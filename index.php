@@ -38,7 +38,7 @@
 
 
 <style type="text/css">
-    @import url("LAOS/stylesheet.css");
+    @import url("laos/stylesheet.css");
 body,td,th ,h3{
 	font-family: LAOS;
 }
