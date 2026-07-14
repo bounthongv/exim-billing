@@ -1,0 +1,80 @@
+<?php 
+  include("init.php");
+    
+   
+       @$stock_id= mysqli_real_escape_string($con,$_POST['stock_id']);	
+         if($stock_id==''){$s_id="";}  else{ $s_id="and product_receipt.stock_id='$stock_id'  ";}
+		 
+       
+		  
+		   @$from_date= mysqli_real_escape_string($con,$_POST['from_date']);	
+		   @$to_date= mysqli_real_escape_string($con,$_POST['to_date']);	
+		   $today=date("Y-m-d");
+         if($from_date=='' or $to_date==''){$btw="";} 
+		  else{ $btw="and product_receipt.receipt_date between '$from_date' and '$to_date' ";}
+		  
+ 
+           @$receipt_id= mysqli_real_escape_string($con,$_POST['receipt_id']);		   
+		 if($receipt_id==''){$r_id="";}  else{ $r_id="and  product_receipt.receipt_id='$receipt_id' ";}
+		 
+		 
+
+		  
+		  @$sp=mysqli_query($con,"SELECT product_receipt.*,sum(product_receipt.qty) as qty,sum(product_receipt.qty*product_receipt.price) as total,
+		  stocks.stock_name		 
+		  FROM product_receipt
+		   left join stocks on stocks.stock_id=product_receipt.stock_id
+		  where 1=1 $s_id $btw $r_id group by receipt_id 
+	   
+	          ");
+		  if($sp){
+          
+          $output ='
+ 		 <table border="1"   class="table-bordered " >
+		 <thead>
+              <tr align="center">
+                <th>ເລກທີຮັບເຂົ້າ</th>
+				<th>ເລກທີອ້າງອີງ</th>
+                <th>ວັນທີ</th>
+                <th>ສາງ</th>
+                <th>ຈຳນວນສິນຄ້າ</th>
+                <th>ຈຳນວນເງີນ</th>
+                 <th>ແກ້ໄຂ</th>
+                  <th>ລົບ</th>
+			   <th>ພິມ</th>
+              </tr>
+		   </thead> 
+           ';
+            while($p=mysqli_fetch_array($sp)){
+          //  $dd=date_create("$s[transfer_date]");
+			$output .='	
+			<tr>              
+                <td><input type="button" name="show" id="'.$p["receipt_id"].'" value="'.$p["receipt_id"].'" class="btn show_pro btn-sm"
+				data-toggle="modal" data-target="#pro_detail"  ></td>
+				<td>'.$p["refer_no"].'</td>
+               	<td>'.$p["receipt_date"].'</td>
+                <td>'.$p["stock_id"].'&nbsp;'.$p["stock_name"].'</td>
+                <td align="center">'.$p["qty"].'</td>
+                <td align="right">'. number_format($p['total'],2).'</td>
+                <td><button type="button" class="btn btn-success btn-sm edit_Id" id="'.$p["receipt_id"].'" >ແກ້ໄຂ</button></td>
+                <td><button type="button" class="btn btn-danger btn-sm delete_Id" id="'.$p["receipt_id"].'">ລົບ</button></td>
+			 
+			<td><button type="button" class="btn btn-warning btn-sm print_Id" id="'.$p["receipt_id"].'"><i class="fa fa-print"></i> ພິມ</button></td>
+			 
+              </tr>
+                ';
+				
+				
+				
+             } 
+       $output .='   </table>';
+		  
+          } 
+		 
+
+
+echo 	  $output; 
+
+ 
+ 
+ ?>
