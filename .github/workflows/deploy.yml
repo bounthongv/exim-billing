@@ -17,6 +17,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           fingerprint: SHA256:JA3wvZcO0fw2NrAUeG0ypQvEf97O2f+p5czw5bkD2mg
           script: |
-            cd /var/www/exim_billing
+            cd /var/www/exim-billing
             git pull origin main
             docker compose up --build -d
