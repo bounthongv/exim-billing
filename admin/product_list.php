@@ -359,7 +359,7 @@ reader.readAsDataURL(input.files[0]);
           <tr>
           <td valign="top">
               
-           <!-- <?PHP
+            <?php
 			
 			$vg=mysqli_query($con,"SELECT * FROM tb_groups");
 				if($vg){ ?>
@@ -375,13 +375,13 @@ reader.readAsDataURL(input.files[0]);
 		 		echo "<tr>";
 		 	//	echo "<td>".$p['group_id']."</td>";?>
                
-              	<td colspan="2">
+             	<td colspan="2">
               <input type="button" name="show" id="<?php echo $p['Group_ID'];?>" value="<?php echo $p['Group_ID'].'&nbsp;'.$p['Group_Name'];?>"
                class="btn btn-sm show_pro" ></td>
               
               <?PHP } ?>
             </table>
-            <?PHP } ?>-->
+            <?PHP } ?>
           </td>
           
           <td valign="top">
