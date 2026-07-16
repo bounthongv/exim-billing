@@ -1,5 +1,5 @@
 <?php
-$con=mysqli_connect("localhost","admin","Sql_admin@#2024","exim_stock");
+$con=mysqli_connect("172.17.0.1","admin","Sql_admin@#2024","exim_stock");
 mysqli_set_charset($con,"utf8");
 error_reporting( error_reporting() & ~E_NOTICE );
 if (mysqli_connect_errno()) {
