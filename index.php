@@ -99,6 +99,7 @@ body,td,th ,h3{
          ?>
   </div>
 
+  <script type="text/javascript">window.alert = function() {};</script>
   <script type="text/javascript" src="check_js.js"></script>
 
 
