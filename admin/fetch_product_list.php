@@ -82,7 +82,7 @@
        where    1=1   $g_id  $p_id $name 
        
        and products.office_id='$office1'
-        group by products.Product_ID  order by products.Group_ID,products.Product_ID asc 
+        group by products.Product_ID  order by `Id` ASC
 		  ");
 
           
