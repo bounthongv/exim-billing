@@ -6,9 +6,9 @@
 		  if($c_id==''){ $p_id="";}
 		  else{ $p_id="and (customers.customer_id like '$c_id%' or customers.customer_id like '%$c_id%') ";}
 */
-$c_id= mysqli_real_escape_string($con,$_POST['c_id']);		   
-		  if($c_id==''){ $p_id="";}
-		  else{ $p_id="and (customer_id like '$c_id%' or customer_id like '%$c_id%') ";}
+$c_id = isset($_POST['c_id']) ? mysqli_real_escape_string($con, $_POST['c_id']) : '';
+if($c_id==''){ $p_id="";}
+else{ $p_id="and (customer_id like '$c_id%' or customer_id like '%$c_id%') ";}
 
 
 /*
