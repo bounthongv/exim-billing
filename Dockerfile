@@ -1,8 +1,9 @@
-FROM php:5.6-apache
+FROM php:7.4-apache
 RUN a2enmod rewrite
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 # Custom PHP config - matches apis.com.la (which uses PHP 5.6 with FPM)
-# PHP 5.6 is what the customer uses, so legacy patterns (@-suppression, null arithmetic) work
+# We use PHP 7.4 because PHP 5.6 + MySQL 8 has charset negotiation issues
+# PHP 7.4 is more lenient with @-suppression and null arithmetic than PHP 8.x
 RUN { \
         echo 'display_errors = Off'; \
         echo 'log_errors = On'; \
