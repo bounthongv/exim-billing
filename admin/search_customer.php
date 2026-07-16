@@ -32,16 +32,21 @@
         </tr>
         
         <?php
-echo "1";
+echo "";
 		@$sp=mysqli_query($con,"  SELECT customers.*,customer_type.ct_name,routes.route_name
-		
 		 ,sr_list.sr_fname,sr_list.sr_lname
+     ,customer_import.Province
+     ,customer_import.district
+     ,customer_import.village
+
 		   FROM  customers 
 		 left join routes on customers.route_id=routes.route_id
 		 left join customer_type on customers.customer_type=customer_type.ct_id
-		 
 		 left join sr_list on customers.sr=sr_list.sr_id
 		 
+    left join customer_import on customers.customer_id=customer_import.external_id
+
+
 		   where 1=1 $c_id $name $phone limit 100
 		    ");
 		   while($f=mysqli_fetch_array($sp)){
@@ -49,7 +54,12 @@ echo "1";
         <tr>  
         
         <td><button type="button" name="cc" class="btn btn-sm btn-success add_customer" id="<?php echo $f['customer_id'];?>" data-customer_name="<?php echo $f['customer_name'];?>" data-customer_phone="<?php echo $f['phone'];?>" data-customer_address="<?php echo $f['address'];?>" 
-          data-ct_id="<?php echo $f['customer_type'];?>" data-ct_name="<?php echo $f['ct_name'];?>"  data-route_id="<?php echo $f['route_id'];?>"data-sr_id="<?php echo $f['sr'];?>" data-sr_fname="<?php echo $f['sr_fname'];?>" data-sr_lname="<?php echo $f['sr_lname'];?>"  data-dismiss="modal" >ເລືອກ</button></td>        
+          data-ct_id="<?php echo $f['customer_type'];?>" data-ct_name="<?php echo $f['ct_name'];?>"  data-route_id="<?php echo $f['route_id'];?>"data-sr_id="<?php echo $f['sr'];?>" data-sr_fname="<?php echo $f['sr_fname'];?>" data-sr_lname="<?php echo $f['sr_lname'];?>" 
+          data-village="<?php echo $f['village'];?>"
+          data-district="<?php echo $f['district'];?>"
+          data-Province="<?php echo $f['Province'];?>"
+          
+          data-dismiss="modal" >ເລືອກ</button></td>        
          <td><?php echo $f['customer_id'];?></td>
          <td><?php echo $f['customer_name'];?></td>
          <td><?php echo $f['phone'];?></td>

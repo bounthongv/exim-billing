@@ -18,4 +18,5 @@ jobs:
           script: |
             cd /var/www/exim-billing
             git pull origin main
+            bash /root/fix-dblink.sh
             docker compose up --build -d

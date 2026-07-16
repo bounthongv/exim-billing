@@ -6,9 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ດຶງ ແລະ escape ຄ່າຈາກ form (ຕົວອັກສອນ)
 
+$Id           = mysqli_real_escape_string($con, $_POST['Id']);
 
-    
-    $number_cta           = mysqli_real_escape_string($con, $_POST['number_cta']);
+
     $outlet_name           = mysqli_real_escape_string($con, $_POST['Outlet_Name']);
     $address                = mysqli_real_escape_string($con, $_POST['Address']);
     $contact_person         = mysqli_real_escape_string($con, $_POST['Contact_Person']);
@@ -30,14 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ກວດສອບຄ່າວັນທີ (ຖ້າຫວ່າງ ໃຫ້ເປັນ NULL ແທນ string ຫວ່າງ ເພື່ອບໍ່ໃຫ້ error ກັບ column ປະເພດ date)
     $date_value = !empty($date) ? "'$date'" : "NULL";
 
-    $sql = "INSERT INTO tb_cta
-            (number_cta,Outlet_Name, Address, Contact_Person, Tel, Customer_ID, Date,
-             Outlet_Sales_Channels, MONT_SEP, MOFT_SEP, TONT, TOFT_SPP_SLP,
-             Route_Number, Number_days, Limited_Amount, Validation_Date)
-            VALUES
-            ('$number_cta','$outlet_name', '$address', '$contact_person', '$tel', '$customer_id', $date_value,
-             '$outlet_sales_channels', $mont, $moft, $tont, $toft,
-             '$route_number', '$number_days', '$limited_amount', '$validation_date')";
+    $sql = "UPDATE `tb_cta` SET 
+Outlet_Name = '$outlet_name',
+`Address` = '$address',
+Contact_Person = '$contact_person',
+Tel = '$tel',
+Customer_ID = '$customer_id',
+`Date` = '$date',
+Outlet_Sales_Channels = '$outlet_sales_channels',
+MONT_SEP = '$mont',
+MOFT_SEP = '$moft',
+TONT = '$tont',
+TOFT_SPP_SLP = '$toft',
+Route_Number = '$route_number',
+Number_days = '$number_days',
+Limited_Amount = '$limited_amount',
+Validation_Date = '$validation_date'
+
+    WHERE `tb_cta`.`Id` = '$Id'";
 
     if (mysqli_query($con, $sql)) {
 

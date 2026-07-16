@@ -107,6 +107,11 @@ function fmt_date($date) {
     </tr>
 </table>
 
+
+<div align="Right" style="width:100%">ເລກທີ: <?php echo $row['number_cta']; ?></div>
+
+
+
 <h2>ໃບສັນຍາການໃຫ້ເຄດິດຮ້ານຄ້າ</h2>
 <h3>Credit Term Agreement</h3>
 

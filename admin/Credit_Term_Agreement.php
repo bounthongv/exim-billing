@@ -4,6 +4,33 @@
 
 include("init.php");
 
+
+if(isset($_GET['aksi']) == 'delete'){
+				$Id = $_GET['Id'];
+				$cek = mysqli_query($con, "SELECT * FROM tb_cta WHERE Id='$Id'");
+				if(mysqli_num_rows($cek) == 0){
+                echo "<script>
+                alert('ບໍ່ພົບຂໍ້ມູນນີ້');
+                window.location.href = 'Credit_Term_Agreement.php';
+              </script>";
+                    }else{
+					$delete = mysqli_query($con, "DELETE FROM tb_cta WHERE Id='$Id'");
+					if($delete){
+					  echo "<script>
+                    alert('ການລົບຂໍ້ມູນສຳເລັດ');
+                    window.location.href = 'Credit_Term_Agreement.php';
+                  </script>";
+                        }else{
+					 echo "<script>
+                    alert('ການລົບຂໍ້ມູນບໍ່ສຳເລັດ');
+                    window.location.href = 'Credit_Term_Agreement.php';
+                  </script>";
+                        }
+				}
+			}
+
+
+
 ?>
 
 
@@ -135,6 +162,37 @@ $(function () {
   }
 
 
+
+
+$(function(){
+  $('#search_product').click(function(){
+   
+ 
+  
+   var from_date = $('#from_date').val();
+   var to_date = $('#to_date').val();
+
+   
+   
+ //  alert(stock_id);
+   
+         $.ajax({
+				url:"fetch_cta_list.php",
+				method:"POST",
+data:{  from_date:from_date,to_date:to_date },
+				success:function(data)
+				{
+					$('#head_list').html(data);
+
+				}
+			});
+
+  });
+
+ });
+
+
+
 </script>
 
 
@@ -158,6 +216,10 @@ $(function () {
             
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
       
+
+ <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
+
+
 </table>
 
 <br>

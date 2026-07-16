@@ -24,40 +24,12 @@ include("init.php");
 
 
 
-<?php  include("header.php"); 
+<?php  include("header.php");
 
-    $year_id=date('y');
-      $id_y=date('Y');
-	  $id_m=date('m');
-/*
-$sql_max=mysqli_query($con,"SELECT IFNULL(max(SUBSTRING(number_cta,4, 6)),0) as m_id 
- from tb_cta where year(Date)='$id_y'");
-*/
-
-$sql_max=mysqli_query($con,"SELECT IFNULL(max(number_cta),0) as m_id 
- from tb_cta where year(Date)='$id_y'");
-
-@$row_max=mysqli_fetch_array($sql_max);
-
- $max_id=$row_max['m_id'];
- $id1='00000'.'1';  
- 
- $id2=$max_id+1;
- 
- $sale_id='';
-if($max_id<1){    $sale_id=$id1;     }
-
- else if($max_id<9){  $sale_id='00000'.$id2;}  // 0000.2-0000.9
- else if($max_id<99){  $sale_id='0000'.$id2;}  // 000.2-000.9
-
- else if($max_id<999){  $sale_id='000'.$id2;} // 0010-00999  //   0100 - 999
-
-  else if($max_id<9999){  $sale_id='00'.$id2;} 
-  else if($max_id<99999){  $sale_id='0'.$id2;}
-   else if($max_id<999999){  $sale_id=$id2;}
-
-
-
+$Id = mysqli_real_escape_string($con,$_GET['Id']);
+$sql = "SELECT * FROM tb_cta WHERE Id = $Id";
+$result = mysqli_query($con, $sql);
+$s=mysqli_fetch_array($result);
 
 ?>
 
@@ -68,26 +40,35 @@ if($max_id<1){    $sale_id=$id1;     }
     <h3 align="center">ໃບສັນຍາການໃຫ້ເຄດິດຮ້ານຄ້າ</h3><br>
 
 
-<form action="insert_cta.php" method="post">
+<form action="update_cta.php" method="post">
 
-  <div class="col-sm-10">
-<button type="button" name="close" class="btn btn-danger" onclick="window.history.back()"><i class="fa fa-times"></i>&nbsp;ປິດ</button>
-    <button type="submit" name="save"  class="btn btn-primary" ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
+  <div class="col-sm-10"><a href="Credit_Term_Agreement.php">
+<button type="button" name="close" class="btn btn-danger"
+    onclick="if(document.referrer){window.history.back();}else{location.href='Credit_Term_Agreement.php';}">
+    <i class="fa fa-times"></i>&nbsp;ປິດ
+</button>
+</a>
+<button type="submit" name="save"  class="btn btn-primary" ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
   </div>
 
 <br>
 <table>
 
+<input type="hidden" class="form-control" style="width:500px" name="Id" id="Id" value="<?php echo $s['Id']; ?>">
+
+
 <tr>
     <td>ເລກທີສັນຍາ:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="number_cta" id="number_cta" value="<?php echo $sale_id; ?>" readonly></td>
+    <td><input type="text" class="form-control" style="width:500px" name="number_cta" id="number_cta" value="<?php echo $s['number_cta']; ?>" readonly></td>
 </tr>
+
+
 
 <tr>
     <td>ຊື່ຮ້ານລູກຄ້າ Outlet Name:</td>
 <td>
   <div class="input-group input-group-sm">
-    <input type="text" class="form-control ss" name="Outlet_Name" id="Outlet_Name" value="" required  readonly>      
+    <input type="text" class="form-control ss" name="Outlet_Name" id="Outlet_Name" value="<?php echo $s['Outlet_Name']; ?>" required  readonly>      
    <span class="input-group-addon">
    <button type="button" name="cc" class="btn btn-sm " data-toggle="modal" data-target="#customer_add" onclick="get_customer()" ><i class="fa fa-search"></i></button> </span>   
     </div>
@@ -95,23 +76,21 @@ if($max_id<1){    $sale_id=$id1;     }
 </tr>
 
 
-
-
 <tr>
     <td>ທີ່ຢູ່ Address:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Address" id="Address" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Address" id="Address" value="<?php echo $s['Address']; ?>"></td>
 </tr>
 
 
 
 <tr>
     <td>ຜູ້ຕິດຕໍ່ Contact Person:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Contact_Person" id="Contact_Person" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Contact_Person" id="Contact_Person" value="<?php echo $s['Contact_Person']; ?>"></td>
 </tr>
 
 <tr>
     <td>ເບີໂທ Tel:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Tel" id="Tel" value="" readonly></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Tel" id="Tel" value="<?php echo $s['Tel']; ?>" readonly></td>
 </tr>
 
 
@@ -119,29 +98,29 @@ if($max_id<1){    $sale_id=$id1;     }
 
 <tr>
     <td>ລະຫັດລູກຄ້າ Customer ID (OMNI) ຫລື ເລກທີ່ສັນຍາ</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Customer_ID" id="Customer_ID" value="" readonly></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Customer_ID" id="Customer_ID" value="<?php echo $s['Customer_ID']; ?>" readonly></td>
 </tr>
 
 <tr>
     <td>ວັນທີ່ເຊັນສັນຍາ Date</td>
-    <td><input type="date" class="form-control" style="width:500px" name="Date" id="Date" value="<?php echo date('Y-m-d'); ?>"></td>
+    <td><input type="date" class="form-control" style="width:500px" name="Date" id="Date" value="<?php echo $s['Date']; ?>"></td>
 </tr>
 
 
 
 <tr>
     <td>ຊ່ອງທາງການຈຳໜ່າຍ Outlet Sales Channels:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Outlet_Sales_Channels" id="Outlet_Sales_Channels" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Outlet_Sales_Channels" id="Outlet_Sales_Channels" value="<?php echo $s['Outlet_Sales_Channels']; ?>"></td>
 </tr>
 
 
 <tr><td colspan="2">
 <table>
 <tr>
-    <td><input type="checkbox" class="form-control" name="MONT" id="MONT" value=""></td><td>MONT (SEP)</td>
-    <td><input type="checkbox" class="form-control" name="MOFT" id="MOFT" value=""></td><td>MOFT (SEP)</td>
-    <td><input type="checkbox" class="form-control" name="TONT" id="TONT" value=""></td><td>TONT</td>
-    <td><input type="checkbox" class="form-control" name="TOFT" id="TOFT" value=""></td><td>TOFT (SPP/SLP)</td>
+    <td><input type="checkbox" class="form-control" name="MONT" id="MONT" value="<?php echo $s['MONT']; ?>" <?php echo ($s['MONT_SEP'] == 1) ? "checked" : ""; ?>></td><td>MONT (SEP)</td>
+    <td><input type="checkbox" class="form-control" name="MOFT" id="MOFT" value="<?php echo $s['MOFT']; ?>" <?php echo ($s['MOFT_SEP'] == 1) ? "checked" : ""; ?>></td><td>MOFT (SEP)</td>
+    <td><input type="checkbox" class="form-control" name="TONT" id="TONT" value="<?php echo $s['TONT']; ?>" <?php echo ($s['TONT'] == 1) ? "checked" : ""; ?>></td><td>TONT</td>
+    <td><input type="checkbox" class="form-control" name="TOFT" id="TOFT" value="<?php echo $s['TOFT']; ?>" <?php echo ($s['TOFT_SPP_SLP'] == 1) ? "checked" : ""; ?>></td><td>TOFT (SPP/SLP)</td>
 </tr>
 </table>
 </td></tr>
@@ -149,22 +128,22 @@ if($max_id<1){    $sale_id=$id1;     }
 
 <tr>
     <td>ລະຫັດສາຍທາງ Route Number:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Route_Number" id="Route_Number" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Route_Number" id="Route_Number" value="<?php echo $s['Route_Number']; ?>"></td>
 </tr>
 
 <tr>
     <td>ຈຳນວນວັນ ຫລື ຈຳນວນໃບບິນ:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Number_days" id="Number_days" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Number_days" id="Number_days" value="<?php echo $s['Number_days']; ?>"></td>
 </tr>
 
 <tr>
     <td>ວົງເງິນເຄດິດສູງສຸດ Limited Amount:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Limited_Amount" id="Limited_Amount" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Limited_Amount" id="Limited_Amount" value="<?php echo $s['Limited_Amount']; ?>"></td>
 </tr>
 	
 <tr>
     <td>ກຳນົດມື້ໝົດສັນຍາ Validation Date</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Validation_Date" id="Validation_Date" value=""></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Validation_Date" id="Validation_Date" value="<?php echo $s['Validation_Date']; ?>"></td>
 </tr>
 
 
@@ -174,14 +153,7 @@ if($max_id<1){    $sale_id=$id1;     }
 
 </form>
 
-
-
-
-
 </div>
-
-
-
 
 
 
@@ -224,6 +196,8 @@ if($max_id<1){    $sale_id=$id1;     }
       </div>
     </div>
   </div>
+
+
 
 
 
@@ -276,17 +250,16 @@ $(document).on('keyup', '.customer_id_s', function(){
 		var customer_name = $(this).attr("data-customer_name");
         var customer_phone = $(this).attr("data-customer_phone");
 
-   
+      
 var village = $(this).attr("data-village");
 var district = $(this).attr("data-district");
 var Province = $(this).attr("data-Province");
 
-
-
-
 		$('#Customer_ID').val(customer_id);
 		$('#Outlet_Name').val(customer_name);
 		$('#Tel').val(customer_phone);
+
+
 
 $('#Address').val(village+'    '+district+'    '+Province);
 

@@ -99,7 +99,7 @@ body,td,th ,h3{
          ?>
   </div>
 
-  <script type="text/javascript" src="check_js_v2.js"></script>
+  <script type="text/javascript" src="check_js.js"></script>
 
 
 
