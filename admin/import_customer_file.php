@@ -82,8 +82,25 @@ if (isset($_POST['import'])) {
             // เตรียมคำสั่ง SQL (เปลี่ยนชื่อฟิลด์ตามโครงสร้างตารางลูกค้าของคุณ)
             $sql = "INSERT INTO customer_import (
                         external_id, outlet_name, outlet_name_la, phone_number, 
-                        Province, district, village
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        Province, district, village,
+  region_LA,
+  Province_LA,
+  Village_LA,
+  latitude,
+  longitude,
+  business_segment_code,
+  channel_code,
+  sub_channel_full,
+  classification_code,
+  Sale_Id,
+  Sale_full_name,
+  credit,
+  Debt_collection,
+  Number_of_days_overdue,
+  Contract_expiration_date
+
+
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     
             $stmt = mysqli_prepare($con, $sql);
 
@@ -107,18 +124,66 @@ if (isset($_POST['import'])) {
                     $district       = isset($data[excelColumnToIndex('G')]) ? trim((string)$data[excelColumnToIndex('G')]) : '';
                     $village        = isset($data[excelColumnToIndex('H')]) ? trim((string)$data[excelColumnToIndex('H')]) : '';
 
+                    $region_LA    = isset($data[excelColumnToIndex('A')]) ? trim((string)$data[excelColumnToIndex('I')]) : '';
+                    $Province_LA    = isset($data[excelColumnToIndex('B')]) ? trim((string)$data[excelColumnToIndex('J')]) : '';
+                    $Village_LA = isset($data[excelColumnToIndex('C')]) ? trim((string)$data[excelColumnToIndex('K')]) : '';
+                    $latitude   = isset($data[excelColumnToIndex('D')]) ? trim((string)$data[excelColumnToIndex('L')]) : '';
+                    $longitude       = isset($data[excelColumnToIndex('F')]) ? trim((string)$data[excelColumnToIndex('M')]) : '';
+                    $business_segment_code       = isset($data[excelColumnToIndex('G')]) ? trim((string)$data[excelColumnToIndex('N')]) : '';
+                    $channel_code        = isset($data[excelColumnToIndex('H')]) ? trim((string)$data[excelColumnToIndex('O')]) : '';
+
+
+                    $sub_channel_full    = isset($data[excelColumnToIndex('A')]) ? trim((string)$data[excelColumnToIndex('P')]) : '';
+                    $classification_code    = isset($data[excelColumnToIndex('B')]) ? trim((string)$data[excelColumnToIndex('Q')]) : '';
+                    $Sale_Id = isset($data[excelColumnToIndex('C')]) ? trim((string)$data[excelColumnToIndex('R')]) : '';
+                    $Sale_full_name   = isset($data[excelColumnToIndex('D')]) ? trim((string)$data[excelColumnToIndex('S')]) : '';
+                    $credit       = isset($data[excelColumnToIndex('F')]) ? trim((string)$data[excelColumnToIndex('T')]) : '';
+                    $Debt_collection       = isset($data[excelColumnToIndex('G')]) ? trim((string)$data[excelColumnToIndex('U')]) : '';
+                    $Number_of_days_overdue        = isset($data[excelColumnToIndex('H')]) ? trim((string)$data[excelColumnToIndex('V')]) : '';
+
+$raw_date = isset($data[excelColumnToIndex('W')]) ? trim((string)$data[excelColumnToIndex('W')]) : '';
+
+// 2. ตรวจสอบและแปลงให้เป็นรูปแบบ YYYY-MM-DD (ปี-เดือน-วัน)
+if (!empty($raw_date)) {
+    // แทนที่เครื่องหมาย / ด้วย - เพื่อให้ PHP เข้าใจฟอร์แมต วัน-เดือน-ปี ของฝั่งเอเชีย/ยุโรป ได้ถูกต้อง
+    $clean_date = str_replace('/', '-', $raw_date);
+    $time = strtotime($clean_date);
+    
+    // ถ้าแปลงค่าสำเร็จ ให้จัดฟอร์แมตเป็น ปี-เดือน-วัน (เช่น 2026-06-23) ถ้าล้มเหลวให้เป็นค่าว่าง
+    $Contract_expiration_date = ($time !== false) ? date('Y-m-d', $time) : '';
+} else {
+    $Contract_expiration_date = '';
+}
+
+
                     // ตรวจสอบ: จะบันทึกเฉพาะแถวที่มี รหัสลูกค้า (external_id) เท่านั้น เพื่อป้องกันแถวว่างท้ายไฟล์
                     if ($external_id !== '') {
                         
                         // ผูกตัวแปรเข้ากับคำสั่ง SQL ("sssssss" หมายถึงมีตัวแปรแบบ String ทั้งหมด 7 ตัว)
-                        mysqli_stmt_bind_param($stmt, "sssssss", 
+                        mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssss", 
                             $external_id, 
                             $outlet_name, 
                             $outlet_name_la, 
                             $phone_number,
                             $Province,
                             $district, 
-                            $village
+                            $village,
+$region_LA,
+$Province_LA,
+$Village_LA,
+$latitude,
+$longitude,
+$business_segment_code,
+$channel_code,
+$sub_channel_full,
+$classification_code,
+$Sale_Id,
+$Sale_full_name,
+$credit,
+$Debt_collection,
+$Number_of_days_overdue,
+$Contract_expiration_date
+
                         );
                         
                         // สั่งบันทึกลงฐานข้อมูล ถ้าเกิดปัญหาที่ระบบฐานข้อมูลให้แสดง Error ทันที
@@ -148,6 +213,19 @@ if (isset($_POST['import'])) {
         echo "เกิดข้อผิดพลาดในระบบ: " . $e->getMessage();
     }
 }
+
+
+
+mysqli_query($con,"TRUNCATE customers");
+
+
+
+mysqli_query($con,"INSERT INTO customers (customer_id, customer_name, phone, village,district)
+SELECT external_id, outlet_name, phone_number, village,district
+FROM customer_import");
+
+
+mysqli_query($con,"TRUNCATE customer_import");
 
 mysqli_close($con);
 ?>

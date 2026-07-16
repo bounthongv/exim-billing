@@ -13,15 +13,15 @@ $from_date='$now';
 $to_date='$now';
 $customer_id='';
 $Detailed='ລະອຽດ';
-		   /*
+		   
            if($from_date=='' or $to_date==''){$btw="";} 
 		  else{ $btw="and (sale_date>='$from_date' and sale_date<='$to_date')
 		  ";}
-		  */
-
+		  
+/*
  if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
-
+*/
 
 
 
@@ -127,7 +127,11 @@ while ($row = mysqli_fetch_assoc($product_query)) {
     $dynamic_columns[] = "`$pid`";
     
     // ใช้ SUM ครอบ CASE WHEN เพื่อยุบรวมยอดรวมตามพฤติกรรมเดิมของตาราง _help
-    $dynamic_sum_cases[] = "    SUM(CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END) AS `$pid`";
+    //$dynamic_sum_cases[] = "    SUM(CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END) AS `$pid`";
+  $dynamic_cases[] = "    CASE WHEN product_id = '$pid' THEN qty ELSE 0 END";
+
+
+
     
     // 🔥 [Auto-Alter Table] หากพบสินค้าใหม่ที่ไม่มีคอลัมน์รองรับ ระบบจะสร้างคอลัมน์ในฐานข้อมูลให้ทันที
     if (!in_array($pid, $existing_columns)) {
@@ -145,6 +149,7 @@ $str_in_products = implode(", ", $product_ids);
 mysqli_query($con, "TRUNCATE TABLE tb_statement_customers");
 
 // 4. สั่งประมวลผลดึงข้อมูล ยุบรวมกลุ่มด้วย GROUP BY และบันทึกใน Query เดียวจบ (ไม่ต้องใช้ตาราง Help)
+/*
 $query = "INSERT INTO tb_statement_customers (
     customer_id, inv_amt, 
     $str_columns
@@ -160,6 +165,22 @@ WHERE Product_SKU IN ($str_in_products)
 GROUP BY Outlet_External_ID
 ORDER BY Outlet_External_ID ASC;
 ";
+*/
+$query = "INSERT INTO tb_statement_customers (
+    inv_amt, customer_id, 
+    $str_columns
+)
+SELECT 
+    total as amount, 
+    customer_id,
+\n$str_cases
+FROM `product_sale` 
+WHERE product_id IN ($str_in_products)
+  $btw $c 
+  AND total != '0' 
+ORDER BY customer_id, sale_date ASC
+";
+
 
 // ประมวลผลคำสั่งหลัก
 @$sp = mysqli_query($con, $query);
@@ -401,8 +422,11 @@ while ($row = mysqli_fetch_assoc($product_query)) {
     $dynamic_columns[] = "`$pid`";
     
     // ใช้ SUM ครอบ CASE WHEN เพื่อยุบรวมยอดรวมตามพฤติกรรมเดิมของตาราง _help
-    $dynamic_sum_cases[] = "    SUM(CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END) AS `$pid`";
-    
+    //$dynamic_sum_cases[] = "    SUM(CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END) AS `$pid`";
+    $dynamic_sum_cases[] = "    SUM(CASE WHEN product_id = '$pid' THEN qty ELSE 0 END) AS `$pid`";
+
+
+
     // 🔥 [Auto-Alter Table] หากพบสินค้าใหม่ที่ไม่มีคอลัมน์รองรับ ระบบจะสร้างคอลัมน์ในฐานข้อมูลให้ทันที
     if (!in_array($pid, $existing_columns)) {
         $alter_sql = "ALTER TABLE `tb_statement_customers` ADD `$pid` VARCHAR(255) COLLATE utf8mb3_unicode_ci DEFAULT '0'";
@@ -419,6 +443,7 @@ $str_in_products = implode(", ", $product_ids);
 mysqli_query($con, "TRUNCATE TABLE tb_statement_customers");
 
 // 4. สั่งประมวลผลดึงข้อมูล ยุบรวมกลุ่มด้วย GROUP BY และบันทึกใน Query เดียวจบ (ไม่ต้องใช้ตาราง Help)
+/*
 $query = "INSERT INTO tb_statement_customers (
     customer_id, inv_amt, 
     $str_columns
@@ -434,6 +459,23 @@ WHERE Product_SKU IN ($str_in_products)
 GROUP BY Outlet_External_ID
 ORDER BY Outlet_External_ID ASC;
 ";
+*/
+$query = "INSERT INTO tb_statement_customers (
+    customer_id, inv_amt, 
+    $str_columns
+)
+SELECT 
+    customer_id as customer_id,
+    SUM(total) as inv_amt, -- ยุบรวมยอดเงินรวมแยกรายลูกค้าตามโครงสร้างเดิมของคุณ
+\n$str_sum_cases
+FROM `product_sale` 
+WHERE product_id IN ($str_in_products)
+  $btw $c 
+  AND total != '0' 
+GROUP BY customer_id
+ORDER BY customer_id ASC;
+";
+
 
 // ประมวลผลคำสั่งหลัก
 @$sp = mysqli_query($con, $query);

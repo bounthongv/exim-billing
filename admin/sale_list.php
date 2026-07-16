@@ -218,7 +218,7 @@ $(function(){
   $('#search_product').click(function(){
    
  
-   var stock_id = $('#stock_id').val(); 
+  // var stock_id = $('#stock_id').val(); 
    var sale_id = $('#sale_id').val();   
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
@@ -234,7 +234,7 @@ $(function(){
          $.ajax({
 				url:"fetch_sale_list.php",
 				method:"POST",
-data:{  stock_id:stock_id,from_date:from_date,to_date:to_date,sale_id:sale_id,status_payment:status_payment,customer_id:customer_id,status:status,sale_order_id:sale_order_id },
+data:{  from_date:from_date,to_date:to_date,sale_id:sale_id,status_payment:status_payment,customer_id:customer_id,status:status,sale_order_id:sale_order_id },
 				success:function(data)
 				{
 					$('#head_list').html(data);
@@ -280,7 +280,7 @@ $(document).on('click', '#print', function(){
 	//	var action = $(this).attr("value");
 
 
-     window.open('print_sale_list.php?stock_id='+stock_id + '&from_date='+from_date  + '&to_date='+to_date+' ','_blank'); 
+     window.open('print_sale_list.php?from_date='+from_date  + '&to_date='+to_date+' ','_blank'); 
    
  
 
@@ -294,7 +294,7 @@ $(document).on('click', '#print', function(){
     <!-- /.container -->  
 <table>
        <tr>
-     <td> <br>  <a href="product_qty_list.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
+     <td> <br>  <a href="index.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
        <td> <br><a href="add_sale_customer_order.php"  ><button type="button" class="btn btn-success" >
             <i class="fa fa-plus-square"></i>&nbsp; ຂາຍ</button></a></td>
             
@@ -303,6 +303,9 @@ $(document).on('click', '#print', function(){
             
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
       
+
+<?php /*
+
       <td>ສາງ<br>
       <select name="stock_id" id="stock_id" class="form-control" required>   
    <?php
@@ -326,6 +329,11 @@ $(document).on('click', '#print', function(){
 		} ?>
     </select> </td>    
     
+
+*/ ?>
+
+
+<?php /*
     <td>ສະຖານະ<br>
       <select name="status_payment" id="status_payment" class="form-control" required>   
         <option value="">ທັງຫມົດ</option>
@@ -342,7 +350,7 @@ $(document).on('click', '#print', function(){
         <option value="1">ຕິດຫນີ້</option>
   
     </select> </td> 
-   
+   */ ?>
       
     
              <td>ເລກທີ<br><input  type="text" name="sale_id" id="sale_id" class="form-control"  ></td> 
@@ -352,10 +360,19 @@ $(document).on('click', '#print', function(){
                 <select  name="customer_id" id="customer_id" class="form-control select2" style="width:210px;"  >
               <option value="">ທັງຫມົດ</option>
          <?php 
-		 $sql_c=mysqli_query($con,"select * from customers ");
+		 $sql_c=mysqli_query($con,"SELECT * FROM
+		  (
+		  SELECT 
+		  external_id as customer_id,
+		  outlet_name as customer_name,
+		  phone_number as phone,
+		  village as village,
+		  district as district
+		  FROM customer_import
+		  ) as customer_import ");
 		 while($f=mysqli_fetch_array($sql_c)){
 		  ?>     
-              <option value="<?php echo $f['customer_id'];?>"><?php echo $f['customer_name'];?></option>
+              <option value="<?php echo $f['customer_id'];?>"><?php echo $f['customer_id'].' '.$f['customer_name'];?></option>
           <?php } ?>   
              </select> 
               </td> 
@@ -430,13 +447,55 @@ $(document).on('click', '#print', function(){
     <br>
       </div>
       
+
     </div>
   </div>
-  
 </div>
 
 
+
+
 <!----->
+   <div class="modal" id="order_add">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">ປ່ຽນສະຖານະ</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+        
+    
+  <td>ສະຖານະ<br>
+      <select name="status_payment" id="status_select" class="form-control">  
+       	<option value="2">ສົດ</option>
+        <option value="3">ເງີນໂອນ</option>
+        <option value="1">ຕິດຫນີ້</option>
+    </select> </td> 
+        
+   
+    
+    </div>
+    
+     <div>
+       &nbsp;   <button type="button" class="btn btn-danger" data-dismiss="modal">ປິດ</button>
+        </div>
+    
+    <br>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
  <?php  if(isset($_SESSION['smg'])){ echo $_SESSION['smg']; unset($_SESSION['smg']); } ?>
  
  
@@ -451,3 +510,195 @@ $(document).on('click', '#print', function(){
 
 </html>
 
+
+
+
+
+<script>
+$(document).ready(function() {
+    $('.btn-status').on('click', function() {
+        // 1. ดึงข้อมูลจากปุ่มที่คลิก
+        var statusValue = $(this).data('value');
+        var statusText = $(this).data('text');
+        
+        // 2. ส่งค่าไปเลือกใน Dropdown (Select) อัตโนมัติ
+        $('#status_select').val(statusValue).change();
+       
+        // 3. ส่งข้อความไปแสดงใน Modal ให้ผู้ใช้เห็นข้อความตัวหนังสือด้วย
+        $('#current_status_text').text(statusText);
+
+
+
+    });
+
+
+
+});
+
+////
+
+// ตัวแปรส่วนกลางสำหรับจำว่า "ปุ่มไหนในตาราง" ที่เป็นคนกดเปิด Modal นี้ขึ้นมา
+let $activeButtonInRow = null;
+
+// 1. กำหนดรูปแบบข้อมูลสำหรับ "ปุ่มหลัก (ปุ่มซ้าย)"
+const configMain = {
+    '1': { text: 'ຕິດໜີ້',    colorClass: 'btn-danger' },  // เปลี่ยนจาก '' เป็น '1' ตาม HTML ของคุณ
+    '2': { text: 'ສົດ',      colorClass: 'btn-success' },
+    '3': { text: 'ເງີນໂອນ',   colorClass: 'btn-info' }
+};
+
+// 2. กำหนดรูปแบบข้อมูลสำหรับ "ปุ่มสถานะภาพรวม (ปุ่มขวา)"
+const configStatus = {
+    '1': { text: 'ຕິດໜີ້',    colorClass: 'btn-danger' },
+    '2': { text: 'ຈ່າຍແລ້ວ',   colorClass: 'btn-success' },
+    '3': { text: 'ຈ່າຍແລ້ວ',   colorClass: 'btn-success' }
+};
+
+// 3. จังหวะที่ผู้ใช้ "คลิกปุ่มในตาราง" เพื่อเปิด Modal
+$(document).on('click', '.btn-status', function() {
+    // เก็บจำตำแหน่งปุ่มที่ถูกกดไว้ในตัวแปรส่วนกลาง
+    $activeButtonInRow = $(this);
+    
+    // ดึงค่า value ล่าสุดของปุ่มนั้นมาเซ็ตให้ตัว Dropdown ใน Modal เลือกค่านั้นรอไว้ล่วงหน้า
+    var currentBtnValue = $activeButtonInRow.attr('data-value') || $activeButtonInRow.val();
+    $('#status_select').val(currentBtnValue);
+
+
+ 
+
+});
+
+// 4. จังหวะที่ผู้ใช้ "เลือกเปลี่ยนค่าใน Dropdown" บนหน้าต่าง Modal
+$('#status_select').on('change', function() {
+    var selectedValue = $(this).val(); // ได้ค่า '1', '2' หรือ '3'
+    var selectedText = $(this).find('option:selected').text();
+    
+var sale_id = $activeButtonInRow.attr('data-sale_id');
+
+    // ตรวจสอบความปลอดภัยว่ามีปุ่มต้นทางส่งมาจริงไหม
+    if ($activeButtonInRow && $activeButtonInRow.length) {
+        
+        if (confirm("ທ່ານຕ້ອງການປ່ຽນສະຖານະເປັນ " + selectedText + " ບໍ່")) {
+            
+            // ดึงสไตล์ตามค่าที่เลือกจากตัวแปร Config
+            const mainStyle = configMain[selectedValue];
+            const statusStyle = configStatus[selectedValue];
+
+
+
+
+            // -------------------------------------------
+            // ส่วนที่ 1: อัปเดตปุ่มหลักที่กดเปิด Modal ตัวนั้น
+            // -------------------------------------------
+            $activeButtonInRow.attr('data-value', selectedValue); // เปลี่ยน data-value
+            $activeButtonInRow.val(selectedValue);                // เปลี่ยน value
+            $activeButtonInRow.text(mainStyle.text);             // เปลี่ยนข้อความ
+            $activeButtonInRow.removeClass('btn-danger btn-success btn-info').addClass(mainStyle.colorClass); // เปลี่ยนสี
+
+            // -------------------------------------------
+            // ส่วนที่ 2: วิ่งไปอัปเดตปุ่มสถานะขวา (ในแถวเดียวกันในตาราง)
+            // -------------------------------------------
+            var $currentRow = $activeButtonInRow.closest('tr');
+            if ($currentRow.length) {
+                var $statusButton = $currentRow.find('.btn-status-text'); // ค้นหาปุ่มขวาผ่าน class
+                
+                if ($statusButton.length) {
+                    $statusButton.text(statusStyle.text); // เปลี่ยนข้อความ
+                    $statusButton.removeClass('btn-danger btn-success').addClass(statusStyle.colorClass); // เปลี่ยนสี
+                }
+            }
+
+            // เมื่อเปลี่ยนค่าเสร็จเรียบร้อย สั่งให้ปิดหน้าต่าง Modal อัตโนมัติได้เลย
+            $('#order_add').modal('hide');
+
+            // [เพิ่มเติม] สามารถเขียนโค้ด AJAX ส่งไปบันทึกในฐานข้อมูลตรงนี้ได้เลยโดยใช้ selectedValue
+
+
+
+    $.ajax({
+        url: "sale_status.php",
+        method: "POST",
+        data: { sale_id:sale_id,selectedValue:selectedValue },
+        success: function() {
+          
+        }
+    });
+
+
+
+
+
+
+        } else {
+            // ถ้ากดยกเลิก ให้ดีดค่าใน Dropdown กลับไปเป็นค่าเดิมของปุ่มตัวนั้น
+            var originalValue = $activeButtonInRow.attr('data-value') || $activeButtonInRow.val();
+            $(this).val(originalValue);
+        }
+    }
+});
+
+
+
+</script>
+
+
+
+
+
+
+<script>
+// 1. กำหนดรูปแบบข้อมูล (Mapping) ว่าแต่ละ Value จะให้ใช้ข้อความอะไร และคลาสสีอะไร
+const statusConfig = {
+    '':  { text: 'ຕິດໜີ້',   colorClass: 'btn-danger' },
+    '2': { text: 'ສົດ',      colorClass: 'btn-success' },
+    '3': { text: 'ເງີນໂອນ',  colorClass: 'btn-info' }
+};
+
+// 2. เลือกปุ่มทั้งหมดที่มีคลาส btn-toggle
+const buttons = document.querySelectorAll('.btn-toggle');
+
+buttons.forEach(button => {
+    button.addEventListener('click', function() {
+        let currentValue = this.value;
+        let nextValue = '';
+
+        // 3. กำหนดเงื่อนไขการลูปเปลี่ยนค่า ('' -> '2' -> '3' -> '')
+        if (currentValue === '') {
+            nextValue = '2';
+        } else if (currentValue === '2') {
+            nextValue = '3';
+        } else if (currentValue === '3') {
+            nextValue = '';
+        }
+
+        // 4. ดึงข้อมูลชุดใหม่จากสถานะถัดไป
+        const nextConfig = statusConfig[nextValue];
+
+        // 5. ลบคลาสสีเก่าออกทั้งหมดก่อน เพื่อไม่ให้สีตีกัน
+        this.classList.remove('btn-danger', 'btn-success', 'btn-info');
+
+        // 6. อัปเดตค่า Value, ข้อความ และคลาสสีใหม่ลงไปที่ปุ่ม
+        this.value = nextValue;
+        this.textContent = nextConfig.text;
+        this.classList.add(nextConfig.colorClass);
+    });
+});
+
+
+/*
+
+$.ajax({
+				url:"update_OT_n_Benefit.php",
+				method:"POST",
+				data:{  
+          Id:Id,mm:mm,yy:yy,Active_Money:Active_Money,Sale_Ticket_holiday:Sale_Ticket_holiday,Payback:Payback,Meal_Allowance:Meal_Allowance,Accommodati:Accommodati,Other:Other,Lunch_Allowance:Lunch_Allowance,Total_Balance:Total_Balance
+        },
+				success:function(data)
+				{
+
+				}
+			});
+         
+*/
+
+</script>

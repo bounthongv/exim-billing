@@ -19,26 +19,30 @@ $Detailed='ລະອຽດ';
 		  
 
 
-/*
-           if($from_date=='' or $to_date==''){$btw="";} 
-		  else{ $btw="and (sale_date>='$from_date' and sale_date<='$to_date')";}
-	*/
+if($from_date=='' or $to_date==''){$btw="";} 
+else{ $btw="and (sale_date>='$from_date' and sale_date<='$to_date')";}
+	
 
+/*
  if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+*/
 
-/*
+
+
+
 if($customer_id==''){$c="";}
 else{
 	$c="and customer_id='$customer_id'";
 }
-*/
 
+
+/*
 if($customer_id==''){$c="";}
 else{
 	$c="and Outlet_Name='$customer_id'";
 }
-
+*/
 
 
 
@@ -76,7 +80,7 @@ SELECT sale_id,sale_date, amount,customer_id, 0, 0, qty, 0, 0, 0, 0, 0, 0, 0, 0,
 
 */
 
-
+/*
 // 1. ล้างตารางเดิมก่อน
 @$sp0 = mysqli_query($con, "TRUNCATE TABLE tb_statement");
 
@@ -119,6 +123,77 @@ ORDER BY Invoiced_Date
 ";
 
 @$sp = mysqli_query($con, $query);
+*/
+
+
+
+// 1. ล้างตารางเดิมก่อน
+@$sp0 = mysqli_query($con, "TRUNCATE TABLE tb_statement");
+
+// 1. ดึงรายการสินค้าปัจจุบันจากตาราง products
+$product_query = mysqli_query($con, "SELECT DISTINCT Product_ID FROM `products` WHERE Product_ID IS NOT NULL AND Product_ID != '' ORDER BY Product_ID ASC");
+
+$dynamic_columns = [];
+$dynamic_cases = [];
+$product_ids = [];
+
+// เช็คคอลัมน์ที่มีอยู่แล้วในตาราง tb_statement ป้องกันการสร้างซ้ำ
+$existing_cols_query = mysqli_query($con, "SHOW COLUMNS FROM `tb_statement`");
+$existing_columns = [];
+while ($col_row = mysqli_fetch_assoc($existing_cols_query)) {
+    $existing_columns[] = $col_row['Field'];
+}
+
+// 2. วนลูปเพื่อเช็คโครงสร้างตาราง และเตรียมสร้าง Dynamic SQL
+while ($row = mysqli_fetch_assoc($product_query)) {
+    $pid = $row['Product_ID'];
+    $product_ids[] = "'$pid'";
+    $dynamic_columns[] = "`$pid`";
+/*
+    $dynamic_cases[] = "    CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END";
+    */
+
+    $dynamic_cases[] = "    CASE WHEN product_id = '$pid' THEN qty ELSE 0 END";
+
+
+    // 🔥 [จุดสำคัญ] ถ้าในตาราง products มีรหัสนี้ แต่ใน tb_statement ยังไม่มีคอลัมน์นี้...
+    // ระบบจะสั่ง ALTER TABLE เพิ่มคอลัมน์ให้ทันทีอัตโนมัติ!
+    if (!in_array($pid, $existing_columns)) {
+        $alter_sql = "ALTER TABLE `tb_statement` ADD `$pid` VARCHAR(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL";
+        mysqli_query($con, $alter_sql);
+    }
+}
+
+// แปลงเป็นรูปแบบ String เพื่อนำไปใช้กับคิวรีหลัก
+$str_columns = implode(", ", $dynamic_columns);
+$str_cases = implode(",\n", $dynamic_cases);
+$str_in_products = implode(", ", $product_ids);
+
+$query = "INSERT INTO tb_statement (
+    inv_no, inv_date, inv_amt, customer_id, 
+    $str_columns
+)
+SELECT 
+    sale_id, 
+    sale_date, 
+    total, 
+    customer_id,
+\n$str_cases
+FROM `product_sale` 
+WHERE product_id IN ($str_in_products)
+  $btw $c 
+  AND total != '0' 
+ORDER BY customer_id, sale_date ASC
+";
+
+// 3. สั่งรันคิวรี
+@$sp = mysqli_query($con, $query);
+
+
+
+
+
+
 
 
 
@@ -159,7 +234,7 @@ SELECT sale_id,sale_date, amount,customer_id, 0, qty, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 @$sp16=mysqli_query($con,"INSERT into tb_statement(inv_no, inv_date, inv_amt,customer_id, HD, HM, HP, HP1, HQ, HQ1, HS, NC, NQ, RP, RP1, RS, TC, TQ, CO2,RQ,RQ1)SELECT sale_id,sale_date, amount,customer_id, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, qty FROM `product_sale` WHERE product_id='RQ1' $btw $c and amount!='0'  order by sale_date");	
 	*/
 	
-	
+	/*
 	// 1. ล้างตารางเดิมก่อน
 @$sp0 = mysqli_query($con, "TRUNCATE TABLE tb_statement");
 
@@ -276,6 +351,81 @@ GROUP BY inv_no
 @$sp15_2 = mysqli_query($con, $query_restore);
 
 @$sp15_3=mysqli_query($con,"TRUNCATE TABLE tb_statement_help");	
+*/
+
+
+
+
+// 1. ดึงรายการสินค้าปัจจุบันจากตาราง products เพื่อเช็คและเตรียมชื่อคอลัมน์
+$product_query = mysqli_query($con, "SELECT DISTINCT Product_ID FROM `products` WHERE Product_ID IS NOT NULL AND Product_ID != '' ORDER BY Product_ID ASC");
+
+$dynamic_columns = [];
+$dynamic_cases = [];
+$dynamic_sum_cases = [];
+$product_ids = [];
+
+// เช็คคอลัมน์ที่มีอยู่แล้วในตาราง tb_statement ป้องกันการสร้างซ้ำ
+$existing_cols_query = mysqli_query($con, "SHOW COLUMNS FROM `tb_statement`");
+$existing_columns = [];
+while ($col_row = mysqli_fetch_assoc($existing_cols_query)) {
+    $existing_columns[] = $col_row['Field'];
+}
+
+// 2. วนลูปเพื่อเช็คโครงสร้างตาราง (ถ้ามีสินค้าใหม่ ระบบจะสร้างคอลัมน์ในตารางจริงให้ทันที)
+while ($row = mysqli_fetch_assoc($product_query)) {
+    $pid = $row['Product_ID'];
+    $product_ids[] = "'$pid'";
+    $dynamic_columns[] = "`$pid`";
+    
+
+    // ใช้ SUM ครอบ CASE WHEN เพื่อยุบยอดรวมแยกตามลูกค้า (customer_id) ตั้งแต่คิวรีแรก
+    /*
+    $dynamic_sum_cases[] = "    SUM(CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END) AS `$pid`";
+    */
+    $dynamic_sum_cases[] = "    SUM(CASE WHEN product_id = '$pid' THEN qty ELSE 0 END) AS `$pid`";
+
+
+
+    // ตรวจสอบและสร้างคอลัมน์ใน DB อัตโนมัติหากยังไม่มีรองรับ
+    if (!in_array($pid, $existing_columns)) {
+        $alter_sql = "ALTER TABLE `tb_statement` ADD `$pid` VARCHAR(255) COLLATE utf8mb3_unicode_ci DEFAULT '0'";
+        mysqli_query($con, $alter_sql);
+    }
+}
+
+// แปลง Array เป็น String สำหรับใช้ใน Statement หลัก
+$str_columns = implode(", ", $dynamic_columns);
+$str_sum_cases = implode(",\n", $dynamic_sum_cases);
+$str_in_products = implode(", ", $product_ids);
+
+// 3. ล้างข้อมูลเก่าในตารางหลักรอไว้
+mysqli_query($con, "TRUNCATE TABLE tb_statement");
+
+$query = "INSERT INTO tb_statement (
+    inv_no, inv_date, inv_amt, customer_id, 
+    $str_columns
+)
+SELECT 
+    MAX(sale_id) as sale_id, -- เลือกเลขที่บิลล่าสุดหรือใช้ MAX ยุบกลุ่ม
+    MAX(sale_date) as sale_date, 
+    SUM(total) as inv_amt,          -- รวมยอดเงินบิลทั้งหมดของลูกค้ารายนี้
+    customer_id,
+\n$str_sum_cases
+FROM `product_sale` 
+WHERE product_id IN ($str_in_products)
+  $btw $c 
+  AND total != '0' 
+GROUP BY customer_id
+ORDER BY customer_id ASC;
+";
+
+
+
+// รันคำสั่งคำนวณและบันทึกผล
+@$sp = mysqli_query($con, $query);
+
+
+
 }
 	
 	if($sp){

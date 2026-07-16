@@ -33,13 +33,13 @@
 
 if($select_mode=='1'){
 		  
-  @$sp=mysqli_query($con,"
-       
-         select customer_payment.* ,customers.customer_name
+
+
+  @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 
-		 where 1=1 $btw $r_id $c_id $pt
+		 where 1=1 $btw $r_id $c_id 
 		 
 		 
 	   

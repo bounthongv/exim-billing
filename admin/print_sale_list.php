@@ -77,25 +77,45 @@ font-size:10px;
 </style>
 <?php
     
-   
+   /*
        @$stock_id= mysqli_real_escape_string($con,$_GET['stock_id']);	
          if($stock_id==''){$s_id="";}  else{ $s_id="and product_sale.stock_id='$stock_id'  ";}
-		 
+		 */
        
+
+
+     @$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);
+			if($customer_id==''){$c_id="";} 
+		   else{ $c_id="and (sale_import.Outlet_External_ID like '$customer_id%' or sale_import.Outlet_External_ID like '%$customer_id%')";}
+			
+
+
 		  
 		   @$from_date= mysqli_real_escape_string($con,$_GET['from_date']);	
 		   @$to_date= mysqli_real_escape_string($con,$_GET['to_date']);	
 		   $today=date("Y-m-d");
-         if($from_date=='' or $to_date==''){$btw="and product_sale.sale_date='$today'";} 
-		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
-		  
+    if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+
  
-           @$sale_id= mysqli_real_escape_string($con,$_GET['sale_id']);		   
-		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id='$sale_id' ";}
-		 
+
+
+       @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);	
+    /*	   
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id='$sale_id' "; $btw=""; }
+		 */
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and Invoice_Number='$sale_id' ";  }
 		 
 
-		  
+		  @$sale_order_id= mysqli_real_escape_string($con,$_POST['sale_order_id']);		   
+		 if($sale_order_id==''){$sr_id="";}  else{ $sr_id="and  Display_ID='$sale_order_id' ";  }
+		 
+
+
+
+
+
+		  /*
 		  @$sp=mysqli_query($con,"
   		select product_sale.*,sum(product_sale.total_amt) as t_total_amt,count(product_sale.total_qty) as total_item
 		,sum(product_sale.amount) as total_amt,sum(product_sale.discount) as total_dis  from 	  
@@ -108,7 +128,7 @@ font-size:10px;
 	   left join customers on customers.customer_id=product_sale.customer_id
        left join tb_groups on tb_groups.Group_ID=products.group_id
        
-       where 1=1   $s_id $btw $r_id
+       where 1=1   $btw $r_id
          group by product_sale.sale_id,product_sale.product_id ) 
        as product_sale
           
@@ -116,6 +136,24 @@ font-size:10px;
 	  
 	   
 	          ");
+*/
+
+	  @$sp=mysqli_query($con,"SELECT 
+      Invoice_Number as sale_id,
+      Display_ID as order_id,
+      DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
+      Outlet_Name as customer_name,
+      sum(Quantity) as qty_p,
+      sum(Total) as total_amt,
+      count(Invoice_Number) as count_sale_id
+      FROM sale_import
+      WHERE 1=1
+      $btw $r_id $c_id $sr_id
+      group by Invoice_Number order by DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) desc
+      ");
+
+
+
 		  if($sp){
           ?>
         
@@ -139,9 +177,8 @@ echo date_format($date,"d/m/Y"); ?> </h7>
  		<table border="1"  align="center"   class="table-bordered " width="800px" >
               <tr>
                 <th align="center">ເລກທີ</th>
-                <th align="center">ເລກທີອ້າງອີງ</th>
+                <th align="center">ເລກທີສັ່ງຊື້</th>
                 <th align="center">ວັນທີ</th>
-				<th align="center">ສາງ</th>
                 <th align="center">ລູກຄ້າ</th>
                
                 <th align="center">ຈຳນວນລາຍການ</th>
@@ -156,13 +193,13 @@ echo date_format($date,"d/m/Y"); ?> </h7>
             $dd=date_create("$s[sale_date]");
 			?>	<tr>
 			   <td align="center"><?=$s["sale_id"];?></td> 
-                <td><?=$s["refer_no"];?></td>
+                <td><?=$s["order_id"];?></td>
 				<td align="center"><?=date_format($dd,"d-m-Y");?></td>
-				<td><?=$s["stock_id"];?>&nbsp;<?=$s["stock_name"];?></td>
+		
             	<td><?=$s["customer_id"];?>&nbsp;<?=$s["customer_name"];?></td>
                
-            	<td align="center"><?= $s["total_item"];?></td>
-                <td align="right"><?=@number_format($s["t_total_amt"],2);?></td>
+            	<td align="center"><?= $s["count_sale_id"];?></td>
+                <td align="right"><?=@number_format($s["total_amt"],2);?></td>
                 <td align="right"><?=@number_format($s["total_dis"]+$s["bill_discount"],2);?></td>
                  <td align="right"><?=@number_format($s["total"],2);?></td>
 				<td align="right"><?=@number_format($s["payment"],2);?></td>
@@ -171,12 +208,12 @@ echo date_format($date,"d/m/Y"); ?> </h7>
 				</tr>
                
 			<?php	
-				@$t_amt +=$s["t_total_amt"];
+				@$t_amt +=$s["total_amt"];
 				@$t_payment +=$s["payment"];
 				@$total_dis +=$s["total_dis"]+$s["bill_discount"];
 				@$totals +=$s["total"];
              } ?>
-             <td colspan="6" align="right">ລວມ</td>
+             <td colspan="5" align="right">ລວມ</td>
              <td colspan="1" align="right"><?=@number_format($t_amt,2);?></td>
                <td colspan="1" align="right"><?=@number_format($total_dis,2);?></td>
              <td colspan="1" align="right"><?=@number_format($totals,2);?></td>

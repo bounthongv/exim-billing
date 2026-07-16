@@ -332,7 +332,7 @@ th{ text-align:center;}
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">ລາຍການລູຄ້າສັ່ງຊື້</h4>
+          <h4 class="modal-title">ລາຍການລູກຄ້າສັ່ງຊື້</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
        

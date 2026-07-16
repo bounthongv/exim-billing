@@ -88,8 +88,13 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 		
 		
     $sql_up_order=mysqli_query($con,"update product_sale set payment=payment+$total_x_pay,remain=remain-$total_x_pay   where sale_id='$sale_id'  ");
-    $sql_up_order=mysqli_query($con,"update product_sale set status='2'    where sale_id='$sale_id' and remain<1  ");
+   
+	$sql_up_order=mysqli_query($con,"update product_sale set status='2'    where sale_id='$sale_id' and remain<1  ");
   
+/*
+	$sql_up_order=mysqli_query($con,"update product_sale set status='2'    where sale_id='$sale_id'");
+*/
+
    $sql_up_debit=mysqli_query($con,"update customers set total_debit_amt=ifnull(total_debit_amt,0)-$total_x_pay where customer_id='$customer_id'  ");
 			
 			}else{
@@ -105,8 +110,12 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 		
 		
     $sql_up_order=mysqli_query($con,"update product_sale set payment=payment+$total_xx_pay,remain=remain-$total_xx_pay   where sale_id='$sale_id'  ");
+
+
     $sql_up_order=mysqli_query($con,"update product_sale set status='2'    where sale_id='$sale_id' and remain<1  ");
-  
+  /*
+	$sql_up_order=mysqli_query($con,"update product_sale set status='2'    where sale_id='$sale_id'");
+*/
    $sql_up_debit=mysqli_query($con,"update customers set total_debit_amt=ifnull(total_debit_amt,0)-$total_xx_pay where customer_id='$customer_id'  ");
 				 }
 			

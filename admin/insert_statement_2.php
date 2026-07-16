@@ -18,7 +18,7 @@ else{
 }
 
 if($Detailed=='ລະອຽດ'){
-
+/*
    @$sp0=mysqli_query($con,"
 TRUNCATE TABLE tb_statement
 	          ");
@@ -50,9 +50,65 @@ insert into tb_statement(inv_no, inv_date, inv_amt, HD, HM, HP, HP1, HQ, HQ1, HS
 @$sp13=mysqli_query($con,"insert into tb_statement(inv_no, inv_date, inv_amt, HD, HM, HP, HP1, HQ, HQ1, HS, NC, NQ, RP, RP1, RS, TC, TQ, HC)SELECT receipt_id,receipt_date, amount, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, qty, 0 FROM `product_receipt` WHERE product_id='TQ' $btw $c and amount!='0' order by receipt_date");
 @$sp14=mysqli_query($con,"insert into tb_statement(inv_no, inv_date, inv_amt, HD, HM, HP, HP1, HQ, HQ1, HS, NC, NQ, RP, RP1, RS, TC, TQ, HC)SELECT receipt_id,receipt_date, amount, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, qty FROM `product_receipt` WHERE product_id='HC' $btw $c and amount!='0' order by receipt_date");
 
+
+*/
+
+
+
+
+
+
+// 1. ล้างตารางสรุปข้อมูลเดิม
+@$sp0 = mysqli_query($con, "TRUNCATE TABLE tb_statement");
+
+// 2. ยุบคิวรีเหลือชุดเดียว ดึงข้อมูลและแยกคอลัมน์สินค้าให้ครบในรอบเดียว
+@$sp = mysqli_query($con, "INSERT INTO tb_statement (
+        inv_no, inv_date, inv_amt, 
+        `10031707`, `10031707D`, `10031708`, `10031708D`, `10031709`, `10031709D`, 
+        `10031710`, `10031710D`, `10126756`, `10128824`, `10128824D`, `10135854`, 
+        `10031711`, `10031711D`, `10031712`, `10031713`, `10031713D`, `10031777`, `10031777D`
+    )
+    SELECT 
+        receipt_id, 
+        receipt_date, 
+        amount,
+        IF(product_id = '10031707', qty, 0),
+        IF(product_id = '10031707D', qty, 0),
+        IF(product_id = '10031708', qty, 0),
+        IF(product_id = '10031708D', qty, 0),
+        IF(product_id = '10031709', qty, 0),
+        IF(product_id = '10031709D', qty, 0),
+        IF(product_id = '10031710', qty, 0),
+        IF(product_id = '10031710D', qty, 0),
+        IF(product_id = '10126756', qty, 0),
+        IF(product_id = '10128824', qty, 0),
+        IF(product_id = '10128824D', qty, 0),
+        IF(product_id = '10135854', qty, 0),
+        IF(product_id = '10031711', qty, 0),
+        IF(product_id = '10031711D', qty, 0),
+        IF(product_id = '10031712', qty, 0),
+        IF(product_id = '10031713', qty, 0),
+        IF(product_id = '10031713D', qty, 0),
+        IF(product_id = '10031777', qty, 0),
+        IF(product_id = '10031777D', qty, 0)
+    FROM `product_receipt` 
+    WHERE product_id IN (
+        '10031707', '10031707D', '10031708', '10031708D', '10031709', '10031709D', 
+        '10031710', '10031710D', '10126756', '10128824', '10128824D', '10135854', 
+        '10031711', '10031711D', '10031712', '10031713', '10031713D', '10031777', '10031777D'
+    ) 
+    $btw $c 
+    AND amount != '0' 
+    ORDER BY receipt_date
+");
+
+
+
+
+
 }elseif($Detailed=='ສັງລວມ'){
 	
-	
+	/*
 	 @$sp0=mysqli_query($con,"
 TRUNCATE TABLE tb_statement
 	          ");
@@ -104,6 +160,10 @@ TRUNCATE TABLE tb_statement
 @$sp15_2=mysqli_query($con,"insert into tb_statement(inv_no, inv_date, inv_amt, HD, HM, HP, HP1, HQ, HQ1, HS, NC, NQ, RP, RP1, RS, TC, TQ, HC)SELECT inv_no,inv_date,inv_amt,HD, HM, HP, HP1, HQ, HQ1, HS, NC, NQ, RP, RP1, RS, TC, TQ, HC from tb_statement_help group by inv_no");	
 	
 @$sp15_3=mysqli_query($con,"TRUNCATE TABLE tb_statement_help");	
+*/
+
+
+
 }
 	
 	if($sp){

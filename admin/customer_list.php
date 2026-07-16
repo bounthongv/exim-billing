@@ -199,10 +199,7 @@ height:20px;
     <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>" readonly></td>
     <input type="hidden" name="id" id="id" >
     
-    <td  align="right">ເພດານໜີ້:</td>
-    <td ><input type="text" class="form-control number" style="text-align:right;" name="debit_amt" id="debit_amt"></td>
-     <td  align="right">ຍອດໜີ້ທັງໝົດ:</td>
-    <td ><h1 id="total_debit_amt"></h1></td>
+   
     
   </tr>
   <tr>
@@ -211,100 +208,91 @@ height:20px;
     <!--<td width="132" align="right">ຊື່ ທະນາຄານ(1):</td>
     <td width="308"><input type="text" class="form-control" name="bank_name1" id="bank_name1"></td>-->
     
-    
-     <td align="right">ເສັ້ນທາງ:</td>
+         <td align="right">latitude:</td>
     <td>  
-	<?PHP 
-	
-	$sql=mysqli_query($con,"select * from routes");
-	
-	?>
-    <select name="route_id" id="route_id" class="form-control" required>
-    	<option value="" >ເລືອກ</option>
-    <?PHP 
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['route_id']?>"><?php echo $f['route_id']?> &nbsp; <?php echo $f['route_name']?></option>
-	<?PHP } ?>
-    </select>
+<input type="text" class="form-control" name="latitude" id="latitude" >
     </td>
-  <td align="right">Up:</td>
-    <td><input type="text" class="form-control" name="up" id="up" ></td>
+
+<td align="right">Sale_Id:</td>
+    <td>  
+<input type="text" class="form-control" name="Sale_Id" id="Sale_Id" >
+    </td>
+
+
   </tr>
   
-  
+
   
   <tr>
-     <td align="right">ປະເພດລາຄາ :</td>
-    <td>  
-	<?PHP 
-	
-	$sql=mysqli_query($con,"select * from customer_type");
-	
-	?>
-    <select name="customer_type" id="customer_type" class="form-control" required>
-    	<option value="" >ເລືອກ</option>
-    <?PHP 
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['ct_id']?>"><?php echo $f['ct_id']?> &nbsp; <?php echo $f['ct_name']?></option>
-	<?PHP } ?>
-    </select>
-    </td>
+     <td align="right">ຊື່ ລູກຄ້າ ລາວ:</td>
+    <td><input type="text" class="form-control" name="outlet_name_la" id="outlet_name_la" ></td>
     
     
-    <td align="right">ປະເພດລູກຄ້າ:</td>
-    <td><input type="text" class="form-control" name="customer_level" id="customer_level" ></td>
+       <td align="right">longitude :</td>
+    <td><input type="text" class="form-control" name="longitude" id="longitude" ></td>
     
-     <td align="right">Brand:</td>
-    <td><input type="text" class="form-control" name="brand" id="brand" ></td>
+
+    <td align="right">Sale_full_name :</td>
+    <td><input type="text" class="form-control" name="Sale_full_name" id="Sale_full_name" ></td>
+
+
   </tr>
   
   <tr>
-    <td align="right">ທີ່ຢູ່:</td>
-    <td><input type="text" class="form-control" name="address" id="address" ></td>
+        <td align="right">ເບີໂທລະສັບ:</td>
+    <td><input type="text" class="form-control" name="phone" id="phone" ></td>
+    
+
+
+<td align="right">business_segment_code:</td>
+ <td><input type="text" class="form-control" name="business_segment_code" id="business_segment_code" ></td>
+
+
+    <td align="right">ເຄຣດິດ :</td>
+    <td>
+ <input type="checkbox" class="form-control" id="credit" name="credit" value="NO">
+  </td>
+
+  </tr>
+  <tr>
    <td align="right">ບ້ານ:</td>
     <td><input type="text" class="form-control" name="village" id="village" ></td>
-     <td align="right">Class:</td>
-    <td><input type="text" class="form-control" name="class" id="class" ></td>
-  </tr>
-  <tr>
-    <td align="right">ເບີໂທລະສັບ:</td>
-    <td><input type="text" class="form-control" name="phone" id="phone" ></td>
-    <td align="right">ເມືອງ:</td>
+
+ <td align="right">channel_code:</td>
+    <td><input type="text" class="form-control" name="channel_code" id="channel_code" ></td>
+
+<td align="right">ວົງເງິນຕິດໜີ້:</td>
+ <td><input type="text" class="form-control" name="Debt_collection" id="Debt_collection" disabled></td>
+
+
+</tr>
+
+ <tr>
+<td align="right">ເມືອງ:</td>
     <td><input type="text" class="form-control" name="district" id="district" ></td>
+
+<td align="right">sub_channel_full:</td>
+    <td><input type="text" class="form-control" name="sub_channel_full" id="sub_channel_full" ></td>
+
+  <td align="right">ຈໍານວນມື້ຕິດໜີ້ :</td>
+    <td><input type="text" class="form-control" name="Number_of_days_overdue" id="Number_of_days_overdue" disabled></td>
+
   </tr>
-  <tr>
-    <td align="right">ແຟັກ:</td>
-    <td><input type="text" class="form-control" name="fax" id="fax"></td>
-   <td align="right">SR:</td>
-    <td>
-    
-    	<?PHP 
-	
-	$sql=mysqli_query($con,"select * from sr_list");
-	
-	?>
-    <select name="sr" id="sr" class="form-control select2" style="width:250px;" >
-    	<option value="" >ເລືອກ</option>
-    <?PHP 
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['sr_id']?>"><?php echo $f['sr_fname']?> &nbsp; <?php echo $f['sr_lname']?></option>
-	<?PHP } ?>
-    </select>
-   <!-- <input type="text" class="form-control" name="sr" id="sr" >--></td>
+
+ <tr>
+<td align="right">ແຂວງ:</td>
+    <td><input type="text" class="form-control" name="Province" id="Province" ></td>
+
+
+<td align="right">classification_code:</td>
+    <td><input type="text" class="form-control" name="classification_code" id="classification_code" ></td>
+
+<td align="right">ວັນທີໝົດອາຍຸສັນຍາ:</td>
+    <td><input type="date" class="form-control" name="Contract_expiration_date" id="Contract_expiration_date" value="" disabled></td>
+
   </tr>
-  <tr>
-    <td align="right">ອີເມວ:</td>
-    <td><input type="text" class="form-control" name="email" id="email" ></td>
-    <td align="right">Segment:</td>
-    <td><input type="text" class="form-control" name="segment" id="segment" ></td>
-  </tr>
-  
-  <tr>
-  	<td align="right">ໜາຍເຫດ:</td>
-    <td><input type="text" class="form-control" name="remark" id="remark" ></td>
-    <td align="right">Grade:</td>
-    <td><input type="text" class="form-control" name="grade" id="grade" ></td>
-  </tr>
+
+
 </table>
 
 
@@ -343,13 +331,10 @@ height:20px;
 <table border="0">
   <tr>
     <td  align="right">ລະຫັດ:</td>
-    <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>" ></td>
+    <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>" readonly></td>
     <input type="hidden" name="id" id="id" >
     
-    <td  align="right">ເພດານໜີ້:</td>
-    <td ><input type="text" class="form-control number" style="text-align:right;" name="debit_amt" id="debit_amt"></td>
-     <td  align="right">ຍອດໜີ້ທັງໝົດ:</td>
-    <td ><h1 id="total_debit_amt"></h1></td>
+   
     
   </tr>
   <tr>
@@ -358,100 +343,91 @@ height:20px;
     <!--<td width="132" align="right">ຊື່ ທະນາຄານ(1):</td>
     <td width="308"><input type="text" class="form-control" name="bank_name1" id="bank_name1"></td>-->
     
-    
-     <td align="right">ເສັ້ນທາງ:</td>
+         <td align="right">latitude:</td>
     <td>  
-	<?PHP 
-	
-	$sql=mysqli_query($con,"select * from routes");
-	
-	?>
-    <select name="route_id" id="route_id" class="form-control" required>
-    	<option value="" >ເລືອກ</option>
-    <?PHP 
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['route_id']?>"><?php echo $f['route_id']?> &nbsp; <?php echo $f['route_name']?></option>
-	<?PHP } ?>
-    </select>
+<input type="text" class="form-control" name="latitude" id="latitude" >
     </td>
-  <td align="right">Up:</td>
-    <td><input type="text" class="form-control" name="up" id="up" ></td>
+
+<td align="right">Sale_Id:</td>
+    <td>  
+<input type="text" class="form-control" name="Sale_Id" id="Sale_Id" >
+    </td>
+
+
   </tr>
   
-  
+
   
   <tr>
-     <td align="right">ປະເພດລາຄາ :</td>
-    <td>  
-	<?PHP 
-	
-	$sql=mysqli_query($con,"select * from customer_type");
-	
-	?>
-    <select name="customer_type" id="customer_type" class="form-control" required>
-    	<option value="" >ເລືອກ</option>
-    <?PHP 
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['ct_id']?>"><?php echo $f['ct_id']?> &nbsp; <?php echo $f['ct_name']?></option>
-	<?PHP } ?>
-    </select>
-    </td>
+     <td align="right">ຊື່ ລູກຄ້າ ລາວ:</td>
+    <td><input type="text" class="form-control" name="outlet_name_la" id="outlet_name_la" ></td>
     
     
-    <td align="right">ປະເພດລູກຄ້າ:</td>
-    <td><input type="text" class="form-control" name="customer_level" id="customer_level" ></td>
+       <td align="right">longitude :</td>
+    <td><input type="text" class="form-control" name="longitude" id="longitude" ></td>
     
-     <td align="right">Brand:</td>
-    <td><input type="text" class="form-control" name="brand" id="brand" ></td>
+
+    <td align="right">Sale_full_name :</td>
+    <td><input type="text" class="form-control" name="Sale_full_name" id="Sale_full_name" ></td>
+
+
   </tr>
   
   <tr>
-    <td align="right">ທີ່ຢູ່:</td>
-    <td><input type="text" class="form-control" name="address" id="address" ></td>
+        <td align="right">ເບີໂທລະສັບ:</td>
+    <td><input type="text" class="form-control" name="phone" id="phone" ></td>
+    
+
+
+<td align="right">business_segment_code:</td>
+ <td><input type="text" class="form-control" name="business_segment_code" id="business_segment_code" ></td>
+
+
+    <td align="right">ເຄຣດິດ :</td>
+    <td>
+ <input type="checkbox" class="form-control" id="credit" name="credit" value="NO">
+  </td>
+
+  </tr>
+  <tr>
    <td align="right">ບ້ານ:</td>
     <td><input type="text" class="form-control" name="village" id="village" ></td>
-     <td align="right">Class:</td>
-    <td><input type="text" class="form-control" name="class" id="class" ></td>
-  </tr>
-  <tr>
-    <td align="right">ເບີໂທລະສັບ:</td>
-    <td><input type="text" class="form-control" name="phone" id="phone" ></td>
-    <td align="right">ເມືອງ:</td>
+
+ <td align="right">channel_code:</td>
+    <td><input type="text" class="form-control" name="channel_code" id="channel_code" ></td>
+
+<td align="right">ວົງເງິນຕິດໜີ້:</td>
+ <td><input type="text" class="form-control" name="Debt_collection" id="Debt_collection" disabled></td>
+
+
+</tr>
+
+ <tr>
+<td align="right">ເມືອງ:</td>
     <td><input type="text" class="form-control" name="district" id="district" ></td>
+
+<td align="right">sub_channel_full:</td>
+    <td><input type="text" class="form-control" name="sub_channel_full" id="sub_channel_full" ></td>
+
+  <td align="right">ຈໍານວນມື້ຕິດໜີ້ :</td>
+    <td><input type="text" class="form-control" name="Number_of_days_overdue" id="Number_of_days_overdue" disabled></td>
+
   </tr>
-  <tr>
-    <td align="right">ແຟັກ:</td>
-    <td><input type="text" class="form-control" name="fax" id="fax"></td>
-   <td align="right">SR:</td>
-    <td>
-    
-    	<?PHP 
-	
-	$sql=mysqli_query($con,"select * from sr_list");
-	
-	?>
-    <select name="sr" id="sr" class="form-control select2" style="width:250px;" >
-    	<option value="" >ເລືອກ</option>
-    <?PHP 
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['sr_id']?>"><?php echo $f['sr_fname']?> &nbsp; <?php echo $f['sr_lname']?></option>
-	<?PHP } ?>
-    </select>
-   <!-- <input type="text" class="form-control" name="sr" id="sr" >--></td>
+
+ <tr>
+<td align="right">ແຂວງ:</td>
+    <td><input type="text" class="form-control" name="Province" id="Province" ></td>
+
+
+<td align="right">classification_code:</td>
+    <td><input type="text" class="form-control" name="classification_code" id="classification_code" ></td>
+
+<td align="right">ວັນທີໝົດອາຍຸສັນຍາ:</td>
+    <td><input type="date" class="form-control" name="Contract_expiration_date" id="Contract_expiration_date" value="" disabled></td>
+
   </tr>
-  <tr>
-    <td align="right">ອີເມວ:</td>
-    <td><input type="text" class="form-control" name="email" id="email" ></td>
-    <td align="right">Segment:</td>
-    <td><input type="text" class="form-control" name="segment" id="segment" ></td>
-  </tr>
-  
-  <tr>
-  	<td align="right">ໜາຍເຫດ:</td>
-    <td><input type="text" class="form-control" name="remark" id="remark" ></td>
-    <td align="right">Grade:</td>
-    <td><input type="text" class="form-control" name="grade" id="grade" ></td>
-  </tr>
+
+
 </table>
 
 
@@ -539,7 +515,139 @@ $(document).on('keyup change', '.s_customer', function(){
 
 <script>
 
+// =========================================================================
+// ส่วนที่ 1: ประกาศตัวแปร และ ฟังก์ชันสำหรับผู้ใช้คลิกเลือกเองหน้าจอ
+// =========================================================================
+const creditCheckbox = document.getElementById('credit');
+const debtInput = document.getElementById('Debt_collection');
+const debtInput_2 = document.getElementById('Number_of_days_overdue');
+const debtInput_3 = document.getElementById('Contract_expiration_date');
+
+// ฟังก์ชันควบคุมเปิด-ปิดช่องทั่วไป (ใช้ตอนผู้ใช้คลิก Checkbox เอง)
+function userToggleCredit() {
+    const isDisabled = !creditCheckbox.checked;
+    debtInput.disabled = isDisabled;
+    debtInput_2.disabled = isDisabled;
+    debtInput_3.disabled = isDisabled;
+    
+    if (!creditCheckbox.checked) {
+        // ถ้าผู้ใช้เคลียร์เครื่องหมายถูกออก ให้ล้างค่าทิ้งทั้งหมด
+        debtInput.value = '';
+        debtInput_2.value = '';
+        debtInput_3.value = '';
+        creditCheckbox.value = 'NO';
+    } else {
+        // ถ้าผู้ใช้ติ๊กถูกเอง ให้ตั้งค่าเริ่มต้นเป็น 0 และใส่วันที่ปัจจุบันให้ทำงานง่ายขึ้น
+        creditCheckbox.value = 'YES';
+        if (debtInput.value === '') debtInput.value = '0';
+        if (debtInput_2.value === '') debtInput_2.value = '0';
+        if (debtInput_3.value === '') {
+            debtInput_3.value = '<?php echo date("Y-m-d"); ?>';
+        }
+    }
+}
+
+// ผูกเหตุการณ์เฉพาะตอนที่ "ผู้ใช้คลิกเปลี่ยนค่าเอง" บนหน้าเว็บ
+creditCheckbox.addEventListener('change', userToggleCredit);
+
+
+// =========================================================================
+// ส่วนที่ 2: ฟังก์ชันเมื่อมีการคลิกปุ่มแก้ไข (.edit_supplier) เพื่อดึงค่าเก่า
+// =========================================================================
+$(document).on('click', '.edit_supplier', function(){
+    
+    var customer_id = $(this).attr("id");   
+    var customer_name = $('#e_customer_name'+customer_id+'').val();
+    var e_outlet_name_la = $('#e_outlet_name_la'+customer_id+'').val();
+    var e_phone_number = $('#e_phone_number'+customer_id+'').val();
+    var e_Province = $('#e_Province'+customer_id+'').val();
+    var e_district = $('#e_district'+customer_id+'').val();
+    var e_village = $('#e_village'+customer_id+'').val();
+    var e_region_LA = $('#e_region_LA'+customer_id+'').val();
+    var e_Province_LA = $('#e_Province_LA'+customer_id+'').val();
+    var e_Village_LA = $('#e_Village_LA'+customer_id+'').val();
+    var e_latitude = $('#e_latitude'+customer_id+'').val();
+    var e_longitude = $('#e_longitude'+customer_id+'').val();
+    var e_business_segment_code = $('#e_business_segment_code'+customer_id+'').val();
+    var e_channel_code = $('#e_channel_code'+customer_id+'').val();
+    var e_sub_channel_full = $('#e_sub_channel_full'+customer_id+'').val();
+    var e_classification_code = $('#e_classification_code'+customer_id+'').val();
+    var e_Sale_Id = $('#e_Sale_Id'+customer_id+'').val();
+    var e_Sale_full_name = $('#e_Sale_full_name'+customer_id+'').val();
+    
+    // ชุดข้อมูลเครดิตเดิมจากตารางฐานข้อมูล
+    var credit = $('#e_credit'+customer_id+'').val();
+    var Debt_collection = $('#e_Debt_collection'+customer_id+'').val();
+    var Number_of_days_overdue = $('#e_Number_of_days_overdue'+customer_id+'').val();
+    var Contract_expiration_date = $('#e_Contract_expiration_date'+customer_id+'').val();
+
+    var id = $('#id'+customer_id+'').val();
+    var remark = $('#e_remark'+customer_id+'').val(); 
+
+    // นำข้อมูลทั่วไปแสดงผลใน Modal 
+    $('#customer_id').val(customer_id);
+    $("#customer_name").val(customer_name);
+    $("#outlet_name_la").val(e_outlet_name_la);
+    $("#phone").val(e_phone_number);
+    $("#Province").val(e_Province);
+    $("#district").val(e_district);
+    $("#village").val(e_village);
+    $("#region_LA").val(e_region_LA);
+    $("#Province_LA").val(e_Province_LA);
+    $("#Village_LA").val(e_Village_LA);
+    $("#latitude").val(e_latitude);
+    $("#longitude").val(e_longitude);
+    $("#business_segment_code").val(e_business_segment_code);
+    $("#channel_code").val(e_channel_code);
+    $("#sub_channel_full").val(e_sub_channel_full);
+    $("#classification_code").val(e_classification_code);
+    $("#Sale_Id").val(e_Sale_Id);
+    $("#Sale_full_name").val(e_Sale_full_name);
+
+    // [แก้ไขจุดบกพร่อง] ตรวจสอบสถานะเครดิตเก่าของลูกค้าเพื่อทำงานแยกขาดจากกัน
+    if (credit === 'YES') {
+        creditCheckbox.checked = true; // ติ๊กถูกที่หน้าฟอร์ม
+        
+        // เปิดช่องกรอกข้อมูลให้พร้อมทำงาน (Disabled = false)
+        debtInput.disabled = false;
+        debtInput_2.disabled = false;
+        debtInput_3.disabled = false;
+        
+        // ยัดข้อมูลจริงจากฐานข้อมูลลงไปตรง ๆ (ข้อมูลจะไม่หายหรือโดนเขียนทับ)
+        $("#credit").val(credit);
+        $("#Debt_collection").val(Debt_collection);
+        $("#Number_of_days_overdue").val(Number_of_days_overdue);
+        $("#Contract_expiration_date").val(Contract_expiration_date);
+    } else {
+        creditCheckbox.checked = false; // เอาติ๊กถูกออกที่หน้าฟอร์ม
+        
+        // ล็อคช่องกรอกข้อมูลไม่ให้ใช้งาน (Disabled = true)
+        debtInput.disabled = true;
+        debtInput_2.disabled = true;
+        debtInput_3.disabled = true;
+        
+        // ล้างข้อมูลเก่าของรายก่อนหน้าทิ้งป้องกันข้อมูลผีตกค้าง
+        $("#credit").val('NO');
+        $("#Debt_collection").val('');
+        $("#Number_of_days_overdue").val('');
+        $("#Contract_expiration_date").val('');
+    }
+    
+    // กำหนดค่าส่วนที่เหลือท้ายฟังก์ชัน
+    $("#remark").val(remark);
+    $("#id").val(id);
+    $("#action").val('Update');
+     
+});
+
+
+
+
 $(document).ready(function(){
+
+
+
+
 
  /*
  load_stock_list();
@@ -560,79 +668,100 @@ function load_stock_list()
 */
 
 /////////////////////////////////////
-	$(document).on('click', '.edit_supplier', function(){
-	
-		var customer_id = $(this).attr("id");		
-		var customer_name = $('#customer_name'+customer_id+'').val();
-		var customer_type = $('#customer_type'+customer_id+'').val();
-		var address = $('#address'+customer_id+'').val();
-		var phone = $('#phone'+customer_id+'').val();
-		var fax = $('#fax'+customer_id+'').val();
-		var email = $('#email'+customer_id+'').val();
-		var customer_level = $('#customer_level'+customer_id+'').val();
-		var route_id = $('#route_id'+customer_id+'').val();
-		
-		var e_village = $('#e_village'+customer_id+'').val();
-		var e_district = $('#e_district'+customer_id+'').val();
-		
-		var e_sr = $('#e_sr'+customer_id+'').val();
-		
-		
-		var e_segment = $('#e_segment'+customer_id+'').val();
-		var e_grade = $('#e_grade'+customer_id+'').val();
-		
-		var e_up = $('#e_up'+customer_id+'').val();
-		var e_brand = $('#e_brand'+customer_id+'').val();
-		var e_class = $('#e_class'+customer_id+'').val();
-		
-		var debit_amt = $('#e_debit_amt'+customer_id+'').val();
-		var total_debit_amt = $('#e_total_debit_amt'+customer_id+'').val();
-		
-		var remark = $('#remark'+customer_id+'').val();
-		var id = $('#id'+customer_id+'').val();
-	
+	// =========================================================================
+// ส่วนที่ 2: โค้ดการทำงานเมื่อมีการคลิกปุ่มแก้ไข (.edit_supplier)
+// =========================================================================
+/*
+$(document).on('click', '.edit_supplier', function(){
+    
+    // 2.1 ดึงรหัสไอดีของแถวที่ถูกกด
+    var customer_id = $(this).attr("id");   
+    
+    // 2.2 ดึงข้อมูลเดิมจาก Element ซ่อน (Hidden fields) ในตารางมาเก็บลงตัวแปร JavaScript
+    var customer_name = $('#e_customer_name'+customer_id+'').val();
+    var e_outlet_name_la = $('#e_outlet_name_la'+customer_id+'').val();
+    var e_phone_number = $('#e_phone_number'+customer_id+'').val();
+    var e_Province = $('#e_Province'+customer_id+'').val();
+    var e_district = $('#e_district'+customer_id+'').val();
+    var e_village = $('#e_village'+customer_id+'').val();
+    var e_region_LA = $('#e_region_LA'+customer_id+'').val();
+    var e_Province_LA = $('#e_Province_LA'+customer_id+'').val();
+    var e_Village_LA = $('#e_Village_LA'+customer_id+'').val();
+    var e_latitude = $('#e_latitude'+customer_id+'').val();
+    var e_longitude = $('#e_longitude'+customer_id+'').val();
+    var e_business_segment_code = $('#e_business_segment_code'+customer_id+'').val();
+    var e_channel_code = $('#e_channel_code'+customer_id+'').val();
+    var e_sub_channel_full = $('#e_sub_channel_full'+customer_id+'').val();
+    var e_classification_code = $('#e_classification_code'+customer_id+'').val();
+    var e_Sale_Id = $('#e_Sale_Id'+customer_id+'').val();
+    var e_Sale_full_name = $('#e_Sale_full_name'+customer_id+'').val();
+    
+    // (ตัวแปรชุดข้อมูลเครดิตเดิม)
+    var credit = $('#e_credit'+customer_id+'').val();
+    var Debt_collection = $('#e_Debt_collection'+customer_id+'').val();
+    var Number_of_days_overdue = $('#e_Number_of_days_overdue'+customer_id+'').val();
+    var Contract_expiration_date = $('#e_Contract_expiration_date'+customer_id+'').val();
 
-	   $('#village').val(e_village);
-	   $('#district').val(e_district);
-	   
-	    $('#sr').val(e_sr).trigger('change');
-	
-		
-	   $('#segment').val(e_segment);
-	   $('#grade').val(e_grade);
-	   
-	    $('#up').val(e_up);
-	   $('#brand').val(e_brand);
-	   $('#class').val(e_class);
-	   
-	   
-	   $('#debit_amt').val(numeral(debit_amt).format('0,000'));
-	   $('#total_debit_amt').html(numeral(total_debit_amt).format('0,000'));
-		
-		
-	   $('#customer_id').val(customer_id);
-	   $("#customer_name").val( customer_name );
-	   $("#address").val( address );
-	   $("#phone").val( phone );
-	   $("#fax").val( fax );
-	   $("#email").val( email );
-	   $("#customer_type").val( customer_type );
-	   $("#customer_level").val( customer_level );
-	    $("#route_id").val( route_id );
-		
-		
-		
-		
-	   $("#remark").val( remark );
-	    $("#id").val( id );
-		 
-			$("#action").val('Update');
-			
-			});	
-			/////////////////////////////////////
-	
+    var id = $('#id'+customer_id+'').val();
+    var remark = $('#e_remark'+customer_id+'').val(); // ป้องกัน Error: ดึงค่า remark มารองรับไว้
 
+
+
+    // 2.3 นำข้อมูลที่ดึงได้ ยัดกลับเข้าไปแสดงผลในฟอร์มของ Modal แก้ไข
+    $('#customer_id').val(customer_id);
+    $("#customer_name").val(customer_name);
+    $("#outlet_name_la").val(e_outlet_name_la);
+    $("#phone").val(e_phone_number);
+    $("#Province").val(e_Province);
+    $("#district").val(e_district);
+    $("#village").val(e_village);
+    $("#region_LA").val(e_region_LA);
+    $("#Province_LA").val(e_Province_LA);
+    $("#Village_LA").val(e_Village_LA);
+    $("#latitude").val(e_latitude);
+    $("#longitude").val(e_longitude);
+    $("#business_segment_code").val(e_business_segment_code);
+    $("#channel_code").val(e_channel_code);
+    $("#sub_channel_full").val(e_sub_channel_full);
+    $("#classification_code").val(e_classification_code);
+    $("#Sale_Id").val(e_Sale_Id);
+    $("#Sale_full_name").val(e_Sale_full_name);
+
+    // 2.4 [หัวใจสำคัญ] จัดการ Logic เครดิตตามข้อมูลเก่าของลูกค้ารายนี้
+    if (credit === 'YES') {
+        creditCheckbox.checked = true; // ติ๊กถูกที่หน้าจอ
+        
+        // ยัดข้อมูลเครดิตเดิมลงฟอร์ม
+        $("#credit").val(credit);
+        $("#Debt_collection").val(Debt_collection);
+        $("#Number_of_days_overdue").val(Number_of_days_overdue);
+        $("#Contract_expiration_date").val(Contract_expiration_date);
+    } else {
+        creditCheckbox.checked = false; // เอาติ๊กถูกออกที่หน้าจอ
+        
+        // ล้างข้อมูลเก่าออกทันที เพื่อป้องกันค่าของลูกค้ารายก่อนหน้าค้างบนหน้าจอ
+        $("#credit").val('NO');
+        $("#Debt_collection").val('');
+        $("#Number_of_days_overdue").val('');
+        $("#Contract_expiration_date").val('');
+    }
+
+    // 2.5 เรียกใช้งานฟังก์ชันควบคุมทันที เพื่อสั่งเปิด/ปิดช่องอินพุตให้สอดคล้องกับค่า credit
+    handleCreditToggle();
+    
+    // 2.6 กำหนดค่าส่วนที่เหลือท้ายฟังก์ชัน
+    $("#remark").val(remark);
+    $("#id").val(id);
+    $("#action").val('Update');
+     
 });
+*/
+
+
+			/////////////////////////////////////
+});
+
+
 	$(document).on('click', '.delete_Id', function(){
 	
 		var Id = $(this).attr("id");

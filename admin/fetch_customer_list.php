@@ -50,22 +50,28 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 			 <thead>
               <tr class="bgtd">
 		<td align="center"><strong>No</strong></td>
-        <td align="center"><strong>Code</strong></td>
-    	<td><strong>ຊື່ ລູກຄ້າ </strong></td>     
-		<td><strong>ປະເພດ</strong></td>       
-        <td><strong>ບ້ານ</strong></td>
-		<td><strong>ເມືອງ</strong></td>
-        <td><strong>Tel</strong></td>
-        <td><strong>sr</strong></td>
-        <td><strong>segment</strong></td>
-		 <td><strong>Grade</strong></td>
-		  <td><strong>UP</strong></td>
-		  <td><strong>Brand</strong></td>
-		  <td><strong>Class</strong></td>
-     
-	  <td><strong>ເສັ້ນທາງ</strong></td> 
-       <td><strong>ເພດານໜີ້</strong></td> 
-        <td><strong>ຍອດໜີ້</strong></td> 
+<td><strong>external_id</strong></td>
+<td><strong>outlet_name</strong></td>
+<td><strong>outlet_name_la</strong></td>
+<td><strong>phone_number</strong></td>
+<td><strong>Province</strong></td>
+<td><strong>district</strong></td>
+<td><strong>village</strong></td>
+<td><strong>region_LA</strong></td>
+<td><strong>Province_LA</strong></td>
+<td><strong>Village_LA</strong></td>
+<td><strong>latitude</strong></td>
+<td><strong>longitude</strong></td>
+<td><strong>business_segment_code</strong></td>
+<td><strong>channel_code</strong></td>
+<td><strong>sub_channel_full</strong></td>
+<td><strong>classification_code</strong></td>
+<td><strong>Sale_Id</strong></td>
+<td><strong>Sale_full_name</strong></td>
+<td><strong>credit</strong></td>
+<td><strong>Debt_collection</strong></td>
+<td><strong>Number_of_days_overdue</strong></td>
+<td><strong>Contract_expiration_date</strong></td>
        
 		 <td><strong>ແກ້ໄຂ</strong></td>
 		  <td><strong>ລົບ</strong></td>
@@ -88,78 +94,108 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 		   
 		   where 1=1 $s_name $p_id $ct $cv $cd order by customers.customer_id $lmr
 		    ";
-
-
-
-
-		  @$sp=mysqli_query($con,"SELECT * FROM
+/*
+"SELECT * FROM
 		  (
 		  SELECT 
 		  external_id as customer_id,
 		  outlet_name as customer_name,
 		  phone_number as phone,
 		  village as village,
-		  district as district
+		  district as district,
+		  credit,
+		  Debt_collection,
+		  Number_of_days_overdue,
+		  Contract_expiration_date
 		  FROM customer_import
 		  ) as customer_import
 		  WHERE 1=1
 		  $p_id $s_name $cv $cd order by customer_id $lmr
+		  "
+*/
+
+		  @$sp=mysqli_query($con,"SELECT customer_import.*,customer_import.external_id as customer_id,
+		  customer_import.outlet_name as customer_name
+			FROM  customers 
+		   left join customer_type on customer_type.ct_id=customers.customer_type
+		   left join routes on customers.route_id=routes.route_id
+		   left join sr_list on customers.sr=sr_list.sr_id
+		   left join customer_import on customers.customer_id=customer_import.external_id
+
+
+		  WHERE 1=1
+		  $p_id $s_name $cv $cd order by external_id $lmr
 		  ");
             while($f=mysqli_fetch_array($sp)){
             $row_list++;
 			?>
 		 		<tr>
 				<td align="center"><?php echo $row_list; ?></td>
-				<td align="center"><?php echo $f['customer_id']; ?></td>
-    	        <td><?php echo  $f['customer_name']; ?></td>     
-				<td><?php echo  $f['ct_name']; ?></td>      	
+				<td align="center"><?php echo $f['external_id']; ?></td>
+    	        <td><?php echo  $f['outlet_name']; ?></td>     
+				<td><?php echo  $f['outlet_name_la']; ?></td>      	
+        		<td><?php echo  $f['phone_number']; ?></td>
+				<td><?php echo  $f['Province']; ?></td>
+        		<td><?php echo  $f['district']; ?></td>
         		<td><?php echo  $f['village']; ?></td>
-				<td><?php echo  $f['district']; ?></td>
-        		<td><?php echo  $f['phone']; ?></td>
-        		<td><?php echo  $f['sr_fname']; ?> <?php echo  $f['sr_lname']; ?></td>
-        		<td><?php echo  $f['segment']; ?></td>
-				<td><?php echo  $f['grade']; ?></td>
-				<td><?php echo  $f['up']; ?></td>
-				<td><?php echo  $f['brand']; ?></td>
-				<td><?php echo  $f['class']; ?></td>
+        		<td><?php echo  $f['region_LA']; ?></td>
+				<td><?php echo  $f['Province_LA']; ?></td>
+				<td><?php echo  $f['Village_LA']; ?></td>
+				<td><?php echo  $f['latitude']; ?></td>
+				<td><?php echo  $f['longitude']; ?></td>
 				
         		
-				<td><?php echo  $f['route_name']; ?></td> 
-        		<td align="right"><?php echo  @number_format($f['debit_amt'],0); ?></td> 
-                <td align="right"><?php echo  @number_format($f['total_debit_amt'],0); ?></td> 
+				<td><?php echo  $f['business_segment_code']; ?></td> 
+				<td><?php echo  $f['channel_code']; ?></td>
+				<td><?php echo  $f['sub_channel_full']; ?></td>
+				<td><?php echo  $f['classification_code']; ?></td>
+				<td><?php echo  $f['Sale_Id']; ?></td>
+
+				<td><?php echo  $f['Sale_full_name']; ?></td> 
+				<td><?php echo  $f['credit']; ?></td>
+				<td><?php echo  $f['Debt_collection']; ?></td>
+				<td><?php echo  $f['Number_of_days_overdue']; ?></td>
+				<td><?php echo  $f['Contract_expiration_date']; ?></td>
+
+
+
+
 				
+			<input type="hidden" name="e_customer_name" id="e_customer_name<?php echo  $f["customer_id"]; ?>"  value="<?php echo  $f["customer_name"]; ?>" />
 				
-				
-				
-				
-			<input type="hidden" name="customer_name" id="customer_name<?php echo  $f["customer_id"]; ?>"  value="<?php echo  $f["customer_name"]; ?>" />
-			<input type="hidden" name="customer_type" id="customer_type<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["customer_type"]; ?>" />
-				
-			<input type="hidden" name="address" id="address<?php echo $f["customer_id"]; ?>"  value="<?php echo  $f["address"]; ?>" />
-			<input type="hidden" name="phone" id="phone<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["phone"]; ?>" />
-			<input type="hidden" name="fax" id="fax<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["fax"]; ?>" />
-			<input type="hidden" name="email" id="email<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["email"]; ?>" />		
-			<input type="hidden" name="remark" id="remark<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["remark"]; ?>" />
-			<input type="hidden" name="customer_level" id="customer_level<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["customer_level"]; ?>" />	
-			 
-			 
-			 <input type="hidden" name="route_id" id="route_id<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["route_id"]; ?>" />
-			 
-			 <input type="hidden" name="e_village" id="e_village<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["village"]; ?>" />
+			 <input type="hidden" name="e_outlet_name_la" id="e_outlet_name_la<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["outlet_name_la"]; ?>" />
+			 <input type="hidden" name="e_phone_number" id="e_phone_number<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["phone_number"]; ?>" />
+			 <input type="hidden" name="e_Province" id="e_Province<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Province"]; ?>" />
 			 <input type="hidden" name="e_district" id="e_district<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["district"]; ?>" />
-			 <input type="hidden" name="e_sr" id="e_sr<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["sr"]; ?>" />
-			 <input type="hidden" name="e_segment" id="e_segment<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["segment"]; ?>" />
-			 <input type="hidden" name="e_grade" id="e_grade<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["grade"]; ?>" />
+
+
+<input type="hidden" name="e_village" id="e_village<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["village"]; ?>" />
+<input type="hidden" name="e_region_LA" id="e_region_LA<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["region_LA"]; ?>" />
+<input type="hidden" name="e_Province_LA" id="e_Province_LA<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Province_LA"]; ?>" />
+<input type="hidden" name="e_Village_LA" id="e_Village_LA<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Village_LA"]; ?>" />
+<input type="hidden" name="e_latitude" id="e_latitude<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["latitude"]; ?>" />
+
+
+<input type="hidden" name="e_longitude" id="e_longitude<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["longitude"]; ?>" />
+<input type="hidden" name="e_business_segment_code" id="e_business_segment_code<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["business_segment_code"]; ?>" />
+<input type="hidden" name="e_channel_code" id="e_channel_code<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["channel_code"]; ?>" />
+<input type="hidden" name="e_sub_channel_full" id="e_sub_channel_full<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["sub_channel_full"]; ?>" />
+<input type="hidden" name="e_classification_code" id="e_classification_code<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["classification_code"]; ?>" />
+
+
+<input type="hidden" name="e_Sale_Id" id="e_Sale_Id<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Sale_Id"]; ?>" />
+<input type="hidden" name="e_Sale_full_name" id="e_Sale_full_name<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Sale_full_name"]; ?>" />
+
+
 			 
-			 <input type="hidden" name="e_up" id="e_up<?php echo $f["up"]; ?>"  value="<?php echo $f["up"]; ?>" />
-			 <input type="hidden" name="e_brand" id="e_brand<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["brand"]; ?>" />
-			 <input type="hidden" name="e_class" id="e_class<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["class"]; ?>" />
-             
-     <input type="hidden" name="e_debit_amt" id="e_debit_amt<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["debit_amt"]; ?>" />
-      <input type="hidden" name="e_total_debit_amt" id="e_total_debit_amt<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["total_debit_amt"]; ?>" />
-			 
-			 
-			 
+	<input type="hidden" name="e_credit" id="e_credit<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["credit"]; ?>" />
+    <input type="hidden" name="e_Debt_collection" id="e_Debt_collection<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Debt_collection"]; ?>" />
+    <input type="hidden" name="e_Number_of_days_overdue" id="e_Number_of_days_overdue<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Number_of_days_overdue"]; ?>" />
+	<input type="hidden" name="e_Contract_expiration_date" id="e_Contract_expiration_date<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Contract_expiration_date"]; ?>" />
+
+
+
+
 			 
 		 <input type="hidden" name="id" id="id<?php echo $f["customer_id"]; ?>"  value="<?php echo  $f["id"]; ?>" />
 				

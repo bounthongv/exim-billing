@@ -182,25 +182,26 @@ echo date_format($date1,"d/m/Y");
 <th align="center">inv_no</th>
 <th align="center">inv_date</th>
 <th align="center">inv_amt</th>
+<th align="center">ລະຫັດ</th>
 <th align="center">ຊື່ລູກຄ້າ</th>
-<th align="center">10031707</th>
+<th align="center">ໄຮເນເກັນເບຍສົດ 20ລ</th>
  
-<th align="center">10031708</th>
+<th align="center">ໄຮເນເກັນແກ້ວໃຫ່ຍ 12x640ມລ</th>
 
-<th align="center">10031709</th>
+<th align="center">ໄຮເນເກັນແກ້ວນ້ອຍ 24x330ມລ</th>
 
-<th align="center">10031710</th>
+<th align="center">ໄຮເນເກັນລັງແກ້ວໃຫ່ຍ 12x640ມລ</th>
 
-<th align="center">10031711</th>
+<th align="center">ໄຮເນເກັນລັງແກ້ວນ້ອຍ 24x330ມລ</th>
 
-<th align="center">10126756</th>
-<th align="center">10128824</th>
+<th align="center">ໄຮເນເກັນປ໋ອງນ້ອຍ 24x320ມລ</th>
+<th align="center">ໄຮເນເກັນ ເບຍສົດ 30ລ</th>
 
-<th align="center">10135854</th>
-<th align="center">10031712</th>
-<th align="center">10031713</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ (ປີໃໝ່ລາວ)</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ</th>
+<th align="center">ນ້ຳຂອງລັງແກ້ວໃຫຍ່ 12x640ມລ</th>
 
-<th align="center">10031777</th>
+<th align="center">ຖັງບັນຈຸ CO2 10Kg</th>
 <th align="center">Total</th>       
   </tr>
   </thead>
@@ -216,8 +217,9 @@ SELECT tb_statement.*,customers.customer_name from tb_statement
         left join customers on customers.customer_id=tb_statement.customer_id
         order by tb_statement.inv_date, tb_statement.inv_no asc
 */
-    	  @$sp=mysqli_query($con,"SELECT tb_statement.* from tb_statement 
-        order by tb_statement.inv_date, tb_statement.inv_no asc");
+    	  @$sp=mysqli_query($con,"SELECT tb_statement.*,customer_import.outlet_name from tb_statement 
+            LEFT JOIN customer_import ON tb_statement.customer_id=customer_import.external_id
+            order by customer_id asc");
 	
            $i=0;
 								  $p=0;
@@ -234,6 +236,7 @@ SELECT tb_statement.*,customers.customer_name from tb_statement
 <td><?php  $date=date_create($s["inv_date"]); echo date_format($date,"d/m/Y");?></td>
 <td><?php if($s["inv_amt"]=='0'){echo "-";}else{echo number_format($s["inv_amt"]);};?></td>
 <td><?php echo $s["customer_id"];?></td>
+<td><?php echo $s["outlet_name"];?></td>
 <td><?= ($s["10031707"]  == '0' || empty($s["10031707"]))  ? "-" : $s["10031707"]; ?></td>
 
 <td><?= ($s["10031708"]  == '0' || empty($s["10031708"]))  ? "-" : $s["10031708"]; ?></td>

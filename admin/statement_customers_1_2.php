@@ -216,26 +216,27 @@ $(document).on('click', '#print', function(){
        
     <tr>
 	    <th align="center">.No</th>
-<th align="center" colspan="2">ຊື່ລູກຄ້າ</th>
+<th align="center">ລະຫັດ</th>
+<th align="center" >ຊື່ລູກຄ້າ</th>
 <th align="center">inv_amt</th>
-<th align="center">10031707</th>
+<th align="center">ໄຮເນເກັນເບຍສົດ 20ລ</th>
  
-<th align="center">10031708</th>
+<th align="center">ໄຮເນເກັນແກ້ວໃຫ່ຍ 12x640ມລ</th>
 
-<th align="center">10031709</th>
+<th align="center">ໄຮເນເກັນແກ້ວນ້ອຍ 24x330ມລ</th>
 
-<th align="center">10031710</th>
+<th align="center">ໄຮເນເກັນລັງແກ້ວໃຫ່ຍ 12x640ມລ</th>
 
-<th align="center">10031711</th>
+<th align="center">ໄຮເນເກັນລັງແກ້ວນ້ອຍ 24x330ມລ</th>
 
-<th align="center">10126756</th>
-<th align="center">10128824</th>
+<th align="center">ໄຮເນເກັນປ໋ອງນ້ອຍ 24x320ມລ</th>
+<th align="center">ໄຮເນເກັນ ເບຍສົດ 30ລ</th>
 
-<th align="center">10135854</th>
-<th align="center">10031712</th>
-<th align="center">10031713</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ (ປີໃໝ່ລາວ)</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ</th>
+<th align="center">ນ້ຳຂອງລັງແກ້ວໃຫຍ່ 12x640ມລ</th>
 
-<th align="center">10031777</th>
+<th align="center">ຖັງບັນຈຸ CO2 10Kg</th>
 <th align="center">Total</th>                
                     
                 </tr>
@@ -245,10 +246,9 @@ $(document).on('click', '#print', function(){
          
      <?php
         
-    	  @$sp=mysqli_query($con,"SELECT tb_statement_customers.* from tb_statement_customers 
-order by 
-customer_id
-asc
+    	  @$sp=mysqli_query($con,"SELECT tb_statement_customers.*,customer_import.outlet_name from tb_statement_customers 
+            LEFT JOIN customer_import ON tb_statement_customers.customer_id=customer_import.external_id
+            order by customer_id asc
 
 /*
         (`tb_statement_customers`.`10031707` +

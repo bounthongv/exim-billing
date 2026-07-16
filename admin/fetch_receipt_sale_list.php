@@ -29,13 +29,17 @@
 			 
 			 }
 		  
-		  @$sp=mysqli_query($con,"
-		select product_sale.*
+		  @$sp=mysqli_query($con,"SELECT product_sale.*
 		,sum(product_sale.last_amount) as t_total_amt
 		,count(product_sale.total_qty) as total_item
-		,sum(product_sale.total_amt) as total_amt 
-		,product_sale.qty_p
 		 
+	/*	,sum(product_sale.total_amt) as total_amt */
+
+,sum(product_sale.qty*price) as total_amt
+,sum(product_sale.qty) as qty_p 
+
+/* ,product_sale.qty_p */
+
 		from 	  
    (SELECT product_sale.*,sum(product_sale.amount) as total_amt,sum(product_sale.qty) as total_qty
    ,stocks.stock_name,products.Product_Name,products.size,products.Unit 

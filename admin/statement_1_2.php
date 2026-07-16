@@ -3,8 +3,15 @@ include("init.php");
 
 
 	$customer_id = mysqli_real_escape_string($con,$_GET['customer_id']);
+
+/*
 $sql_h = mysqli_query($con," SELECT * FROM customers where customer_id='$customer_id'");
               $ff = mysqli_fetch_array($sql_h);
+*/
+
+$sql_h = mysqli_query($con," SELECT * FROM customer_import where external_id='$customer_id'");
+              $ff = mysqli_fetch_array($sql_h);
+
 
 $from_date = mysqli_real_escape_string($con,$_GET['from_date']);
 $to_date = mysqli_real_escape_string($con,$_GET['to_date']);
@@ -177,14 +184,27 @@ $(document).on('click', '#print', function(){
              
          <td>ລູກຄ້າ<br>
       <select name="customer_id" id="customer_id" class="form-control select2">   
-       	<option value="<?php if($ff['customer_id']==''){echo "";}else{echo $ff['customer_id'];}?>">
-       	<?php if($ff['customer_id']==''){echo "ທັງຫມົດ";}else{echo $ff['customer_id'];?>&nbsp;<?php echo $ff['customer_name'];}?></option>
+       	<option value="<?php if($ff['external_id']==''){echo "";}else{echo $ff['external_id'];}?>">
+       	<?php if($ff['external_id']==''){echo "ທັງຫມົດ";}else{echo $ff['external_id'];?>&nbsp;<?php echo $ff['outlet_name'];}?></option>
        	<option value="">ທັງຫມົດ</option>
+
+
+ <?PHP $sql=mysqli_query($con,"select * from customer_import");	
+	while($f = mysqli_fetch_array($sql)){?>
+		<option value="<?php echo $f['external_id'];?>"><?php echo $f['external_id'];?>&nbsp;<?php echo $f['outlet_name'];?></option>
+	<?PHP } ?>
+
+
     <?PHP 
+
+/*
 	 $sql=mysqli_query($con,"select * from customers");	
 	while($f = mysqli_fetch_array($sql)){?>
 		<option value="<?php echo $f['customer_id'];?>"><?php echo $f['customer_id'];?>&nbsp;<?php echo $f['customer_name'];?></option>
-	<?PHP } ?>
+	<?PHP } 
+  */
+  
+  ?>
     </select> </td>   
                
                 
@@ -219,25 +239,27 @@ $(document).on('click', '#print', function(){
 	    <th align="center">inv_no</th>
 <th align="center">inv_date</th>
 <th align="center">inv_amt</th>
+<th align="center">ລະຫັດ</th>
 <th align="center">ຊື່ລູກຄ້າ</th>
-<th align="center">10031707</th>
+
+<th align="center">ໄຮເນເກັນເບຍສົດ 20ລ</th>
  
-<th align="center">10031708</th>
+<th align="center">ໄຮເນເກັນແກ້ວໃຫ່ຍ 12x640ມລ</th>
 
-<th align="center">10031709</th>
+<th align="center">ໄຮເນເກັນແກ້ວນ້ອຍ 24x330ມລ</th>
 
-<th align="center">10031710</th>
+<th align="center">ໄຮເນເກັນລັງແກ້ວໃຫ່ຍ 12x640ມລ</th>
 
-<th align="center">10031711</th>
+<th align="center">ໄຮເນເກັນລັງແກ້ວນ້ອຍ 24x330ມລ</th>
 
-<th align="center">10126756</th>
-<th align="center">10128824</th>
+<th align="center">ໄຮເນເກັນປ໋ອງນ້ອຍ 24x320ມລ</th>
+<th align="center">ໄຮເນເກັນ ເບຍສົດ 30ລ</th>
 
-<th align="center">10135854</th>
-<th align="center">10031712</th>
-<th align="center">10031713</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ (ປີໃໝ່ລາວ)</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ</th>
+<th align="center">ນ້ຳຂອງລັງແກ້ວໃຫຍ່ 12x640ມລ</th>
 
-<th align="center">10031777</th>
+<th align="center">ຖັງບັນຈຸ CO2 10Kg</th>
 
 <th align="center">Total</th>                
                     
@@ -252,9 +274,9 @@ SELECT tb_statement.*,customers.customer_name from tb_statement
         left join customers on customers.customer_id=tb_statement.customer_id
         order by tb_statement.inv_date, tb_statement.inv_no asc
 */
-    	  @$sp=mysqli_query($con,"SELECT tb_statement.* from tb_statement 
-        order by customer_id asc");
-	
+    	  @$sp=mysqli_query($con,"SELECT tb_statement.*,customer_import.outlet_name from tb_statement 
+            LEFT JOIN customer_import ON tb_statement.customer_id=customer_import.external_id
+            order by customer_id asc");
            $i=0;
 	  
             while($s=mysqli_fetch_array($sp)){
@@ -265,7 +287,10 @@ SELECT tb_statement.*,customers.customer_name from tb_statement
 <td><?php echo $s["inv_no"];?></td>
 <td><?php $date=date_create($s["inv_date"]); echo date_format($date,"d/m/Y");?></td>
 <td><?php if($s["inv_amt"]=='0'){echo "-";}else{echo number_format($s["inv_amt"]);};?></td>
+
 <td><?php echo $s["customer_id"];?></td>
+<td><?php echo $s["outlet_name"];?></td>
+
 <td><?= ($s["10031707"]  == '0' || empty($s["10031707"]))  ? "-" : $s["10031707"]; ?></td>
 
 <td><?= ($s["10031708"]  == '0' || empty($s["10031708"]))  ? "-" : $s["10031708"]; ?></td>
@@ -347,7 +372,7 @@ $sum = $s["10031707"] +
   <tr style="background-color:#99ff99;">	
 <td colspan="3" align="center"><strong>ລວມ</strong></td>
 <td colspan="1"><?php if($t_inv_amt=='0'){echo "-";}else{echo @number_format($t_inv_amt);}?></td>
-<td colspan="1"></td>
+<td colspan="2"></td>
 <td colspan="1"><?= (empty($t_10031707)  || $t_10031707  == 0) ? "-" : number_format($t_10031707); ?></td>
 
 <td colspan="1"><?= (empty($t_10031708)  || $t_10031708  == 0) ? "-" : number_format($t_10031708); ?></td>

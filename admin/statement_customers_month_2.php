@@ -227,7 +227,7 @@ if($year!=''){
     </td>   
 
 
-                <?
+                <?php
                /*  
        <td>ລະອຽດ ຫຼື ສັງລວມ<br>
       <select name="Detailed" id="Detailed" class="form-control"> 
@@ -241,7 +241,7 @@ if($year!=''){
      <option value="ສັງລວມ">ສັງລວມ</option>	 
        	 <?php } ?>
     </select> </td>            
-                    */?>
+                    */ ?>
  <td><br><button type="submit" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>      
 
 

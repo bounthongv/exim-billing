@@ -23,13 +23,24 @@ for ($i = 0; $i < count($_POST['item_list']); $i++) {
 		       $sale_id=mysqli_real_escape_string($con,$_POST['item_list'][$i]);
 			  
        
+/*
+"SELECT product_sale.* from (    
+      SELECT product_sale.sale_id,product_sale.sale_date,
 
-           $sql_d=mysqli_query($con,"
-		  select product_sale.* from (    
-      SELECT product_sale.sale_id,product_sale.sale_date,sum(product_sale.amount) as total_amt,sum(product_sale.qty) as total_qty
+
+	  sum(product_sale.amount) as total_amt,
+	  sum(product_sale.qty) as total_qty
+
+
    ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
-	  ,customers.customer_name
-    ,product_sale.total,product_sale.payment,product_sale.remain
+	  ,customers.customer_name,
+
+    ,product_sale.total,
+	
+	
+sum(product_sale.price*product_sale.qty) as total,
+
+	product_sale.payment,product_sale.remain
 			
 
 		   FROM  product_sale 
@@ -39,10 +50,45 @@ for ($i = 0; $i < count($_POST['item_list']); $i++) {
 	   
        where 1=1   and  product_sale.sale_id='$sale_id'  and (product_sale.status is null or product_sale.status='' 
        or product_sale.status='0')
-         group by product_sale.sale_id,product_sale.product_id 
+         group by product_sale.sale_id,product_sale.product_id
+
        ) as product_sale
           
 	   group by product_sale.sale_id order by product_sale.sale_id desc
+			    ";
+*/
+
+
+
+
+
+
+           $sql_d=mysqli_query($con,"SELECT product_sale.sale_id,product_sale.sale_date,
+
+
+	  sum(product_sale.amount) as total_amt,
+	  sum(product_sale.qty) as total_qty
+
+
+   ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
+	  ,customers.customer_name,
+/*
+    ,product_sale.total,
+	*/
+	
+sum(product_sale.price*product_sale.qty) as total,
+
+	product_sale.payment,product_sale.remain
+			
+
+		   FROM  product_sale 
+		   left join products on products.Product_ID=product_sale.product_id
+       left join stocks on stocks.stock_id=product_sale.stock_id
+	     left join customers on customers.customer_id=product_sale.customer_id
+	   
+       where 1=1   and  product_sale.sale_id='$sale_id'  and (product_sale.status is null or product_sale.status='' 
+       or product_sale.status='0')
+         group by product_sale.sale_id
 			    ");		 
 		$f=mysqli_fetch_array($sql_d);
 	       

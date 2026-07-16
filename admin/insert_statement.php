@@ -7,26 +7,30 @@ $customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
 $Detailed = mysqli_real_escape_string($con,$_POST['Detailed']);
 
 		   
-    /*
+    
            if($from_date=='' or $to_date==''){$btw="";} 
 		  else{ $btw="and (sale_date>='$from_date' and sale_date<='$to_date')";}
-	*/
-
- if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+	
 
 /*
+ if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+*/
+
+
+
+
 if($customer_id==''){$c="";}
 else{
 	$c="and customer_id='$customer_id'";
 }
-*/
 
+/*
 if($customer_id==''){$c="";}
 else{
-	$c="and Outlet_Name='$customer_id'";
+	$c="and Outlet_External_ID='$customer_id'";
 }
-
+*/
 
 if($Detailed=='ລະອຽດ'){
 
@@ -86,12 +90,17 @@ while ($row = mysqli_fetch_assoc($product_query)) {
     $pid = $row['Product_ID'];
     $product_ids[] = "'$pid'";
     $dynamic_columns[] = "`$pid`";
+/*
     $dynamic_cases[] = "    CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END";
-    
+    */
+
+    $dynamic_cases[] = "    CASE WHEN product_id = '$pid' THEN qty ELSE 0 END";
+
+
     // 🔥 [จุดสำคัญ] ถ้าในตาราง products มีรหัสนี้ แต่ใน tb_statement ยังไม่มีคอลัมน์นี้...
     // ระบบจะสั่ง ALTER TABLE เพิ่มคอลัมน์ให้ทันทีอัตโนมัติ!
     if (!in_array($pid, $existing_columns)) {
-        $alter_sql = "ALTER TABLE `tb_statement` ADD `$pid` VARCHAR(255) COLLATE utf8mb3_unicode_ci DEFAULT '0'";
+        $alter_sql = "ALTER TABLE `tb_statement` ADD `$pid` VARCHAR(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL";
         mysqli_query($con, $alter_sql);
     }
 }
@@ -103,6 +112,8 @@ $str_in_products = implode(", ", $product_ids);
 
 // 3. รันคำสั่ง INSERT INTO แบบ Dynamic 
 // (คอลัมน์จะเพิ่ม-ลด และเปลี่ยนหน้าตาตามตาราง products ณ วินาทีนั้นทันที)
+
+/*
 $query = "INSERT INTO tb_statement (
     inv_no, inv_date, inv_amt, customer_id, 
     $str_columns
@@ -117,9 +128,25 @@ FROM `sale_import`
 WHERE Product_SKU IN ($str_in_products)
   $btw $c 
   AND Total != '0' 
-ORDER BY Outlet_External_ID, Invoiced_Date ASC;
+ORDER BY Outlet_External_ID, Invoiced_Date ASC
 ";
-
+*/
+$query = "INSERT INTO tb_statement (
+    inv_no, inv_date, inv_amt, customer_id, 
+    $str_columns
+)
+SELECT 
+    sale_id, 
+    sale_date, 
+    total, 
+    customer_id,
+\n$str_cases
+FROM `product_sale` 
+WHERE product_id IN ($str_in_products)
+  $btw $c 
+  AND total != '0' 
+ORDER BY customer_id, sale_date ASC
+";
 
 // 3. สั่งรันคิวรี
 @$sp = mysqli_query($con, $query);
@@ -308,9 +335,15 @@ while ($row = mysqli_fetch_assoc($product_query)) {
     $product_ids[] = "'$pid'";
     $dynamic_columns[] = "`$pid`";
     
+
     // ใช้ SUM ครอบ CASE WHEN เพื่อยุบยอดรวมแยกตามลูกค้า (customer_id) ตั้งแต่คิวรีแรก
+    /*
     $dynamic_sum_cases[] = "    SUM(CASE WHEN Product_SKU = '$pid' THEN Quantity ELSE 0 END) AS `$pid`";
-    
+    */
+    $dynamic_sum_cases[] = "    SUM(CASE WHEN product_id = '$pid' THEN qty ELSE 0 END) AS `$pid`";
+
+
+
     // ตรวจสอบและสร้างคอลัมน์ใน DB อัตโนมัติหากยังไม่มีรองรับ
     if (!in_array($pid, $existing_columns)) {
         $alter_sql = "ALTER TABLE `tb_statement` ADD `$pid` VARCHAR(255) COLLATE utf8mb3_unicode_ci DEFAULT '0'";
@@ -325,6 +358,10 @@ $str_in_products = implode(", ", $product_ids);
 
 // 3. ล้างข้อมูลเก่าในตารางหลักรอไว้
 mysqli_query($con, "TRUNCATE TABLE tb_statement");
+
+
+
+/*
 
 // 4. ใช้ Query ตัวเดียวที่ทำทั้งการกางคอลัมน์และ SUM ยุบยอดกลุ่มรายลูกค้าในเวลาเดียวกัน
 $query = "INSERT INTO tb_statement (
@@ -344,6 +381,26 @@ WHERE Product_SKU IN ($str_in_products)
 GROUP BY Outlet_External_ID
 ORDER BY Outlet_External_ID ASC;
 ";
+*/
+$query = "INSERT INTO tb_statement (
+    inv_no, inv_date, inv_amt, customer_id, 
+    $str_columns
+)
+SELECT 
+    MAX(sale_id) as sale_id, -- เลือกเลขที่บิลล่าสุดหรือใช้ MAX ยุบกลุ่ม
+    MAX(sale_date) as sale_date, 
+    SUM(total) as inv_amt,          -- รวมยอดเงินบิลทั้งหมดของลูกค้ารายนี้
+    customer_id,
+\n$str_sum_cases
+FROM `product_sale` 
+WHERE product_id IN ($str_in_products)
+  $btw $c 
+  AND total != '0' 
+GROUP BY customer_id
+ORDER BY customer_id ASC;
+";
+
+
 
 // รันคำสั่งคำนวณและบันทึกผล
 @$sp = mysqli_query($con, $query);

@@ -202,21 +202,24 @@ $(document).on('click', '#print', function(){
 	    <th align="center">inv_no</th>
 <th align="center">inv_date</th>
 <th align="center">inv_amt</th>
-<th align="center">HD</th>
-<th align="center">HM</th>
-<th align="center">HP</th>
-<th align="center">HP1</th>
-<th align="center">HQ</th>
-<th align="center">HQ1</th>
-<th align="center">HS</th>
-<th align="center">NC</th>
-<th align="center">NQ</th>
-<th align="center">RP</th>
-<th align="center">RP1</th>
-<th align="center">RS</th>
-<th align="center">TC</th>
-<th align="center">TQ</th>
-<th align="center">HC</th>
+<th align="center">ໄຮເນເກັນເບຍສົດ 20ລ</th>
+ 
+<th align="center">ໄຮເນເກັນແກ້ວໃຫ່ຍ 12x640ມລ</th>
+
+<th align="center">ໄຮເນເກັນແກ້ວນ້ອຍ 24x330ມລ</th>
+
+<th align="center">ໄຮເນເກັນລັງແກ້ວໃຫ່ຍ 12x640ມລ</th>
+
+<th align="center">ໄຮເນເກັນລັງແກ້ວນ້ອຍ 24x330ມລ</th>
+
+<th align="center">ໄຮເນເກັນປ໋ອງນ້ອຍ 24x320ມລ</th>
+<th align="center">ໄຮເນເກັນ ເບຍສົດ 30ລ</th>
+
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ (ປີໃໝ່ລາວ)</th>
+<th align="center">ນ້ຳຂອງກະປ໋ອງ 24x330ມລ</th>
+<th align="center">ນ້ຳຂອງລັງແກ້ວໃຫຍ່ 12x640ມລ</th>
+
+<th align="center">ຖັງບັນຈຸ CO2 10Kg</th>
 
       
                 
@@ -241,61 +244,71 @@ $(document).on('click', '#print', function(){
 <td><?php echo $s["inv_no"];?></td>
 <td><?php $date=date_create($s["inv_date"]); echo date_format($date,"d/m/Y");?></td>
 <td><?php if($s["inv_amt"]=='0'){echo "-";}else{echo number_format($s["inv_amt"]);};?></td>
-<td><?php if($s["HD"]=='0'){echo "-";}else{echo $s["HD"];};?></td>
-<td><?php if($s["HM"]=='0'){echo "-";}else{echo $s["HM"];};?></td>
-<td><?php if($s["HP"]=='0'){echo "-";}else{echo $s["HP"];};?></td>
-<td><?php if($s["HP1"]=='0'){echo "-";}else{echo $s["HP1"];};?></td>
-<td><?php if($s["HQ"]=='0'){echo "-";}else{echo $s["HQ"];};?></td>
-<td><?php if($s["HQ1"]=='0'){echo "-";}else{echo $s["HQ1"];};?></td>
-<td><?php if($s["HS"]=='0'){echo "-";}else{echo $s["HS"];};?></td>
-<td><?php if($s["NC"]=='0'){echo "-";}else{echo $s["NC"];};?></td>
-<td><?php if($s["NQ"]=='0'){echo "-";}else{echo $s["NQ"];};?></td>
-<td><?php if($s["RP"]=='0'){echo "-";}else{echo $s["RP"];};?></td>
-<td><?php if($s["RP1"]=='0'){echo "-";}else{echo $s["RP1"];};?></td>
-<td><?php if($s["RS"]=='0'){echo "-";}else{echo $s["RS"];};?></td>
-<td><?php if($s["TC"]=='0'){echo "-";}else{echo $s["TC"];};?></td>
-<td><?php if($s["TQ"]=='0'){echo "-";}else{echo $s["TQ"];};?></td>
-<td><?php if($s["CO2"]=='0'){echo "-";}else{echo $s["HC"];};?></td>
+<td><?= ($s["10031707"]  == '0' || empty($s["10031707"]))  ? "-" : $s["10031707"]; ?></td>
+
+<td><?= ($s["10031708"]  == '0' || empty($s["10031708"]))  ? "-" : $s["10031708"]; ?></td>
+
+<td><?= ($s["10031709"]  == '0' || empty($s["10031709"]))  ? "-" : $s["10031709"]; ?></td>
+
+<td><?= ($s["10031710"]  == '0' || empty($s["10031710"]))  ? "-" : $s["10031710"]; ?></td>
+
+<td><?= ($s["10031711"]  == '0' || empty($s["10031711"]))  ? "-" : $s["10031711"]; ?></td>
+
+<td><?= ($s["10126756"]  == '0' || empty($s["10126756"]))  ? "-" : $s["10126756"]; ?></td>
+<td><?= ($s["10128824"]  == '0' || empty($s["10128824"]))  ? "-" : $s["10128824"]; ?></td>
+
+<td><?= ($s["10135854"]  == '0' || empty($s["10135854"]))  ? "-" : $s["10135854"]; ?></td>
+<td><?= ($s["10031712"]  == '0' || empty($s["10031712"]))  ? "-" : $s["10031712"]; ?></td>
+<td><?= ($s["10031713"]  == '0' || empty($s["10031713"]))  ? "-" : $s["10031713"]; ?></td>
+
+<td><?= ($s["10031777"]  == '0' || empty($s["10031777"]))  ? "-" : $s["10031777"]; ?></td>
  
 	</tr>
 
       <?php
 	@$t_inv_amt+=$s["inv_amt"];	
-	@$t_HD+=$s["HD"];
-@$t_HM+=$s["HM"];
-@$t_HP+=$s["HP"];
-@$t_HP1+=$s["HP1"];
-@$t_HQ+=$s["HQ"];
-@$t_HQ1+=$s["HQ1"];
-@$t_HS+=$s["HS"];
-@$t_NC+=$s["NC"];
-@$t_NQ+=$s["NQ"];
-@$t_RP+=$s["RP"];
-@$t_RP1+=$s["RP1"];
-@$t_RS+=$s["RS"];
-@$t_TC+=$s["TC"];
-@$t_TQ+=$s["TQ"];
-@$t_HC+=$s["HC"];	  
+	@$t_10031707  += $s["10031707"];
+@$t_10031707D += $s["10031707D"]; 
+@$t_10031708  += $s["10031708"];
+@$t_10031708D += $s["10031708D"];
+@$t_10031709  += $s["10031709"];
+@$t_10031709D += $s["10031709D"];
+@$t_10031710  += $s["10031710"];
+@$t_10031710D += $s["10031710D"];
+@$t_10031711  += $s["10031711"];
+@$t_10031711D += $s["10031711D"];
+@$t_10126756  += $s["10126756"];
+@$t_10128824  += $s["10128824"];
+@$t_10128824D += $s["10128824D"];
+@$t_10135854  += $s["10135854"];
+@$t_10031712  += $s["10031712"];
+@$t_10031713  += $s["10031713"];
+@$t_10031713D += $s["10031713D"];
+@$t_10031777  += $s["10031777"];
+@$t_10031777D += $s["10031777D"]; 
 		  
 		  } ?>
   <tr style="background-color:#99ff99;">	
 <td colspan="3" align="center"><strong>ລວມ</strong></td>
 <td colspan="1"><?php if($t_inv_amt=='0'){echo "-";}else{echo @number_format($t_inv_amt);}?></td>
-<td colspan="1"><?php if($t_HD=='0'){echo "-";}else{echo @number_format($t_HD);}?></td>
-<td colspan="1"><?php if($t_HM=='0'){echo "-";}else{echo @number_format($t_HM);}?></td>
-<td colspan="1"><?php if($t_HP=='0'){echo "-";}else{echo @number_format($t_HP);}?></td>
-<td colspan="1"><?php if($t_HP1=='0'){echo "-";}else{echo @number_format($t_HP1);}?></td>
-<td colspan="1"><?php if($t_HQ=='0'){echo "-";}else{echo @number_format($t_HQ);}?></td>
-<td colspan="1"><?php if($t_HQ1=='0'){echo "-";}else{echo @number_format($t_HQ1);}?></td>
-<td colspan="1"><?php if($t_HS=='0'){echo "-";}else{echo @number_format($t_HS);}?></td>
-<td colspan="1"><?php if($t_NC=='0'){echo "-";}else{echo @number_format($t_NC);}?></td>
-<td colspan="1"><?php if($t_NQ=='0'){echo "-";}else{echo @number_format($t_NQ);}?></td>
-<td colspan="1"><?php if($t_RP=='0'){echo "-";}else{echo @number_format($t_RP);}?></td>
-<td colspan="1"><?php if($t_RP1=='0'){echo "-";}else{echo @number_format($t_RP1);}?></td>
-<td colspan="1"><?php if($t_RS=='0'){echo "-";}else{echo @number_format($t_RS);}?></td>
-<td colspan="1"><?php if($t_TC=='0'){echo "-";}else{echo @number_format($t_TC);}?></td>
-<td colspan="1"><?php if($t_TQ=='0'){echo "-";}else{echo @number_format($t_TQ);}?></td>
-<td colspan="1"><?php if($t_CO2=='0'){echo "-";}else{echo @number_format($t_HC);}?></td>
+<td colspan="1"><?= (empty($t_10031707)  || $t_10031707  == 0) ? "-" : number_format($t_10031707); ?></td>
+
+<td colspan="1"><?= (empty($t_10031708)  || $t_10031708  == 0) ? "-" : number_format($t_10031708); ?></td>
+
+<td colspan="1"><?= (empty($t_10031709)  || $t_10031709  == 0) ? "-" : number_format($t_10031709); ?></td>
+
+<td colspan="1"><?= (empty($t_10031710)  || $t_10031710  == 0) ? "-" : number_format($t_10031710); ?></td>
+
+<td colspan="1"><?= (empty($t_10031711)  || $t_10031711  == 0) ? "-" : number_format($t_10031711); ?></td>
+
+<td colspan="1"><?= (empty($t_10126756)  || $t_10126756  == 0) ? "-" : number_format($t_10126756); ?></td>
+<td colspan="1"><?= (empty($t_10128824)  || $t_10128824  == 0) ? "-" : number_format($t_10128824); ?></td>
+
+<td colspan="1"><?= (empty($t_10135854)  || $t_10135854  == 0) ? "-" : number_format($t_10135854); ?></td>
+<td colspan="1"><?= (empty($t_10031712)  || $t_10031712  == 0) ? "-" : number_format($t_10031712); ?></td>
+<td colspan="1"><?= (empty($t_10031713)  || $t_10031713  == 0) ? "-" : number_format($t_10031713); ?></td>
+
+<td colspan="1"><?= (empty($t_10031777)  || $t_10031777  == 0) ? "-" : number_format($t_10031777); ?></td>
 
 </tr>	
 </table>  

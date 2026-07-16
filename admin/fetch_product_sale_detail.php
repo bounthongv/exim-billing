@@ -7,10 +7,13 @@
  
         @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
 		 if($sale_id==''){$r_id="";}  else{ 
-			/*
+			
 		 $r_id="and  product_sale.sale_id='$sale_id' ";
-		 */
+		 
+/*
 		$r_id="and Invoice_Number='$sale_id' ";
+*/
+
 		 }
 		
 		
@@ -35,15 +38,32 @@
 	   
 	          ";
 
-		  
-		  @$sp=mysqli_query($con,"SELECT  
+
+"SELECT  
 		  Invoice_Number as sale_id,
 		  DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
 		  Product_SKU as Product_ID,
 		  Product_Name,
 		  Quantity as qty,
 		  Price as price
-		  FROM sale_import where 1=1 $r_id group by Product_SKU,Item_ID");
+		  FROM sale_import where 1=1 $r_id group by Product_SKU,Item_ID";
+
+		  
+		  @$sp=mysqli_query($con,"SELECT product_sale.* ,sum(product_sale.qty) as qty,sum(product_sale.amount) as amount,
+	   stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
+			,tb_groups.Group_Name,products.version
+		   FROM  product_sale 
+	
+	left join products on products.Product_ID=product_sale.product_id
+    left join stocks on stocks.stock_id=product_sale.stock_id
+	 
+    left join tb_groups on tb_groups.Group_ID=products.group_id 
+       
+       
+     where 1=1 $r_id and product_sale.qty>0 group by product_sale.product_id limit 50
+         
+	   
+	          ");
 		  if($sp){
           ?>
           

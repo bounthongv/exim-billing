@@ -12,7 +12,33 @@ include("init.php");
 
 	$customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
 	$customer_name = mysqli_real_escape_string($con,$_POST['customer_name']);
-	
+$outlet_name_la = mysqli_real_escape_string($con,$_POST['outlet_name_la']);
+
+
+$phone = mysqli_real_escape_string($con,$_POST['phone']);
+
+$village = mysqli_real_escape_string($con,$_POST['village']);
+$district = mysqli_real_escape_string($con,$_POST['district']);
+$Province = mysqli_real_escape_string($con,$_POST['Province']);
+
+
+$latitude = mysqli_real_escape_string($con,$_POST['latitude']);
+$longitude = mysqli_real_escape_string($con,$_POST['longitude']);
+
+
+$business_segment_code = mysqli_real_escape_string($con,$_POST['business_segment_code']);
+$channel_code = mysqli_real_escape_string($con,$_POST['channel_code']);
+$sub_channel_full = mysqli_real_escape_string($con,$_POST['sub_channel_full']);
+$classification_code = mysqli_real_escape_string($con,$_POST['classification_code']);
+
+$Sale_Id = mysqli_real_escape_string($con,$_POST['Sale_Id']);
+$Sale_full_name = mysqli_real_escape_string($con,$_POST['Sale_full_name']);
+
+
+ $action = mysqli_real_escape_string($con,$_POST['action']);
+ $id = mysqli_real_escape_string($con,$_POST['id']);
+
+/*	
 	$address = mysqli_real_escape_string($con,$_POST['address']);
 	$phone = mysqli_real_escape_string($con,$_POST['phone']);
 	$fax = mysqli_real_escape_string($con,$_POST['fax']);
@@ -40,6 +66,29 @@ include("init.php");
 	$debit_amt = mysqli_real_escape_string($con,$_POST['debit_amt']);
 	 $debit_amt = filter_var($debit_amt,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	
+*/
+
+
+
+
+$credit = mysqli_real_escape_string($con,$_POST['credit']);
+
+
+$Debt_collection = mysqli_real_escape_string($con,$_POST['Debt_collection']);
+$Debt_collection = filter_var($Debt_collection,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+
+$Number_of_days_overdue = mysqli_real_escape_string($con,$_POST['Number_of_days_overdue']);
+$Number_of_days_overdue = filter_var($Number_of_days_overdue,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+
+$Contract_expiration_date = mysqli_real_escape_string($con,$_POST['Contract_expiration_date']);
+$Contract_expiration_date = filter_var($Contract_expiration_date,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+
+
+
+
 if($action=="Add"){
 
 $sql=mysqli_query($con,"INSERT INTO customers(customer_id,customer_name,address, phone, fax, email, customer_type, remark,customer_level,route_id
@@ -97,21 +146,73 @@ else{$rid=",route_id='$route_id'";}
 if($id=="")
 {
 
-
+/*
 $sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
  WHERE customer_id='$customer_id' ");		
+*/
+
+$sql=mysqli_query($con,"UPDATE customer_import SET 
+outlet_name='$customer_name',
+outlet_name_la='$outlet_name_la',
+phone_number='$phone',
+village='$village',
+district='$district',
+Province='$Province',
+latitude='$latitude',
+longitude='$longitude',
+business_segment_code='$business_segment_code',
+channel_code='$channel_code',
+sub_channel_full='$sub_channel_full',
+classification_code='$classification_code',
+Sale_Id='$Sale_Id',
+Sale_full_name='$Sale_full_name',
+`credit`='$credit',
+`Debt_collection`='$Debt_collection',
+`Number_of_days_overdue`='$Number_of_days_overdue',
+`Contract_expiration_date`='$Contract_expiration_date'
+ WHERE external_id='$customer_id' ");
+
 	
 }
 else{
 
+
+/*
 	$sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
  WHERE id='$id' ");	
-	
+	*/
+
+
+$sql=mysqli_query($con,"UPDATE customer_import SET 
+outlet_name='$customer_name',
+outlet_name_la='$outlet_name_la',
+phone_number='$phone',
+village='$village',
+district='$district',
+Province='$Province',
+latitude='$latitude',
+longitude='$longitude',
+business_segment_code='$business_segment_code',
+channel_code='$channel_code',
+sub_channel_full='$sub_channel_full',
+classification_code='$classification_code',
+Sale_Id='$Sale_Id',
+Sale_full_name='$Sale_full_name',
+`credit`='$credit',
+`Debt_collection`='$Debt_collection',
+`Number_of_days_overdue`='$Number_of_days_overdue',
+`Contract_expiration_date`='$Contract_expiration_date'
+ WHERE external_id='$customer_id' ");
+
+
+
+
 }
+
 
 	if($sql){
 		
@@ -123,6 +224,8 @@ else{
 			else {
 		$_SESSION['smg']="<div class='alert alert-danger'><strong>ບໍ່ສຳເລັດ!</strong>Update </div>";
 		header("location:customer_list.php");
+
+
 	}
 	
 	
