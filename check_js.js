@@ -16,9 +16,7 @@ $("#passs").keyup(function() {
 function query_user(){
 	
 	var username = $('#username').val();
-  var office = $('#office').find(":selected").val();
 
-alert(office);
 
         $.ajax({
             type:'POST',
