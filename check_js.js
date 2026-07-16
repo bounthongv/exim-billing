@@ -22,7 +22,7 @@ function query_user(){
             type:'POST',
             url:'query_user.php',
           //  dataType: "json",
-            data:{username:username,office:office},
+            data:{username:username},
             success:function(data){
 				
                // if(data.status == 'ok'){
