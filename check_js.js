@@ -16,13 +16,15 @@ $("#passs").keyup(function() {
 function query_user(){
 	
 	var username = $('#username').val();
+  var office = $('#office').find(":selected").val();
 
+alert(office);
 
         $.ajax({
             type:'POST',
             url:'query_user.php',
           //  dataType: "json",
-            data:{username:username},
+            data:{username:username,office:office},
             success:function(data){
 				
                // if(data.status == 'ok'){
