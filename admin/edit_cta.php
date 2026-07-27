@@ -39,8 +39,8 @@ $s=mysqli_fetch_array($result);
     <br>
     <h3 align="center">ໃບສັນຍາການໃຫ້ເຄດິດຮ້ານຄ້າ</h3><br>
 
-
-<form action="update_cta.php" method="post">
+<!-- ເພີ່ມ enctype="multipart/form-data" ເພື່ອໃຫ້ upload ໄຟລ໌ໄດ້ -->
+<form action="update_cta.php" method="post" enctype="multipart/form-data">
 
   <div class="col-sm-10"><a href="Credit_Term_Agreement.php">
 <button type="button" name="close" class="btn btn-danger"
@@ -132,9 +132,16 @@ $s=mysqli_fetch_array($result);
 </tr>
 
 <tr>
-    <td>ຈຳນວນວັນ ຫລື ຈຳນວນໃບບິນ:</td>
+    <td>ຈຳນວນວັນ:</td>
     <td><input type="text" class="form-control" style="width:500px" name="Number_days" id="Number_days" value="<?php echo $s['Number_days']; ?>"></td>
 </tr>
+
+
+<tr>
+    <td>ຈຳນວນໃບບິນ:</td>
+    <td><input type="text" class="form-control" style="width:500px" name="Number_bills" id="Number_bills" value="<?php echo $s['Number_bills']; ?>"></td>
+</tr>
+
 
 <tr>
     <td>ວົງເງິນເຄດິດສູງສຸດ Limited Amount:</td>
@@ -146,12 +153,30 @@ $s=mysqli_fetch_array($result);
     <td><input type="text" class="form-control" style="width:500px" name="Validation_Date" id="Validation_Date" value="<?php echo $s['Validation_Date']; ?>"></td>
 </tr>
 
+<!-- ==== ສ່ວນທີ່ເພີ່ມ: Upload ໄຟລ໌ສັນຍາທີ່ເຊັນແລ້ວ (ຮູບພາບ/PDF) ==== -->
+<tr>
+    <td>ໄຟລ໌ສັນຍາທີ່ເຊັນແລ້ວ (ຮູບພາບ/PDF):</td>
+    <td>
+        <input type="file" class="form-control" style="width:500px" name="File_CTA" id="File_CTA" accept=".jpg,.jpeg,.png,.pdf">
+        <?php if (!empty($s['File_CTA'])): ?>
+            <br>
+            <small>ໄຟລ໌ປັດຈຸບັນ:
+                <a href="pdf_file/<?php echo $s['File_CTA']; ?>" target="_blank" style="color: black;">
+    <?php echo $s['File_CTA']; ?>
+                    </a>
+            </small>
+        <?php endif; ?>
+    </td>
+</tr>
+<!-- ==== ຈົບສ່ວນທີ່ເພີ່ມ ==== -->
 
 </table>
 
 
 
 </form>
+
+
 
 </div>
 

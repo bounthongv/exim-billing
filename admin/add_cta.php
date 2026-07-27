@@ -26,7 +26,7 @@ include("init.php");
 
 <?php  include("header.php"); 
 
-    $year_id=date('y');
+    $year_id=date('Y');
       $id_y=date('Y');
 	  $id_m=date('m');
 /*
@@ -34,27 +34,28 @@ $sql_max=mysqli_query($con,"SELECT IFNULL(max(SUBSTRING(number_cta,4, 6)),0) as 
  from tb_cta where year(Date)='$id_y'");
 */
 
-$sql_max=mysqli_query($con,"SELECT IFNULL(max(number_cta),0) as m_id 
+$sql_max=mysqli_query($con,"SELECT
+ IFNULL(max(SUBSTRING(number_cta,5, 6)),0) as m_id
  from tb_cta where year(Date)='$id_y'");
 
 @$row_max=mysqli_fetch_array($sql_max);
 
  $max_id=$row_max['m_id'];
- $id1='00000'.'1';  
+ $id1=$year_id.'00000'.'1';  
  
  $id2=$max_id+1;
  
  $sale_id='';
 if($max_id<1){    $sale_id=$id1;     }
 
- else if($max_id<9){  $sale_id='00000'.$id2;}  // 0000.2-0000.9
- else if($max_id<99){  $sale_id='0000'.$id2;}  // 000.2-000.9
+ else if($max_id<9){  $sale_id=$year_id.'00000'.$id2;}  // 0000.2-0000.9
+ else if($max_id<99){  $sale_id=$year_id.'0000'.$id2;}  // 000.2-000.9
 
- else if($max_id<999){  $sale_id='000'.$id2;} // 0010-00999  //   0100 - 999
+ else if($max_id<999){  $sale_id=$year_id.'000'.$id2;} // 0010-00999  //   0100 - 999
 
-  else if($max_id<9999){  $sale_id='00'.$id2;} 
-  else if($max_id<99999){  $sale_id='0'.$id2;}
-   else if($max_id<999999){  $sale_id=$id2;}
+  else if($max_id<9999){  $sale_id=$year_id.'00'.$id2;} 
+  else if($max_id<99999){  $sale_id=$year_id.'0'.$id2;}
+   else if($max_id<999999){  $sale_id=$year_id.$id2;}
 
 
 
@@ -153,9 +154,15 @@ if($max_id<1){    $sale_id=$id1;     }
 </tr>
 
 <tr>
-    <td>ຈຳນວນວັນ ຫລື ຈຳນວນໃບບິນ:</td>
+    <td>ຈຳນວນວັນ:</td>
     <td><input type="text" class="form-control" style="width:500px" name="Number_days" id="Number_days" value=""></td>
 </tr>
+
+<tr>
+    <td>ຈຳນວນໃບບິນ:</td>
+    <td><input type="text" class="form-control" style="width:500px" name="Number_bills" id="Number_bills" value=""></td>
+</tr>
+
 
 <tr>
     <td>ວົງເງິນເຄດິດສູງສຸດ Limited Amount:</td>

@@ -141,7 +141,9 @@ function fmt_date($date) {
     <tr>
         <td class="label-cell">ລະຫັດລູກຄ້າ Customer ID (OMNI) ຫລື ເລກທີ່ສັນຍາ</td>
         <td class="value-cell"><?php echo htmlspecialchars($row['Customer_ID']); ?></td>
-        <td class="label-cell" style="width:15%;">ວັນທີ່ເຊັນສັນຍາ Date</td>
+</tr>
+ <tr>
+        <td class="label-cell" style="width:15%;">ວັນທີເຊັນສັນຍາ Date</td>
         <td class="value-cell"><?php echo fmt_date($row['Date']); ?></td>
     </tr>
     <tr class="checkbox-row">
@@ -164,12 +166,18 @@ function fmt_date($date) {
         <td colspan="2" style="text-align:center; font-weight:bold;">ເງື່ອນໄຂການໃຫ້ເຄດິດ Credit Terms</td>
     </tr>
     <tr>
-        <td class="label-cell">ຈຳນວນວັນ ຫລື ຈຳນວນໃບບິນ</td>
+        <td class="label-cell">ຈຳນວນວັນ</td>
         <td class="value-cell"><?php echo htmlspecialchars($row['Number_days']); ?></td>
     </tr>
+
+<tr>
+        <td class="label-cell">ຈຳນວນໃບບິນ</td>
+        <td class="value-cell"><?php echo htmlspecialchars($row['Number_bills']); ?></td>
+    </tr>
+
     <tr>
         <td class="label-cell">ວົງເງິນເຄດິດສູງສຸດ Limited Amount</td>
-        <td class="value-cell"><?php echo htmlspecialchars($row['Limited_Amount']); ?></td>
+        <td class="value-cell"><?php echo htmlspecialchars(@number_format($row["Limited_Amount"],0)); ?></td>
     </tr>
     <tr>
         <td class="label-cell">ກຳນົດມື້ໝົດສັນຍາ Validation Date</td>

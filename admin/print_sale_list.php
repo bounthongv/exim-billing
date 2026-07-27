@@ -77,47 +77,48 @@ font-size:10px;
 </style>
 <?php
     
-   /*
+   
        @$stock_id= mysqli_real_escape_string($con,$_GET['stock_id']);	
          if($stock_id==''){$s_id="";}  else{ $s_id="and product_sale.stock_id='$stock_id'  ";}
-		 */
+		 
        
 
-
+/*
      @$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);
 			if($customer_id==''){$c_id="";} 
 		   else{ $c_id="and (sale_import.Outlet_External_ID like '$customer_id%' or sale_import.Outlet_External_ID like '%$customer_id%')";}
-			
+			*/
 
 
 		  
 		   @$from_date= mysqli_real_escape_string($con,$_GET['from_date']);	
 		   @$to_date= mysqli_real_escape_string($con,$_GET['to_date']);	
 		   $today=date("Y-m-d");
+/*
     if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
-
+*/
  
+
+    if($from_date=='' or $to_date==''){$btw="and product_sale.sale_date='$today'";} 
+		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
+
 
 
        @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);	
-    /*	   
+    	   
 		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id='$sale_id' "; $btw=""; }
-		 */
-		 if($sale_id==''){$r_id="";}  else{ $r_id="and Invoice_Number='$sale_id' ";  }
 		 
+/*
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and Invoice_Number='$sale_id' ";  }
+		 */
 
 		  @$sale_order_id= mysqli_real_escape_string($con,$_POST['sale_order_id']);		   
 		 if($sale_order_id==''){$sr_id="";}  else{ $sr_id="and  Display_ID='$sale_order_id' ";  }
 		 
 
-
-
-
-
-		  /*
-		  @$sp=mysqli_query($con,"
-  		select product_sale.*,sum(product_sale.total_amt) as t_total_amt,count(product_sale.total_qty) as total_item
+/*
+echo "SELECT product_sale.*,sum(product_sale.total_amt) as t_total_amt,count(product_sale.total_qty) as total_item
 		,sum(product_sale.amount) as total_amt,sum(product_sale.discount) as total_dis  from 	  
    (SELECT product_sale.*,sum(product_sale.amount) as total_amt,sum(product_sale.qty) as total_qty
    ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
@@ -132,12 +133,48 @@ font-size:10px;
          group by product_sale.sale_id,product_sale.product_id ) 
        as product_sale
           
-	   group by product_sale.sale_id order by product_sale.sale_id 
-	  
-	   
-	          ");
+	   group by product_sale.sale_id order by product_sale.sale_id";
 */
 
+		  
+		  @$sp=mysqli_query($con,"SELECT product_sale.*
+		,sum(product_sale.last_amount) as t_total_amt
+		,count(product_sale.total_qty) as total_item
+	/*	,sum(product_sale.total_amt) as total_amt */
+
+,sum(product_sale.qty*price) as total_amt
+,sum(product_sale.qty) as qty_p 
+
+/* ,product_sale.qty_p */
+		from 	  
+   (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
+   ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
+			,tb_groups.Group_Name,products.version,customers.customer_name
+			,sr_list.sr_fname,sr_list.sr_lname
+	,custoemr_sale_order.qty_p
+		   FROM  product_sale 
+		   left join products on products.Product_ID=product_sale.product_id
+       left join stocks on stocks.stock_id=product_sale.stock_id
+	   left join customers on customers.customer_id=product_sale.customer_id
+       left join tb_groups on tb_groups.Group_ID=products.group_id
+       left join sr_list on product_sale.sr=sr_list.sr_id
+	   
+	  LEFT JOIN (select sum(product_sale.qty) as qty_p ,product_sale.sale_id
+           from  product_sale 
+     	          left join products on products.Product_ID=product_sale.product_id
+		          left join tb_groups on tb_groups.Group_ID=products.group_id
+              where 1=1 and tb_groups.Group_ID='001' $btw $r_id $sr_id group by sale_id) as custoemr_sale_order 
+      
+		             on product_sale.sale_id=custoemr_sale_order.sale_id
+					 
+	   
+       where 1=1  $btw $r_id $sr_id
+        ) 
+       as product_sale
+          
+	   group by product_sale.sale_id order by product_sale.sale_id desc");
+
+/*
 	  @$sp=mysqli_query($con,"SELECT 
       Invoice_Number as sale_id,
       Display_ID as order_id,
@@ -151,7 +188,7 @@ font-size:10px;
       $btw $r_id $c_id $sr_id
       group by Invoice_Number order by DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) desc
       ");
-
+*/
 
 
 		  if($sp){

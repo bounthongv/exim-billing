@@ -49,7 +49,7 @@
 		  FROM sale_import where 1=1 $r_id group by Product_SKU,Item_ID";
 
 		  
-		  @$sp=mysqli_query($con,"SELECT product_sale.* ,sum(product_sale.qty) as qty,sum(product_sale.amount) as amount,
+		  @$sp=mysqli_query($con,"SELECT product_sale.* ,(product_sale.qty) as qty,(product_sale.amount) as amount,
 	   stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
 			,tb_groups.Group_Name,products.version
 		   FROM  product_sale 
@@ -60,10 +60,8 @@
     left join tb_groups on tb_groups.Group_ID=products.group_id 
        
        
-     where 1=1 $r_id and product_sale.qty>0 group by product_sale.product_id limit 50
-         
-	   
-	          ");
+     where 1=1 $r_id and product_sale.qty>0");
+
 		  if($sp){
           ?>
           
@@ -90,7 +88,7 @@
             	<tr>
 			    <td><?= $s["sale_id"];?></td>
 				<td><?= $s["sale_date"];?></td>
-				<td><?= $s["Product_ID"];?></td>
+				<td><?= $s["product_id"];?></td>
             	<td><?=$s["Product_Name"];?></td>
                 
             	<td align="center"><?= $s["Unit"];?></td>				

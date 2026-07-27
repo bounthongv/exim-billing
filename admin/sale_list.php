@@ -359,6 +359,8 @@ $(document).on('click', '#print', function(){
               
                 <select  name="customer_id" id="customer_id" class="form-control select2" style="width:210px;"  >
               <option value="">ທັງຫມົດ</option>
+
+              <option value="New_customer">ລູກຄ້າໃໝ່</option>
          <?php 
 		 $sql_c=mysqli_query($con,"SELECT * FROM
 		  (

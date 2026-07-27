@@ -25,16 +25,32 @@
 		  elseif($price_type=='001'){ $pp=",products.s1_price  as price";}
 		  elseif($price_type=='002'){ $pp=",products.s2_price  as price";}
 		  elseif($price_type=='003'){ $pp=",products.s3_price  as price";}
-
+/*
  if($price_type==''){ echo "<h3>ກະລຸນາເລືອກລູກຄ້າກ່ອນ</h3>";}
  else{		  
-		  @$sp=mysqli_query($con," SELECT products.* $pp ,tb_stock_product.stock_qty
+*/
+/*
+echo " SELECT products.* $pp ,tb_stock_product.stock_qty
  
 		             
 		   FROM  products
         left join (select sum(qty) as stock_qty,product_id from stock_product where 1=1 $s_id  group by product_id ) as tb_stock_product
   on products.Product_ID=tb_stock_product.product_id
               where    1=1  $g_id order by products.Group_ID,products.Product_ID 
+		    ";
+*/
+
+
+
+		  @$sp=mysqli_query($con," SELECT products.* $pp ,tb_stock_product.stock_qty
+ 
+		             
+		   FROM  products
+        left join (select sum(qty) as stock_qty,product_id from stock_product where 1=1 $s_id  group by product_id ) as tb_stock_product
+  on products.Product_ID=tb_stock_product.product_id
+              where    1=1  $g_id 
+			  and products.Group_ID='003'
+			  order by products.Group_ID,products.Product_ID 
 		    ");
 		  if($sp){
           ?>
@@ -114,9 +130,9 @@
 		  
           } 
 		 
-
+/*
  }
-
+*/
 
 
  

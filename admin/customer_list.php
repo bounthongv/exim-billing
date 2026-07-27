@@ -293,6 +293,11 @@ height:20px;
   </tr>
 
 
+<tr>
+  <td align="right">ຈຳນວນໃບບິນ:</td>
+    <td><input type="text" class="form-control" name="bill" id="bill" value="0" ></td>
+</tr>
+
 </table>
 
 
@@ -426,6 +431,11 @@ height:20px;
     <td><input type="date" class="form-control" name="Contract_expiration_date" id="Contract_expiration_date" value="" disabled></td>
 
   </tr>
+
+<tr>
+  <td align="right">ຈຳນວນໃບບິນ:</td>
+    <td><input type="text" class="form-control" name="bill" id="bill" value="0" ></td>
+</tr>
 
 
 </table>
@@ -580,6 +590,9 @@ $(document).on('click', '.edit_supplier', function(){
     var Debt_collection = $('#e_Debt_collection'+customer_id+'').val();
     var Number_of_days_overdue = $('#e_Number_of_days_overdue'+customer_id+'').val();
     var Contract_expiration_date = $('#e_Contract_expiration_date'+customer_id+'').val();
+var bill = $('#e_bill'+customer_id+'').val();
+
+
 
     var id = $('#id'+customer_id+'').val();
     var remark = $('#e_remark'+customer_id+'').val(); 
@@ -603,6 +616,9 @@ $(document).on('click', '.edit_supplier', function(){
     $("#classification_code").val(e_classification_code);
     $("#Sale_Id").val(e_Sale_Id);
     $("#Sale_full_name").val(e_Sale_full_name);
+
+$("#bill").val(bill);
+
 
     // [แก้ไขจุดบกพร่อง] ตรวจสอบสถานะเครดิตเก่าของลูกค้าเพื่อทำงานแยกขาดจากกัน
     if (credit === 'YES') {

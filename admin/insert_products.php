@@ -90,8 +90,30 @@ $sad=mysqli_query($con,"INSERT INTO products (Group_ID,Product_Name,Product_Name
 }
 else if($action=="Update"){
 	
-	   $sad=mysqli_query($con,"Update  products set Product_ID='$Product_ID',Group_ID='$Group_ID',Product_Name='$Product_Name',Product_Name_EN='$Product_Name_EN'
-	   ,Bar_Code='$Bar_Code',Unit='$Unit',QTY='$Quantity',Price='$Price',ups='$ups',size='$size',version='$version',s1_price='$s1_price',s2_price='$s2_price',s3_price='$s3_price',s4_price='$s4_price',`function`='$function',seven_eleven='$seven_eleven',crate_price='$crate_price' $img_up $img_up_url  where Id='$Id'  ");
+
+	   $sad=mysqli_query($con,"UPDATE
+    `products`
+SET
+    Product_ID = '$Product_ID',
+    Group_ID = '$Group_ID',
+    Product_Name = '$Product_Name',
+    Product_Name_EN = '$Product_Name_EN',
+    Bar_Code = '$Bar_Code',
+    Unit = '$Unit',
+    QTY = '$Quantity',
+    Price = '$Price',
+    ups = '$ups',
+    `size` = '$size',
+    `VERSION` = '$version',
+    s1_price = '$s1_price',
+    s2_price = '$s2_price',
+    s3_price = '$s3_price',
+    s4_price = '$s4_price',
+    `function` = '$function',
+    seven_eleven = '$seven_eleven',
+    crate_price = '$crate_price' $img_up $img_up_url
+WHERE
+    Id = '$Id'");
 
 
 	if($sad){

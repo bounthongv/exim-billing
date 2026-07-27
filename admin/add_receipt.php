@@ -332,6 +332,7 @@ th{ text-align:center;}
 
 	} 
 	
+	
   function load_customer()
 	{
 		
@@ -349,6 +350,7 @@ th{ text-align:center;}
 			}
 		});
 	}
+
 
  function load_order_receipt(){
 			$.ajax({
@@ -447,9 +449,13 @@ $(document).ready(function(){
 
   $(document).on('keyup', '.s_customer', function(){
 	
+
+
 	    var customer_id = $('#s_customer_id').val();
 	    var customer_name = $('#s_customer_name').val();
 		var action = "show";
+
+
 	//	alert(gr_id);
 			$.ajax({
 				url:"fetch_customer_receipt.php",

@@ -72,7 +72,7 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 <td><strong>Debt_collection</strong></td>
 <td><strong>Number_of_days_overdue</strong></td>
 <td><strong>Contract_expiration_date</strong></td>
-       
+       <td><strong>bill</strong></td>
 		 <td><strong>ແກ້ໄຂ</strong></td>
 		  <td><strong>ລົບ</strong></td>
               </tr>
@@ -115,7 +115,8 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 */
 
 		  @$sp=mysqli_query($con,"SELECT customer_import.*,customer_import.external_id as customer_id,
-		  customer_import.outlet_name as customer_name
+		  customer_import.outlet_name as customer_name,
+		  customers.bill
 			FROM  customers 
 		   left join customer_type on customer_type.ct_id=customers.customer_type
 		   left join routes on customers.route_id=routes.route_id
@@ -157,7 +158,7 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 				<td><?php echo  $f['Number_of_days_overdue']; ?></td>
 				<td><?php echo  $f['Contract_expiration_date']; ?></td>
 
-
+<td><?php echo  $f['bill']; ?></td>
 
 
 				
@@ -194,6 +195,7 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 	<input type="hidden" name="e_Contract_expiration_date" id="e_Contract_expiration_date<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["Contract_expiration_date"]; ?>" />
 
 
+	<input type="hidden" name="e_bill" id="e_bill<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["bill"]; ?>" />
 
 
 			 

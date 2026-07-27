@@ -125,8 +125,8 @@ Email: sale@exim.la,  www.exim.la</td>
               
                  
      where products.Group_ID='001' ");*/
-	 $sql = mysqli_query($con," select product_sale.* ,sum(product_sale.qty) as t_qty
-	 ,sum(product_sale.amount) as t_amount
+	 $sql = mysqli_query($con,"SELECT product_sale.* ,(product_sale.qty) as t_qty
+	 ,(product_sale.amount) as t_amount
 	 ,products.Product_ID,products.Product_Name,customers.customer_name 
 				 ,stocks.stock_name,customers.address,customers.phone,products.Unit
 				 from product_sale 
@@ -134,12 +134,15 @@ Email: sale@exim.la,  www.exim.la</td>
          LEFT JOIN customers ON customers.customer_id = product_sale.customer_id
 		  LEFT JOIN stocks ON product_sale.stock_id = stocks.stock_id 
          
-		 where product_sale.sale_id='$sale_id'  group by product_sale.product_id");
+		 where product_sale.sale_id='$sale_id'  ");
 		 
 		 $e=0;
                         while($f = mysqli_fetch_array($sql)){
                        // $total = $f['qty_iv'] * $f['prices'];
-                        @$amount = $amount + $f["t_amount"];
+                        //@$amount = $amount + $f["t_amount"];
+@$amount += $f["t_qty"]*$f["price"];
+
+
 						@$total_last_amount += $f['last_amount'];
 						$e++;
                         ?>
@@ -149,7 +152,15 @@ Email: sale@exim.la,  www.exim.la</td>
     <td align="center"><?php echo $f["Unit"]; ?></td>
     <td align="center"><?php echo $f["t_qty"]; ?></td>
      <td align="right"><?php  if($f["price"]=='0'){ echo "Free"; }else{ echo @number_format($f["price"],0); } ?></td>
+
+<?php /*
     <td align="right"><?php  if($f["t_amount"]=='0'){ echo "Free"; }else{ echo @number_format($f["t_amount"],0); } ?></td>
+*/ ?>
+    <td align="right"><?php  echo @number_format($f["t_qty"]*$f["price"],0);?></td>
+
+
+
+
   </tr>
   <?php } ?>
   <tr>

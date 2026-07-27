@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $outlet_sales_channels  = mysqli_real_escape_string($con, $_POST['Outlet_Sales_Channels']);
     $route_number           = mysqli_real_escape_string($con, $_POST['Route_Number']);
     $number_days            = mysqli_real_escape_string($con, $_POST['Number_days']);
+    $Number_bills            = mysqli_real_escape_string($con, $_POST['Number_bills']);
     $limited_amount         = mysqli_real_escape_string($con, $_POST['Limited_Amount']);
     $validation_date        = mysqli_real_escape_string($con, $_POST['Validation_Date']);
 
@@ -33,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO tb_cta
             (number_cta,Outlet_Name, Address, Contact_Person, Tel, Customer_ID, Date,
              Outlet_Sales_Channels, MONT_SEP, MOFT_SEP, TONT, TOFT_SPP_SLP,
-             Route_Number, Number_days, Limited_Amount, Validation_Date)
+             Route_Number, Number_days,Number_bills, Limited_Amount, Validation_Date)
             VALUES
             ('$number_cta','$outlet_name', '$address', '$contact_person', '$tel', '$customer_id', $date_value,
              '$outlet_sales_channels', $mont, $moft, $tont, $toft,
-             '$route_number', '$number_days', '$limited_amount', '$validation_date')";
+             '$route_number', '$number_days','$Number_bills', '$limited_amount', '$validation_date')";
 
     if (mysqli_query($con, $sql)) {
 

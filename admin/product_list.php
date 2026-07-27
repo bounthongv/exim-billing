@@ -451,7 +451,7 @@ reader.readAsDataURL(input.files[0]);
     <td>
     
     <input type="text" class="form-control" name="Product_ID" id="Product_ID"  placeholder="Product ID" >
-    <?php/*
+    <?php /*
     <div id="ddd">
        </div>
     */ ?>

@@ -112,7 +112,12 @@ th{ text-align:center;}
 
 	<div class="form-group row">
     <div class="col-sm-10">
-    <a href="index.php"><button type="button" name="close"  class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
+
+
+  <button type="button" name="close" class="btn btn-danger" onclick="history.back()">
+    <i class="fa fa-times"></i>&nbsp;ປິດ
+</button>
+
      <a href="cart_edit_sale_customer_order.php?action=empty" ><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
       
       <button type="submit" name="save"  class="btn btn-primary" ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>

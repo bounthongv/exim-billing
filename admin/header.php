@@ -20,7 +20,8 @@
 		   
 		  $user_id=$_SESSION['user_id'];
 		   
-    $sp=mysqli_query($con,"      select menu_user.user_id,menu_list.header_id,  menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
+/*
+    $sp=mysqli_query($con,"SELECT menu_user.user_id,menu_list.header_id,  menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
      
      from menu_user
      
@@ -28,30 +29,64 @@
      left join menu_header on menu_list.header_id=menu_header.header_id   
            
       where menu_user.user_id='$user_id' and menu_user.status='on'
-	   group by  menu_list.header_id order by  menu_list.header_id    ");	  
-	while($s=mysqli_fetch_array($sp)){		
-	
+	  and menu_header.header_id!='06'
+	  and menu_header.header_id!='05'
+	  and menu_header.header_id!='03'
+	  and menu_header.header_id!='04'
+	   group by  menu_list.header_id order by  menu_list.header_id");	
+	   */
+	   $sp=mysqli_query($con,"SELECT menu_header.header_id,menu_header.header_name
+     
+     from menu_header
+     
+      where 
+	  	  menu_header.header_id!='06'
+	  and menu_header.header_id!='05'
+	  and menu_header.header_id!='03'
+	  and menu_header.header_id!='04'
+	  order by  menu_header.header_id");
+
+	while($s=mysqli_fetch_array($sp)){
+	$header_id=$s['header_id'];
 	
 	     ?>             
                
                 
                <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"aria-expanded="false"><?php echo $s['header_name']; ?></a>
         
         
-       
+<?php
+
+if($header_id=='00'){
+		
+?>
+
+<a class="nav-link" href="<?php if($header_id=='00'){echo 'check.php';}else{echo '#';}; ?>"><?php echo $s['header_name']; ?></a>
+
+	<?php	
+	}else{
+
+?>
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"aria-expanded="false"><?php echo $s['header_name']; ?></a>
+
 		<div class="dropdown-menu" aria-labelledby="navbarDropdown"> 
-                             <?php
+       <?php
 							
+	
 		   
-    $spd=mysqli_query($con," select menu_user.user_id,menu_list.header_id, menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
+    $spd=mysqli_query($con,"SELECT menu_user.user_id,menu_list.header_id, menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
      
      from menu_user
      
      left join menu_list on menu_user.list_id=menu_list.list_id
      left join menu_header on menu_list.header_id=menu_header.header_id   
            
-      where menu_user.user_id='$user_id'   and  menu_header.header_id='$s[header_id]' and menu_user.status='on'    ");	  
+      where menu_user.user_id='$user_id'   and  menu_header.header_id='$s[header_id]' and menu_user.status='on' 
+	  and menu_header.header_id!='06'
+	  and menu_header.header_id!='05'
+	  and menu_header.header_id!='03'
+	  and menu_header.header_id!='04'
+	  ");	  
 	while($sd=mysqli_fetch_array($spd)){		
 	     ?>                              
 								<a class="dropdown-item" href="<?php echo $sd['link']; ?>"><?php echo $sd['list_name']; ?></a>
@@ -62,7 +97,10 @@
                             
                             
 				</li>
-               <?php } ?> 
+               <?php } 
+			   
+	}
+			 ?> 
                 
                 
                 

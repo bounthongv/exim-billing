@@ -36,7 +36,7 @@
     <th align="center"></th>
     <th align="center">ລະຫັດສາຍທາງ<br>Route Number</th>
     <th align="center">ສັນຍາ</th>
-
+<th align="center">PDF</th>
 
 </tr> 
 
@@ -90,6 +90,11 @@
     <a href="print_cta.php?Id=<?=$s["Id"];?>" target="_blank" ><button type="button" class="btn btn-warning btn-sm"><i class="fa fa-print"></i></button></a>
           
           </td>
+ <td align="center">
+ <a href="pdf_file/<?php echo $s['File_CTA']; ?>" target="_blank" style="color: black;">
+<button type="button">PDF</button>
+</a>
+</td>
 
 
 </tr> 

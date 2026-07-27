@@ -138,107 +138,41 @@ for ($i = 0; $i < count($_POST['list_id']); $i++) {
 	   $Group_ID=mysqli_real_escape_string($con,$_POST['Group_ID'][$i]);
 			  
 	 	  
-			
-			
-		if($Group_ID=='001'){			
-		/*if($qty>$qty_limit){ $qty=$qty_limit; 
-		$msg2=$_SESSION['smg']="<div class='alert alert-success'><strong>ຈຳການຈ່າຍບາງລາຍການເກີນຈຳນວນໃນສາງ!</strong></div>"; 
-		
-		header("location:sale_list.php");
-		
-		   }*/
-			
-		
-		 
-		 $user_id=$_SESSION['user_id']; 
-		 
-		 
-		
- $sql_pl=mysqli_query($con,"
-           select * from  stock_product where qty >0 and product_id='$Product_ID' and stock_id='$stock_id' order by product_lot_id ");
-		  while( $p = mysqli_fetch_array($sql_pl))
-	{
-		   $p['product_lot_id']; 
-		   $p['qty'];
-		
-			$q=$p['qty']; 
-			
-			 if($qty > 0)
-			 {	
-					 
-			 $t_qty=$qty-$q;           
-			 $x_qty=$qty-$t_qty; 	           
-				
-				if($qty >$q){
-					
-				
-					
-				//	echo $x_qty;
-					
-			//$total_1=$x_qty*$Price;
-			//$dis1=$dis*$x_qty;
-		$x_amount=$x_qty*$Price;
-	
-		$sql_in=mysqli_query($con,"INSERT INTO product_sale 
-		(stockin_id,list_id,sale_id,sale_date,sale_time,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id
-		,price,crate_price,qty,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
-		
-		values('$p[stockin_id]','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_date','$order_id','$customer_id','$stock_id','$Product_ID'
-		,'$p[product_lot_id]','$Price','$crate_price','$x_qty','$crate_qty','$x_amount'
-		,'$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr') ");
-		
-	
-		$sql_up2=mysqli_query($con,"update stock_product set qty=qty-$x_qty where product_lot_id='$p[product_lot_id]'
-		 and stock_id='$stock_id' and Id='$p[Id]' ");	
-		
-					}
-					else{
-						
-				//	echo $qty;
-				//$total_2=$qty*$Price;
-				//$dis2=$dis*$qty;
-	     	$xx_mount=$qty*$Price;
-				
-		$sql_in=mysqli_query($con,"INSERT INTO product_sale 
-		(stockin_id,list_id,sale_id,sale_date,sale_time,send_date,send_time,order_id,customer_id,stock_id,product_id
-		,product_lot_id,price,crate_price,qty,crate_qty
-		,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
-		
-		values('$p[stockin_id]','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_date','$order_id','$customer_id'
-		,'$stock_id','$Product_ID','$p[product_lot_id]','$Price'
-		,'$crate_price','$qty','$crate_qty','$xx_mount','$amount_crate','$total_amount_crate','$total_all'
-		,'0','$total_all','$user_id','1','$status_payment','$sr') ");
-		
-		
-		$sql_up2=mysqli_query($con,"update stock_product set qty=qty-$qty where
-		 product_lot_id='$p[product_lot_id]' and stock_id='$stock_id' and Id='$p[Id]' ");	
-		
-						}
-				 $qty=$qty-$q;
 
-			        }
-			 
-	  } //end while product lot
-	  
-   }else{// end if group == 001
-	
-	
-		$amount=$qty*$Price;	  	
+
+
+	//$amount=$qty*$Price;	  	
 			
+
+echo "INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
+		,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
+		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
+		
+		values('','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_time','$order_id'
+		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
+		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr') ";
+
 	$sql_in=mysqli_query($con,"INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
 		,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
 		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
 		
-		values('','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_date','$order_id'
+		values('','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_time','$order_id'
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
 		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr') ");
-	} 	 
-	  
+			
+			
+
+
 }/// end while product lot id
-	   
-	  
-	 
+	   $_SESSION['smg']="<div class='alert alert-success'><strong>ບັນທືກສຳເລັດ!</strong></div>";
+ header("location:sale_list.php?sale_id=$sale_id&sale_date=$sale_date&sale_time=$sale_time");
 }
+exit();
+
+
+
+
+
 
 
  if($status_payment=='2'){

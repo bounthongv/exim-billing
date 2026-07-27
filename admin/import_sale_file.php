@@ -336,8 +336,7 @@ if (isset($_POST['import'])) {
             // 🎯 ขั้นตอนที่ 4: ย้ายข้อมูลจากตารางพัก (sale_import) ไปตารางจริง (product_sale)
             // 🛠️ ตรรกะใหม่: เลือกเฉพาะข้อมูลที่ไม่มีในตารางจริงเท่านั้น (ไม่ให้ซ้ำ ไม่ลบ ไม่แก้อันเดิม)
             // -----------------------------------------------------------------
-            $sql_sync_to_product_sale = "
-                INSERT INTO product_sale (customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain)
+            $sql_sync_to_product_sale = "INSERT INTO product_sale (customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain)
                 SELECT
                     si.Outlet_External_ID,
                     si.Product_SKU,
@@ -396,7 +395,7 @@ if (isset($_POST['import'])) {
 
 
 // ⚠️ ชั่วคราว: ปิด TRUNCATE ไว้ก่อนเพื่อให้เข้าไปเช็คข้อมูลใน sale_import ผ่าน phpMyAdmin ได้
-// mysqli_query($con, "TRUNCATE sale_import");
+ mysqli_query($con, "TRUNCATE sale_import");
 
 mysqli_close($con);
 ?>

@@ -35,6 +35,8 @@ $Sale_Id = mysqli_real_escape_string($con,$_POST['Sale_Id']);
 $Sale_full_name = mysqli_real_escape_string($con,$_POST['Sale_full_name']);
 
 
+$bill = mysqli_real_escape_string($con,$_POST['bill']);
+
  $action = mysqli_real_escape_string($con,$_POST['action']);
  $id = mysqli_real_escape_string($con,$_POST['id']);
 
@@ -85,16 +87,17 @@ $Number_of_days_overdue = filter_var($Number_of_days_overdue,  FILTER_SANITIZE_N
 $Contract_expiration_date = mysqli_real_escape_string($con,$_POST['Contract_expiration_date']);
 $Contract_expiration_date = filter_var($Contract_expiration_date,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-
+$bill = mysqli_real_escape_string($con,$_POST['bill']);
+$bill = filter_var($bill,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
 
 
 if($action=="Add"){
 
 $sql=mysqli_query($con,"INSERT INTO customers(customer_id,customer_name,address, phone, fax, email, customer_type, remark,customer_level,route_id
-,village,district,sr,segment,grade,up,brand,class,debit_amt)
+,village,district,sr,segment,grade,up,brand,class,debit_amt,bill)
 values('$customer_id', '$customer_name',  '$address', '$phone', '$fax', '$email', '$customer_type', '$remark','$customer_level','$route_id'
-,'$village','$district','$sr','$segment','$grade','$up','$brand','$class','$debit_amt')");
+,'$village','$district','$sr','$segment','$grade','$up','$brand','$class','$debit_amt','$bill')");
 
 
 	if($sql){
@@ -146,12 +149,13 @@ else{$rid=",route_id='$route_id'";}
 if($id=="")
 {
 
-/*
+
 $sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
+,bill='$bill'
  WHERE customer_id='$customer_id' ");		
-*/
+
 
 $sql=mysqli_query($con,"UPDATE customer_import SET 
 outlet_name='$customer_name',
@@ -179,12 +183,14 @@ Sale_full_name='$Sale_full_name',
 else{
 
 
-/*
+
 	$sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
+,bill='$bill'
+
  WHERE id='$id' ");	
-	*/
+	
 
 
 $sql=mysqli_query($con,"UPDATE customer_import SET 

@@ -5,8 +5,8 @@
        
 		 
 
-		  @$c_id= mysqli_real_escape_string($con,$_POST['customer_id']);		   
-		  if($customer_id==''){$p_id="";}  else{ $p_id="and (customers.customer_id like '$c_id%' or customers.customer_id like '%$customer_id%') ";}
+		   @$c_id= mysqli_real_escape_string($con,$_POST['customer_id']);		   
+		  if($c_id==''){$p_id="";}  else{ $p_id="and (customers.customer_id like '%$c_id%' ) ";}
 		  
 		  		  @$customer_name= mysqli_real_escape_string($con,$_POST['customer_name']);		   
 		  if($customer_name==''){$s_name="";}  else{ $s_name="and (customers.customer_name like '$customer_name%' or customers.customer_name like '%$customer_name%') ";}
@@ -56,7 +56,7 @@
 		   
 		   $row_list=0;
 		   
-   
+ 
 		  @$sp=mysqli_query($con,"  SELECT customers.*,customer_type.ct_id,customer_type.ct_name,routes.route_name
 		  ,sr_list.sr_fname,sr_list.sr_lname
 		   FROM  customers 

@@ -16,9 +16,11 @@
 */
 
 if($customer_id==''){$c_id="";} 
-		   else{ $c_id="and 
+elseif($customer_id=='New_customer'){
+    $c_id="and product_sale.customer_id NOT IN (SELECT customer_id FROM customers)";}
+		   else{ 
+            $c_id="and 
          (product_sale.customer_id like '$customer_id%' or product_sale.customer_id like '%$customer_id%')
-
          ";}
 			
 			
@@ -81,8 +83,6 @@ if($customer_id==''){$c_id="";}
 		  
 
 
-
-
  @$sp=mysqli_query($con,"SELECT product_sale.*
 		,sum(product_sale.last_amount) as t_total_amt
 		,count(product_sale.total_qty) as total_item
@@ -93,7 +93,7 @@ if($customer_id==''){$c_id="";}
 
 /* ,product_sale.qty_p */
 		from 	  
-   (SELECT product_sale.*,sum(product_sale.amount) as total_amt,sum(product_sale.qty) as total_qty
+   (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
    ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
 			,tb_groups.Group_Name,products.version,customers.customer_name
 			,sr_list.sr_fname,sr_list.sr_lname
@@ -115,7 +115,7 @@ if($customer_id==''){$c_id="";}
 					 
 	   
        where 1=1   $sr_id $btw $r_id $st_id $user_show $c_id $sta
-         group by product_sale.sale_id,product_sale.product_id ) 
+        ) 
        as product_sale
           
 	   group by product_sale.sale_id order by product_sale.sale_id desc");
@@ -174,7 +174,7 @@ if($customer_id==''){$c_id="";}
 
 
                 <th align="center">ໃບສົ່ງເຄື່ອງ</th>
-            
+            <th align="center">ເພິ່ມລັງເປົາ</th>
        
               <?php   /*
                 <th align="center">ແກ້ໄຂ</th>
@@ -307,6 +307,8 @@ if($customer_id==''){$c_id="";}
           
           
           
+                          <td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["sale_id"];?>">ເພິ່ມລັງເປົາ</button></td>     
+
           
           
           
@@ -316,14 +318,20 @@ if($customer_id==''){$c_id="";}
           
           
           
-          
-              <?php   if($s["status_off"]=='0') {  ?>
+              <?php 
+              
+              /*
+              if($s["status_off"]=='0') {  ?>
               
               
                <td colspan="2"></td>
                <td align="center"><i class="fa fa-check" aria-hidden="true"></i></td>
               
-                  <?php  }else{  ?>
+                  <?php  }else{  
+                    */
+                    
+                    
+                    ?>
 					  
 		
           <?php  
@@ -355,8 +363,11 @@ if($customer_id==''){$c_id="";}
                 }  
                 */
                 
+                /*
+                }
+                */
                 
-                } ?>
+                ?>
 			    
 			 
                
@@ -376,7 +387,7 @@ if($customer_id==''){$c_id="";}
 				
 				
              } ?>
-             <td colspan="9" align="right">ລວມ</td>
+             <td colspan="7" align="right">ລວມ</td>
              <td colspan="1" align="center"><?=@number_format($t_qty_p,0);?></td>
              <td colspan="1" align="right"><?=@number_format($t_amt,0);?></td>
            <!--  <td colspan="1" align="right"><?=@number_format($total_dis,0);?></td>
