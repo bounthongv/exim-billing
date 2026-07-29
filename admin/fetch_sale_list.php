@@ -239,7 +239,7 @@ elseif($customer_id=='New_customer'){
             	<td><?=$s["customer_name"];?></td>
                <td><?=$s["sr_fname"];?>&nbsp;<?=$s["sr_lname"];?></td>
             	<td align="center"><?=@$s["qty_p"];?></td>
-                <td align="right"><?=@number_format($s["total"],0);?></td>
+                <td align="right"><?php echo @number_format($s["remain"],0);?></td>
                <td align="right">
 			   
 			   <?php /*
