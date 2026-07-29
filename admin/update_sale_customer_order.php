@@ -134,6 +134,9 @@ for ($i = 0; $i < count($_POST['list_id']); $i++) {
 	          $qty_limit = mysqli_real_escape_string($con,$_POST['qty_limit'][$i]);
 			  $qty_limit = filter_var($qty_limit, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 			  
+
+$free=mysqli_real_escape_string($con,$_POST['free'][$i]);
+
 			  
 	   $Group_ID=mysqli_real_escape_string($con,$_POST['Group_ID'][$i]);
 			  
@@ -154,11 +157,11 @@ echo "INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
 
 	$sql_in=mysqli_query($con,"INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
 		,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
-		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
+		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr,free) 
 		
 		values('','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_time','$order_id'
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
-		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr') ");
+		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr','$free') ");
 			
 			
 

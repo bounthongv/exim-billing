@@ -63,6 +63,8 @@ $total_crate_qty = 0;
             $e++;
             // ดึงค่าอย่างปลอดภัย (ป้องกัน Warning Undefined Index)
             $list_id          = isset($values["list_id"]) ? $values["list_id"] : $e;
+//$list_id=$e;
+
             $pic              = isset($values["pic"]) ? $values["pic"] : '';
             $product_id       = isset($values["Product_ID"]) ? $values["Product_ID"] : '';
             $product_name     = isset($values["product_name"]) ? $values["product_name"] : '';
@@ -75,10 +77,26 @@ $total_crate_qty = 0;
             $group_id         = isset($values["Group_ID"]) ? $values["Group_ID"] : '';
             $crate_price      = isset($values["crate_price"]) ? floatval($values["crate_price"]) : 0;
             $status_free      = isset($values['status_free']) ? $values['status_free'] : '';
-            
-            $item_amount       = $product_quantity * $product_price;
+        
+//$item_amount      = isset($values["item_amount"]) ? floatval($values["item_amount"]) : 0;
+
+$free      = isset($values['free']) ? $values['free'] : '';
+
+
+if($free==''){
+$item_amount       = $product_quantity * $product_price;
+}else{
+$item_amount       = 0;
+
+}
+
+
             $item_crate_amount = $product_quantity * $crate_price;
     ?>
+
+                <input type="hidden" name="free[]" style="text-align:center; max-width:40px;" id="free<?=$list_id;?>"  value="<?=$free;?>" data-Product_ID="<?=$list_id;?>" onkeyup="amount()">
+
+
         <tr>
             <td align="center"><?=$e;?></td>
             <td align="center"><img src="<?=$pic;?>" height="50" alt="" /></td>

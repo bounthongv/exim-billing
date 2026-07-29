@@ -196,7 +196,7 @@ height:20px;
 <table border="0">
   <tr>
     <td  align="right">ລະຫັດ:</td>
-    <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>" readonly></td>
+    <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>"></td>
     <input type="hidden" name="id" id="id" >
     
    
@@ -336,7 +336,7 @@ height:20px;
 <table border="0">
   <tr>
     <td  align="right">ລະຫັດ:</td>
-    <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>" readonly></td>
+    <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>"></td>
     <input type="hidden" name="id" id="id" >
     
    

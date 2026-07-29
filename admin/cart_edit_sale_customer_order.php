@@ -77,6 +77,9 @@ if(isset($_POST["action"]))
 			}
 		}
 	}
+
+
+	
 	if($_POST["action"] == 'reset')
 	{
 		unset($_SESSION["cart_edit_sale_customer_order"]);
@@ -183,6 +186,7 @@ for ($i = 0; $i < count($_POST['item_list']); $i++) {
 				'Group_ID'                    =>     $f["Group_ID"],
 				'crate_qty'                =>     '',
 				'status_free'                =>     '',
+				'free'              		=>     $f["free"],
 				 
 				'pic'                      =>     $f["pic_url"],  
 				'crate_price'                =>     $f["crate_price"],

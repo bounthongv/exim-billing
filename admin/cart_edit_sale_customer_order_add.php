@@ -53,10 +53,9 @@ include("init.php");
 			
 			
 	        	//$stock_id=$_SESSION["stock_id"]; 
-          $sql_d=mysqli_query($con,"
-			  
-			  SELECT product_sale.*,stocks.stock_name
-			  ,sum(product_sale.qty) as t_qty
+          $sql_d=mysqli_query($con,"SELECT product_sale.*,stocks.stock_name
+			  ,(product_sale.qty) as t_qty
+			  ,(product_sale.total) as total
 			   ,products.Product_ID,products.Product_Name,products.size,products.Unit 
 			   ,tb_groups.Group_Name,products.pic,products.pic_url
 			   ,customers.customer_id,customers.customer_name
@@ -76,7 +75,7 @@ include("init.php");
 	   
 	  
 	   
-	   where product_sale.sale_id='".$sale_id."' group by product_sale.product_id
+	   where product_sale.sale_id='".$sale_id."'
 	     order by products.Group_ID,product_sale.product_id
 			    ");		 
 
@@ -125,9 +124,12 @@ include("init.php");
 				'units'                    =>     $f["Unit"],
 				'Group_ID'                    =>     $f["Group_ID"], 
 				'qty_limit'                =>     '10000',
-	
+				'item_amount'			   =>     $f["amount"],
 				'crate_qty'                =>     '',
 				'status_free'              =>     '',
+				'free'              		=>     $f["free"],
+
+
 				 
 				'pic'                      =>     $f["pic_url"],  
 				'crate_price'              =>     $f["crate_price"],

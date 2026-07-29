@@ -49,7 +49,35 @@
 		  FROM sale_import where 1=1 $r_id group by Product_SKU,Item_ID";
 
 		  
-		  @$sp=mysqli_query($con,"SELECT product_sale.* ,(product_sale.qty) as qty,(product_sale.amount) as amount,
+
+
+"SELECT product_sale.*,stocks.stock_name
+			  ,sum(product_sale.qty) as t_qty
+			   ,products.Product_ID,products.Product_Name,products.size,products.Unit 
+			   ,tb_groups.Group_Name,products.pic,products.pic_url
+			   ,customers.customer_id,customers.customer_name
+			   ,customer_type.ct_id,customer_type.ct_name,routes.route_id,routes.route_name
+			   ,sr_list.sr_fname,sr_list.sr_lname,products.Group_ID
+			   
+			   
+		   FROM  product_sale 
+		left join products on products.Product_ID=product_sale.product_id
+		left join customers on product_sale.customer_id=customers.customer_id
+		left join customer_type on customers.customer_type=customer_type.ct_id
+		left join routes on customers.route_id=routes.route_id
+		
+       left join stocks on stocks.stock_id=product_sale.stock_id
+       left join tb_groups on tb_groups.Group_ID=products.group_id  
+	   left join sr_list on product_sale.sr=sr_list.sr_id
+	   
+	  
+	   
+	   where product_sale.sale_id='".$sale_id."' group by product_sale.product_id
+	     order by products.Group_ID,product_sale.product_id";
+
+
+		 
+"SELECT product_sale.* ,(product_sale.qty) as qty,(product_sale.amount) as amount,
 	   stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
 			,tb_groups.Group_Name,products.version
 		   FROM  product_sale 
@@ -60,7 +88,23 @@
     left join tb_groups on tb_groups.Group_ID=products.group_id 
        
        
-     where 1=1 $r_id and product_sale.qty>0");
+     where 1=1 $r_id and product_sale.qty>0";
+
+
+
+		  @$sp=mysqli_query($con,"SELECT product_sale.* ,(product_sale.qty) as qty,(product_sale.total) as total,
+	   stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
+			,tb_groups.Group_Name,products.version
+		   FROM  product_sale 
+	
+	left join products on products.Product_ID=product_sale.product_id
+    left join stocks on stocks.stock_id=product_sale.stock_id
+	 
+    left join tb_groups on tb_groups.Group_ID=products.group_id 
+       
+       
+     where 1=1 $r_id and product_sale.qty>0
+	 ");
 
 		  if($sp){
           ?>
@@ -96,7 +140,16 @@
                 
 				<td align="right"><?=@number_format($s["price"],0);?> </td>
                
-                <td align="right"><?=@number_format(($s["qty"])*$s["price"],0);?> </td>
+                <td align="right"><?php 
+				
+				if($s["free"]!=''){
+echo '0';
+				}else{
+
+echo @number_format($s["qty"]*$s["price"],0);
+				}
+
+				?> </td>
               <!--  <td align="center"><?=@number_format($s["amount_crate"],0);?> </td>
                 <td align="center"><?=@number_format($s["last_amount"],0);?> </td>-->
 				
@@ -104,7 +157,18 @@
               <?php
            @$t_qty+=$s["qty"];  
 		   
-		   @$t_amt += ($s["qty"])*$s["price"];
+if($s["free"]!=''){
+ @$t_amt += 0;
+				}else{
+
+ @$t_amt += $s["qty"]*$s["price"];
+				}
+
+		  
+
+
+
+
 		 //  @$t_dis += $s["discount"];
 		   $t_amount_crate+= $s["amount_crate"];
 		   @$t_last_amount += $s["last_amount"];

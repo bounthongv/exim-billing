@@ -113,10 +113,14 @@ th{ text-align:center;}
 	<div class="form-group row">
     <div class="col-sm-10">
 
-
+<?php /*
   <button type="button" name="close" class="btn btn-danger" onclick="history.back()">
     <i class="fa fa-times"></i>&nbsp;ປິດ
 </button>
+*/ ?>
+
+     <a href="sale_list.php" ><button type="button" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
+
 
      <a href="cart_edit_sale_customer_order.php?action=empty" ><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
       
@@ -714,7 +718,17 @@ $(document).on('keyup', '.qty_enters', function(event){
 		
 	     var Product_ID = $(this).attr("data-Product_ID"); 				
 		 var qty_limit = $('#qty_limit'+Product_ID+'').val();
-				 			  		   
+				 			 
+		 
+   // 1. อัปเดตตัวเลขบนหน้าเว็บทันที (ไม่ต้องรอ ajax)
+    var qty_input = $('#e_qty'+Product_ID+'');
+    var new_qty = Number(qty_input.val()) + 1;
+    qty_input.val(new_qty);
+
+    // 2. เรียกฟังก์ชันคำนวณยอดเงินใหม่ (มีอยู่แล้วในโค้ดคุณ)
+    amount();
+
+    // 3. ยิง ajax เก็บค่าลง session เบื้องหลัง (ไม่ต้อง reload ตาราง)
 		
 		var status ='1';
 		var action = "update_plus";
@@ -728,7 +742,7 @@ $(document).on('keyup', '.qty_enters', function(event){
 					
 					
 			//	$('#error').html(data);
-					load_order_receipt();
+					//load_order_receipt();
 					
 
 				
@@ -743,6 +757,14 @@ $(document).on('keyup', '.qty_enters', function(event){
 		 var qty_limit = $('#qty_limit'+Product_ID+'').val();
 				 			  		   
 		
+ // 1. อัปเดตตัวเลขบนหน้าเว็บทันที (ไม่ต้องรอ ajax)
+    var qty_input = $('#e_qty'+Product_ID+'');
+    var new_qty = Number(qty_input.val()) - 1;
+    qty_input.val(new_qty);
+
+    // 2. เรียกฟังก์ชันคำนวณยอดเงินใหม่ (มีอยู่แล้วในโค้ดคุณ)
+    amount();
+
 		var status ='1';
 		var action = "update_minus";
 
@@ -755,7 +777,7 @@ $(document).on('keyup', '.qty_enters', function(event){
 					
 					
 			//	$('#error').html(data);
-					load_order_receipt();
+					//load_order_receipt();
 					
 
 				
@@ -917,6 +939,7 @@ barcode_key.addEventListener("keyup", function(event) {
 	var amount = document.getElementsByName("amount[]");
 	var total_amount_crate = document.getElementsByName("total_amount_crate[]");
 	
+	var free = document.getElementsByName("free[]");
 	
 	
 	var sum =0;
@@ -932,14 +955,28 @@ barcode_key.addEventListener("keyup", function(event) {
 		
 		pc=Number(crate_price[i].value.replace(/[^0-9\.-]+/g,""));
 		
-		
-	
-	    amount[i].value=numeral(q*p).format('0,000');
+
+let free1 = $(free[i]).val(); // ใช้ .val() แทน .value()
+
+if (free1 == '') {
+    
+  $(amount[i]).val(numeral(q * p).format('0,000'));
+} else {
+  $(amount[i]).val(numeral(0).format('0,000'));
+}
+	    
+
+
 		amount_crate[i].value=numeral(q*pc).format('0,000');
 		total_amount_crate[i].value=numeral((q*pc)+(q*p)).format('0,000');
 		
 		sum_qty = sum_qty + (q);
+
+if (free1 == '') {
 		sum = sum + (q*p);
+} else {
+		sum = sum + 0;
+}
 		sum_crate = sum_crate + (q*pc);
 		
 	//    sum_amount_crate=sum_amount_crate+sum_crate+sum

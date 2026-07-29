@@ -239,7 +239,7 @@ elseif($customer_id=='New_customer'){
             	<td><?=$s["customer_name"];?></td>
                <td><?=$s["sr_fname"];?>&nbsp;<?=$s["sr_lname"];?></td>
             	<td align="center"><?=@$s["qty_p"];?></td>
-                <td align="right"><?=@number_format($s["total_amt"],0);?></td>
+                <td align="right"><?=@number_format($s["total"],0);?></td>
                <td align="right">
 			   
 			   <?php /*
@@ -379,7 +379,7 @@ elseif($customer_id=='New_customer'){
 				</tr>
                
 			<?php	
-				@$t_amt +=$s["total_amt"];
+				@$t_amt +=$s["total"];
 				@$t_payment +=$s["payment"];
 				@$total_dis +=$s["bill_discount"];
 				@$totals +=$s["total"];
