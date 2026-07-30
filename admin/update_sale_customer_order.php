@@ -95,9 +95,11 @@ date_default_timezone_set("Asia/Bangkok");
 	//$all_dis = mysqli_real_escape_string($con,$_POST['all_dis']);
    // $all_dis = filter_var($all_dis,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	
-	$total_all = mysqli_real_escape_string($con,$_POST['total_all']);
-    $total_all = filter_var($total_all,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+	//$total_all = mysqli_real_escape_string($con,$_POST['total_all']);
+    //$total_all = filter_var($total_all,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
    
+
+	
     $status_payment = mysqli_real_escape_string($con,$_POST['status_payment']);
 	
 	
@@ -138,13 +140,25 @@ for ($i = 0; $i < count($_POST['list_id']); $i++) {
 			   $total_amount_crate = mysqli_real_escape_string($con,$_POST['total_amount_crate'][$i]);
 			   $total_amount_crate = filter_var($total_amount_crate, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 			  	
-			//  $total = $qty * $Price;
+
+
+			
+			  
+
+
 			  
 	          $qty_limit = mysqli_real_escape_string($con,$_POST['qty_limit'][$i]);
 			  $qty_limit = filter_var($qty_limit, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 			  
 
 $free=mysqli_real_escape_string($con,$_POST['free'][$i]);
+
+if($free==''){
+  $total_all = $qty * $Price;
+}else{
+  $total_all = 0;
+}
+
 
 			  
 	   $Group_ID=mysqli_real_escape_string($con,$_POST['Group_ID'][$i]);

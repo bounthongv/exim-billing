@@ -379,7 +379,16 @@ elseif($customer_id=='New_customer'){
 				</tr>
                
 			<?php	
-				@$t_amt +=$s["total"];
+
+ if($s["free"]==''){
+@$t_amt+=$s["total_2"];
+            }else{
+@$t_amt+=0;
+            }
+				
+
+
+
 				@$t_payment +=$s["payment"];
 				@$total_dis +=$s["bill_discount"];
 				@$totals +=$s["total"];
