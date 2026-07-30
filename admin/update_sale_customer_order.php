@@ -67,20 +67,23 @@ date_default_timezone_set("Asia/Bangkok");
  $sale_id = mysqli_real_escape_string($con,$_POST['sale_id']);
 
  $sale_date = mysqli_real_escape_string($con,$_POST['sale_date']);
- $sale_time=date('H:i:s');
+ //$sale_time=date('H:i:s');
  
- $sale_dd_tt=date_create("$sale_date $sale_time");
+ //$sale_dd_tt=date_create("$sale_date $sale_time");
 
 
-  $sale_date_time = date_format($sale_dd_tt,"Y-m-d H:i:s");
+  //$sale_date_time = date_format($sale_dd_tt,"Y-m-d H:i:s");
+
+
+
 
       $order_id = mysqli_real_escape_string($con,$_POST['order_id']);
      
      $sale_date = mysqli_real_escape_string($con,$_POST['sale_date']);
-	 $sale_time = mysqli_real_escape_string($con,$_POST['sale_time']);
+	 //$sale_time = mysqli_real_escape_string($con,$_POST['sale_time']);
 	  
-	 $send_date = mysqli_real_escape_string($con,$_POST['send_date']);
-	 $send_time = mysqli_real_escape_string($con,$_POST['send_time']);
+	// $send_date = mysqli_real_escape_string($con,$_POST['send_date']);
+	// $send_time = mysqli_real_escape_string($con,$_POST['send_time']);
  //    $staff_id = mysqli_real_escape_string($con,$_POST['staff_id']);  
      $customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
      $stock_id = mysqli_real_escape_string($con,$_POST['stock_id']);
@@ -103,9 +106,15 @@ date_default_timezone_set("Asia/Bangkok");
 if(isset($_POST['save'])){
 for ($i = 0; $i < count($_POST['list_id']); $i++) {
 			
-			   $list_id = mysqli_real_escape_string($con,$_POST['list_id'][$i]);
+			   //$list_id = mysqli_real_escape_string($con,$_POST['list_id'][$i]);
 		      $Product_ID = mysqli_real_escape_string($con,$_POST['Product_ID'][$i]);
 			  
+				$Item_ID = mysqli_real_escape_string($con,$_POST['Item_ID'][$i]);
+				$customer_id = mysqli_real_escape_string($con,$_POST['customer_id'][$i]);
+
+
+
+
 	          $qty = mysqli_real_escape_string($con,$_POST['QTY'][$i]);
 			  $qty = filter_var($qty,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 			  	
@@ -147,7 +156,7 @@ $free=mysqli_real_escape_string($con,$_POST['free'][$i]);
 	//$amount=$qty*$Price;	  	
 			
 
-echo "INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
+ "INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
 		,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
 		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
 		
@@ -155,20 +164,29 @@ echo "INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
 		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr') ";
 
-	$sql_in=mysqli_query($con,"INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
-		,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
-		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr,free) 
+
+
+
+
+
+	$sql_in=mysqli_query($con,"INSERT INTO product_sale (stockin_id,sale_id,sale_date
+		,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
+		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr,free,Item_ID) 
 		
-		values('','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_time','$order_id'
+		values('','$sale_id','$sale_date','$order_id'
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
-		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr','$free') ");
+		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr','$free'
+		,'$Item_ID') ");
 			
 			
+
+mysqli_query($con,"UPDATE product_sale SET Item_ID=Id WHERE Item_ID=''");
+
 
 
 }/// end while product lot id
 	   $_SESSION['smg']="<div class='alert alert-success'><strong>ບັນທືກສຳເລັດ!</strong></div>";
- header("location:sale_list.php?sale_id=$sale_id&sale_date=$sale_date&sale_time=$sale_time");
+header("location:sale_list.php?sale_id=$sale_id&sale_date=$sale_date&sale_time=$sale_time");
 }
 exit();
 

@@ -334,22 +334,20 @@ if (isset($_POST['import'])) {
                 }
             }
 
-            // -----------------------------------------------------------------
-            // 🎯 ขั้นตอนที่ 4: ย้ายข้อมูลจาก sale_import ไป product_sale
-            // -----------------------------------------------------------------
 
-// 4.1 อัปเดตรายการที่มีอยู่แล้วใน product_sale ( match จาก sale_id และ product_id )
-$sql_update_existing = "UPDATE product_sale ps
-    JOIN sale_import si 
-      ON ps.sale_id = si.Invoice_Number 
-     AND ps.product_id = si.Product_SKU
+// 🎯 ขั้นตอนที่ 4: ย้ายข้อมูลจาก sale_import ไป product_sale (UPSERT)
+// -----------------------------------------------------------------
+
+// ---- 4.1 UPDATE แถวที่มีอยู่แล้วใน product_sale ----
+$sql_sync_update = "UPDATE product_sale ps
+    INNER JOIN sale_import si
+        ON ps.Item_ID = si.Item_ID
     LEFT JOIN (
         SELECT Invoice_Number, SUM(Quantity * Price) AS remain
         FROM sale_import
         GROUP BY Invoice_Number
-    ) AS sale_import_2 
-      ON sale_import_2.Invoice_Number = si.Invoice_Number
-    SET 
+    ) AS sale_import_2 ON sale_import_2.Invoice_Number = si.Invoice_Number
+    SET
         ps.customer_id = si.Outlet_External_ID,
         ps.price       = si.Price,
         ps.qty         = si.Quantity,
@@ -358,16 +356,14 @@ $sql_update_existing = "UPDATE product_sale ps
         ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
-        ps.free        = si.Item_Promotion_Code";
+        ps.free        = si.Item_Promotion_Code
+";
+$sync_update_ok = mysqli_query($con, $sql_sync_update);
+$update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
 
-$update_ok = mysqli_query($con, $sql_update_existing);
-
-
-// 4.2 บันทึกเฉพาะรายการใหม่ที่ยังไม่มีใน product_sale
-$sql_insert_new = "INSERT INTO product_sale (
-        customer_id, product_id, price, qty, Total, 
-        sale_date, sale_time, order_id, sale_id, remain, free
-    )
+// ---- 4.2 INSERT แถวใหม่ที่ยังไม่มีใน product_sale ----
+$sql_sync_insert = "INSERT INTO product_sale
+        (customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID)
     SELECT
         si.Outlet_External_ID,
         si.Product_SKU,
@@ -379,29 +375,27 @@ $sql_insert_new = "INSERT INTO product_sale (
         si.Display_ID,
         si.Invoice_Number,
         sale_import_2.remain,
-        si.Item_Promotion_Code
+        si.Item_Promotion_Code,
+        si.Item_ID
     FROM sale_import si
     LEFT JOIN (
         SELECT Invoice_Number, SUM(Quantity * Price) AS remain
         FROM sale_import
         GROUP BY Invoice_Number
     ) AS sale_import_2 ON sale_import_2.Invoice_Number = si.Invoice_Number
-    LEFT JOIN product_sale ps 
-           ON ps.sale_id = si.Invoice_Number 
-          AND ps.product_id = si.Product_SKU
-    WHERE ps.sale_id IS NULL";
-
-$insert_ok = mysqli_query($con, $sql_insert_new);
+    LEFT JOIN product_sale ps
+        ON ps.sale_id = si.Invoice_Number
+       AND ps.product_id = si.Product_SKU
+    WHERE ps.sale_id IS NULL
+";
+$sync_insert_ok = mysqli_query($con, $sql_sync_insert);
+$insert_sale_count = $sync_insert_ok ? mysqli_affected_rows($con) : 0;
 
 // 🔍 DEBUG
 echo "<div style='background:#ffe; padding:10px; margin:5px; font-family:monospace;'>";
-echo "DEBUG: Update ข้อมูลเดิม = " . ($update_ok ? mysqli_affected_rows($con) . " แถว" : "ล้มเหลว: " . mysqli_error($con)) . "<br>";
-echo "DEBUG: Insert ข้อมูลใหม่ = " . ($insert_ok ? mysqli_affected_rows($con) . " แถว" : "ล้มเหลว: " . mysqli_error($con)) . "<br>";
+echo "DEBUG: UPDATE product_sale " . ($sync_update_ok ? "สำเร็จ" : "ล้มเหลว: " . mysqli_error($con)) . " (แถวที่อัปเดต = $update_sale_count)<br>";
+echo "DEBUG: INSERT product_sale " . ($sync_insert_ok ? "สำเร็จ" : "ล้มเหลว: " . mysqli_error($con)) . " (แถวที่เพิ่มใหม่ = $insert_sale_count)<br>";
 echo "</div>";
-
-      
-
-
 
         } else {
             echo "ไม่สามารถเปิดไฟล์ CSV ได้";

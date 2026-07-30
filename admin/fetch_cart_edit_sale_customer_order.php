@@ -51,7 +51,7 @@ $total_crate_qty = 0;
             <th align="center">ສັ່ງຊື້</th> 
             <th align="center">ລາຄາ</th>  
             <th align="center">ເປັນເງີນ</th> 
-            <th align="center">ແຖມ</th> 
+ 
             <th align="center">ລົບ</th> 
         </tr>
     </thead>
@@ -62,10 +62,12 @@ $total_crate_qty = 0;
         foreach ($_SESSION["cart_edit_sale_customer_order"] as $keys => $values) {
             $e++;
             // ดึงค่าอย่างปลอดภัย (ป้องกัน Warning Undefined Index)
-            $list_id          = isset($values["list_id"]) ? $values["list_id"] : $e;
+           $list_id          = isset($values["list_id"]) ? $values["list_id"] : $e;
 //$list_id=$e;
 
             $pic              = isset($values["pic"]) ? $values["pic"] : '';
+            $Item_ID       = isset($values["Product_ID"]) ? $values["Item_ID"] : '';
+            $customer_id       = isset($values["customer_id"]) ? $values["customer_id"] : '';
             $product_id       = isset($values["Product_ID"]) ? $values["Product_ID"] : '';
             $product_name     = isset($values["product_name"]) ? $values["product_name"] : '';
             $units            = isset($values["units"]) ? $values["units"] : '';
@@ -93,6 +95,9 @@ $item_amount       = 0;
 
             $item_crate_amount = $product_quantity * $crate_price;
     ?>
+                <input type="hidden" name="Item_ID[]" style="text-align:center; max-width:40px;" id="Item_ID<?=$list_id;?>"  value="<?=$Item_ID;?>" data-Product_ID="<?=$list_id;?>" onkeyup="amount()">
+
+                <input type="hidden" name="customer_id[]" style="text-align:center; max-width:40px;" id="customer_id<?=$list_id;?>"  value="<?=$customer_id;?>" data-Product_ID="<?=$list_id;?>" onkeyup="amount()">
 
                 <input type="hidden" name="free[]" style="text-align:center; max-width:40px;" id="free<?=$list_id;?>"  value="<?=$free;?>" data-Product_ID="<?=$list_id;?>" onkeyup="amount()">
 
@@ -133,6 +138,9 @@ $item_amount       = 0;
                 <input type="hidden" name="total_amount_crate[]" id="total_amount_crate<?=$list_id;?>" value="<?=number_format($item_amount + $item_crate_amount, 0);?>" readonly="readonly" class="form-control" style="text-align:right;">
             </td>
             
+
+
+          <?php  /*
             <td align="center">        
                 <?php if ($status_free == '') { ?>
                     <button type="button" name="free_p" class="btn btn-sm free_item" id="<?=$list_id;?>" value="<?=$list_id;?>"><i class="fa fa-check free_item" aria-hidden="true"></i></button>
@@ -140,6 +148,10 @@ $item_amount       = 0;
                     <button type="button" name="free_p" class="btn btn-success btn-sm" id="<?=$list_id;?>" value="<?=$list_id;?>"><i class="fa fa-check" aria-hidden="true"></i></button>
                 <?php } ?>
             </td> 
+*/ ?>
+
+
+
             
         <?php
             if($group_id=='003'){

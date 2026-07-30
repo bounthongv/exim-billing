@@ -50,7 +50,7 @@ elseif($customer_id=='New_customer'){
 
            @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);	
       
-		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id='$sale_id' "; $btw=""; }
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id like '%$sale_id%' "; $btw=""; }
 		 
       /*
 		 if($sale_id==''){$r_id="";}  else{ $r_id="and Invoice_Number='$sale_id' ";  }
@@ -90,7 +90,7 @@ elseif($customer_id=='New_customer'){
 
 ,sum(product_sale.qty*price) as total_amt
 ,sum(product_sale.qty) as qty_p 
-
+,sum(product_sale.total) as total_2 
 /* ,product_sale.qty_p */
 		from 	  
    (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
@@ -239,7 +239,7 @@ elseif($customer_id=='New_customer'){
             	<td><?=$s["customer_name"];?></td>
                <td><?=$s["sr_fname"];?>&nbsp;<?=$s["sr_lname"];?></td>
             	<td align="center"><?=@$s["qty_p"];?></td>
-                <td align="right"><?php echo @number_format($s["remain"],0);?></td>
+                <td align="right"><?php echo @number_format($s["total_2"],0);?></td>
                <td align="right">
 			   
 			   <?php /*

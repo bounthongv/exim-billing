@@ -110,14 +110,16 @@ include("init.php");
 	  
 	 $_SESSION['s_status_payment']=$f["status_payment"];
 	 	
-				
-	       $list_id= $f["list_id"];
+			$list_id= $f["Id"];
+	       //$list_id= $f["list_id"];
 		   $_SESSION["list_id"]=$list_id;
 		   $remark=$f["crate_price"];
 		   
 		  $item_array = array(
 			    
 				'list_id'                  =>     $list_id,
+				'Item_ID'               	=>     $f["Item_ID"],  
+				'customer_id'               =>     $f["customer_id"], 
 				'Product_ID'               =>     $f["Product_ID"],  
 				'product_name'             =>     $f["Product_Name"],  
 				'product_price'            =>     $f["price"],

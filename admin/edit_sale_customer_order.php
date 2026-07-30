@@ -139,11 +139,13 @@ th{ text-align:center;}
   <tr>
     <td align="center">ເລກທີ: <br><input type="text" class="form-control ss" name="sale_id" id="sale_id" value="<?php echo @$sale_id;  ?>" readonly></td>
   <td align="center">ວັນທີຂາຍ: <br><input type="date" class="form-control" name="sale_date" id="sale_date" value="<?php echo $_SESSION['sale_date'];  ?>"  required></td>
+ 
+ <?php /*
   <td align="center">ເວລາ: <br> <input type="time" class="form-control" name="sale_time" id="sale_time" value="<?php echo $_SESSION['sale_time'];  ?>"  required> </td>
     <td align="center">ວັນທີຕ້ອງການສົ່ງ: <br><input type="date" class="form-control" name="send_date" id="send_date" value="<?php echo $_SESSION['send_date'];  ?>" 
      required> </td>
    <td align="center">ເວລາ: <br>  <input type="time" class="form-control" name="send_time" id="send_time" value="<?php echo $_SESSION['send_time'];  ?>"  required></td>
-  
+  */ ?>
  
   </tr>
  <tr>
