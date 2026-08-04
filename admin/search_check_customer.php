@@ -44,7 +44,9 @@ status
 $stmt2 = "SELECT customer_import.*,customer_import.external_id as customer_id,
 		  customer_import.outlet_name as customer_name,
           customers.bill,
-          product_sale.amount
+          product_sale.total,
+          product_sale_2.days_count,
+          product_sale_2.invoice_count
 			FROM  customers 
 		   left join customer_type on customer_type.ct_id=customers.customer_type
 		   left join routes on customers.route_id=routes.route_id
@@ -53,11 +55,19 @@ $stmt2 = "SELECT customer_import.*,customer_import.external_id as customer_id,
 
 
 left join
-(SELECT customer_id,(product_sale.qty) as qty,(product_sale.amount) as amount FROM product_sale 
-where `status` is null
+(SELECT customer_id,(product_sale.qty) as qty,sum(product_sale.total) as total FROM product_sale 
+WHERE `status` is null
+OR status_payment is null
 group by customer_id) as product_sale
  on product_sale.customer_id=customers.customer_id
 
+
+left join
+(SELECT customer_id,count(DISTINCT sale_id)as invoice_count,DATEDIFF(CURRENT_DATE(), MIN(sale_date)) AS days_count FROM `product_sale` 
+WHERE `status` is null
+OR status_payment is null
+group by customer_id)
+as product_sale_2 on product_sale_2.customer_id=customers.customer_id
 
 
 WHERE 1=1 $c $c2";
@@ -82,6 +92,10 @@ echo json_encode([
     'Number_of_days_overdue'           => $row['Number_of_days_overdue'],
     'Number_of_bills'           =>  $row['bill'],
     'Contract_expiration_date'           => $row['Contract_expiration_date'],
+
+    'Outstanding_debt'           => $row['total'],
+    'Actual_number_of_days_of_infection'           => $row['days_count'],
+    'Actual_number_of_outstanding_bills'           => $row['invoice_count'],
 ]);
 
 }else{
@@ -95,6 +109,11 @@ echo json_encode([
     'Number_of_days_overdue'           => '',
     'Number_of_bills'           => '',
     'Contract_expiration_date'           => '',
+
+    'Outstanding_debt'           => '',
+    'Actual_number_of_days_of_infection'           => '',
+    'Actual_number_of_outstanding_bills'           => '',
+
 ]);
 
 

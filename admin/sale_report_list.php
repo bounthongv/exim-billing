@@ -347,7 +347,6 @@ $(document).on('click', '#print_excel', function(){
    
             <td>ໝວດສິນຄ້າ<br>
       <select name="group_id" id="group_id" class="form-control" required>   
-  	<option value="">ທັງຫມົດ</option>
     <?PHP 
 	 $sql=mysqli_query($con,"select * from tb_groups");	
 	while($f = mysqli_fetch_array($sql)){?>

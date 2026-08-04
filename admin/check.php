@@ -118,7 +118,8 @@ if($max_id<1){    $sale_id=$id1;     }
     <td><input type="text" class="form-control" style="width:300px" name="Contract_expiration_date" id="Contract_expiration_date" value="" readonly></td>
 
     <td>ສະຖານະ</td>
-    <td><input type="text" class="form-control" style="width:300px" name="Status" id="Status" value="" readonly></td>
+    <td><button type="button" id="button1" style="width:300px" class="btn btn-danger btn-sm btn-status">ຕິດໜີ້</button></td>
+
 </tr>
 
 
@@ -173,6 +174,35 @@ var year = dateObj.getFullYear();
 
 var formattedDate = day + '/' + month + '/' + year; // จะได้ "DD/MM/YYYY"
 $('#Contract_expiration_date').val(formattedDate);
+
+
+
+$('#Outstanding_debt').val(Number(data.Outstanding_debt).toLocaleString('en-US'));
+$('#Actual_number_of_days_of_infection').val(data.Actual_number_of_days_of_infection);
+$('#Actual_number_of_outstanding_bills').val(data.Actual_number_of_outstanding_bills);
+
+
+
+// เช็คสถานะหนี้ แล้วสลับสีปุ่ม
+if(Number(data.Outstanding_debt) == 0 
+   && Number(data.Actual_number_of_days_of_infection) == 0 
+   && Number(data.Actual_number_of_outstanding_bills) == 0){
+
+    $('#button1')
+        .removeClass('btn-danger')
+        .addClass('btn-success')
+        .text('ບໍ່ຕິດໜີ້');   // ไม่มีหนี้ค้าง
+
+} else {
+
+    $('#button1')
+        .removeClass('btn-success')
+        .addClass('btn-danger')
+        .text('ຕິດໜີ້');   // ติดหนี้
+
+}
+
+
 
 			}
 		});
