@@ -20,6 +20,7 @@
          <td><strong>ສາງ</strong></td>
          <td><strong>ພະແນກ</strong></td>
 		 <td><strong>ແກ້ໄຂ</strong></td>
+		  <td><strong>ລຶບ</strong></td>
               </tr>
 			  </thead>
            
@@ -39,8 +40,7 @@
 				else{  echo $f['user_type'];}?></td>
                 
         		
-        		
-				
+        	
 				
 				
 				
@@ -56,7 +56,12 @@
 				<input type="hidden" name="Id" id="Id<?=$f["Id"];?>"  value="<?=$f["Id"];?>" />
              		<td >
         <button  class="btn btn-success btn-sm edit_supplier" id="<?=$f['Id'];?>"    data-toggle="modal" data-target="#add_stock" data-id="<?php echo $f['User_ID']; ?>">
-            ແກ້ໄຂ</button>  </td>
+            ແກ້ໄຂ</button>  
+		
+		<td class="save1" align="center"><a href="?del=<?php echo $f['Id'] ?>" onclick="return confirm('ທ່ານຕ້ອງການລຶບຂໍ້ມູນນີ້ແທ້ບໍ່ ?')"><font color="red"><button class="btn btn-danger btn btn-sm">ລຶບ</button></font></a></td>
+
+		
+		</td>
 				 
 				</tr>
                <?php

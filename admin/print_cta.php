@@ -1,9 +1,7 @@
 <?php
-include 'init.php'; // ຕ້ອງມີຕົວແປ $con (mysqli connection)
+include 'init.php'; 
 
-
-$id = mysqli_real_escape_string($con,$_GET['Id']);
-
+$id = mysqli_real_escape_string($con, $_GET['Id']);
 
 $sql = "SELECT * FROM tb_cta WHERE Id = $id";
 $result = mysqli_query($con, $sql);
@@ -14,12 +12,10 @@ if (!$result || mysqli_num_rows($result) === 0) {
 
 $row = mysqli_fetch_assoc($result);
 
-// ຟັງຊັນຊ່ວຍໃສ່ເຄື່ອງໝາຍຖືກໃນ checkbox
 function chk($value) {
-    return ($value == 1) ? "&#9745;" : "&#9744;"; // ☑ : ☐
+    return ($value == 1) ? "&#9745;" : "&#9744;";
 }
 
-// ຟັງຊັນຈັດຮູບແບບວັນທີ
 function fmt_date($date) {
     if (empty($date) || $date == "0000-00-00") return "";
     return date("d/m/Y", strtotime($date));
@@ -31,86 +27,88 @@ function fmt_date($date) {
 <meta charset="utf-8">
 <title>ໃບສັນຍາການໃຫ້ເຄດິດຮ້ານຄ້າ - <?php echo htmlspecialchars($row['Outlet_Name']); ?></title>
 <style>
+    /* ตั้งค่ากระดาษ A4 และระยะขอบสำหรับการพิมพ์ */
+    @page {
+        size: A4 portrait;
+        margin-top: 0mm;
+        margin-bottom: 0mm;
+        margin-left: 10mm;
+        margin-right: 10mm;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
     body {
         font-family: "Phetsarath OT", "Noto Sans Lao", Tahoma, sans-serif;
-        font-size: 14px;
+        font-size: 13px;
         color: #000;
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 0 20px;
+        width: 100%;
+        max-width: 190mm; /* A4 width (210mm) - Left/Right margins (20mm) */
+        margin: 0 auto;
+        padding: 10mm 0; /* ระยะห่างเนื้อหาด้านบน/ล่างภายในหน้า */
     }
+
     .header-table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
     .header-table td { vertical-align: top; border: none; }
-    .header-table img { width: 90px; }
-    .company-info { font-weight: bold; line-height: 1.5; }
-    h2, h3 { text-align: center; margin: 4px 0; }
-    .intro { text-align: left; margin: 15px 0; line-height: 1.6; }
+    .company-info { font-weight: bold; line-height: 1.4; }
+    
+    .doc-number {
+        text-align: right;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    h2 { text-align: center; margin: 2px 0; font-size: 18px; }
+    h3 { text-align: center; margin: 2px 0 10px 0; font-size: 14px; font-weight: normal; }
+    
+    .intro { text-align: left; margin: 10px 0; line-height: 1.5; text-align: justify; }
 
     table.info-table, table.credit-table, table.bank-table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
     table.info-table td, table.credit-table td, table.bank-table td,
     table.bank-table th {
         border: 1px solid #000;
-        padding: 6px 8px;
+        padding: 5px 8px;
         vertical-align: middle;
     }
-    .label-cell { width: 30%; font-weight: normal; }
+    
+    .label-cell { width: 32%; font-weight: normal; }
     .value-cell { font-weight: bold; }
-    .bank-table th { text-align: center; }
+    .bank-table th { text-align: center; font-weight: bold; background-color: #f9f9f9; }
     .bank-table td { text-align: center; font-weight: bold; }
 
-    .checkbox-row td { border: 1px solid #000; }
-
-    .signature-table { width: 100%; margin-top: 50px; border: none; }
+    .signature-table { width: 100%; margin-top: 40px; border: none; }
     .signature-table td { border: none; text-align: center; width: 50%; }
-    .signature-line { margin-top: 60px; border-top: 1px dotted #000; width: 80%; margin-left: auto; margin-right: auto; }
-
-    .print-btn-wrap { text-align: center; margin: 20px 0; }
-    .btn-print {
-        padding: 8px 20px; font-size: 14px; cursor: pointer;
-        background: #337ab7; color: #fff; border: none; border-radius: 4px;
-    }
+    .signature-line { margin-top: 50px; border-top: 1px solid #000; width: 80%; margin-left: auto; margin-right: auto; }
 
     @media print {
-        .print-btn-wrap { display: none; }
-        body { margin: 0; }
+        body { padding: 5mm 0; }
     }
 </style>
 </head>
 <body>
 
-<?php 
-/*
-<div class="print-btn-wrap">
-    <button class="btn-print" onclick="window.print()">🖨️ ພິມ / Print</button>
-</div>
-*/
- ?>
-
-
 <table class="header-table">
     <tr>
-       
         <td class="company-info">
             EXIM SERVICES SOLE CO., LTD.<br>
             #888 Hom 22, Unit 46 Nakhuay Tai Village, Xaysettha District, Vientiane, Lao PDR<br>
             Tel: +856-21-264087 &nbsp; website: www.exim.la
         </td>
-         <td style="width:100px;"><img src="images/EXIM_logo.png" alt="logo"></td>
+        <td style="width:100px; text-align:right;"><img src="images/EXIM_logo.png" alt="logo" style="width:90px;"></td>
     </tr>
 </table>
 
-
-<div align="Right" style="width:100%">ເລກທີ: <?php echo $row['number_cta']; ?></div>
-
-
+<div class="doc-number">ເລກທີ: <?php echo htmlspecialchars($row['number_cta']); ?></div>
 
 <h2>ໃບສັນຍາການໃຫ້ເຄດິດຮ້ານຄ້າ</h2>
 <h3>Credit Term Agreement</h3>
@@ -140,11 +138,11 @@ function fmt_date($date) {
     </tr>
     <tr>
         <td class="label-cell">ລະຫັດລູກຄ້າ Customer ID (OMNI) ຫລື ເລກທີ່ສັນຍາ</td>
-        <td class="value-cell"><?php echo htmlspecialchars($row['Customer_ID']); ?></td>
-</tr>
- <tr>
-        <td class="label-cell" style="width:15%;">ວັນທີເຊັນສັນຍາ Date</td>
-        <td class="value-cell"><?php echo fmt_date($row['Date']); ?></td>
+        <td class="value-cell" colspan="3"><?php echo htmlspecialchars($row['Customer_ID']); ?></td>
+    </tr>
+    <tr>
+        <td class="label-cell">ວັນທີເຊັນສັນຍາ Date</td>
+        <td class="value-cell" colspan="3"><?php echo fmt_date($row['Date']); ?></td>
     </tr>
     <tr class="checkbox-row">
         <td class="label-cell">ຊ່ອງທາງການຈຳໜ່າຍ<br>Outlet Sales Channels:</td>
@@ -163,25 +161,23 @@ function fmt_date($date) {
 
 <table class="credit-table">
     <tr>
-        <td colspan="2" style="text-align:center; font-weight:bold;">ເງື່ອນໄຂການໃຫ້ເຄດິດ Credit Terms</td>
+        <td colspan="2" style="text-align:center; font-weight:bold; background-color:#f9f9f9;">ເງື່ອນໄຂການໃຫ້ເຄດິດ Credit Terms</td>
     </tr>
     <tr>
         <td class="label-cell">ຈຳນວນວັນ</td>
         <td class="value-cell"><?php echo htmlspecialchars($row['Number_days']); ?></td>
     </tr>
-
-<tr>
+    <tr>
         <td class="label-cell">ຈຳນວນໃບບິນ</td>
         <td class="value-cell"><?php echo htmlspecialchars($row['Number_bills']); ?></td>
     </tr>
-
     <tr>
         <td class="label-cell">ວົງເງິນເຄດິດສູງສຸດ Limited Amount</td>
         <td class="value-cell"><?php echo htmlspecialchars(@number_format($row["Limited_Amount"],0)); ?></td>
     </tr>
     <tr>
         <td class="label-cell">ກຳນົດມື້ໝົດສັນຍາ Validation Date</td>
-        <td class="value-cell"><?php echo htmlspecialchars($row['Validation_Date']); ?></td>
+        <td class="value-cell"><?php echo fmt_date($row['Validation_Date']); ?></td>
     </tr>
 </table>
 
@@ -225,7 +221,6 @@ function fmt_date($date) {
 </table>
 
 <script>
-    // ພິມອັດຕະໂນມັດທັນທີທີ່ໜ້າໂຫລດສຳເລັດ
     window.onload = function () {
         window.print();
     };

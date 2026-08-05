@@ -18,7 +18,7 @@ function query_user(){
 	var username = $('#username').val();
   var office = $('#office').find(":selected").val();
 
-	//alert(office);   // removed: #office does not exist on login page -> "undefined" popup steals focus
+//alert(office);   // removed: #office does not exist on login page -> "undefined" popup steals focus
 
         $.ajax({
             type:'POST',

@@ -1,6 +1,18 @@
 <?php 
 include("init.php");
 
+
+	if(isset($_GET['del'])){
+			$del=mysqli_real_escape_string($con,$_GET['del']);
+			$delete=mysqli_query($con,"DELETE from users where Id='$del'");
+			if($delete){
+			echo "<script>alert('ລຶບສຳເລັດ');location='user_list.php';</script>";
+			}else{
+		echo "<script>alert('ລຶບບໍ່ສຳເລັດ');location='user_list.php';</script>";
+	}
+}
+
+
 ?>
 <style>
 td{ padding:10px;

@@ -253,6 +253,25 @@ if($max_id<1){    $sale_id=$id1;     }
 
 
 
+$(document).on('keyup click', '#Limited_Amount', function() {
+    // 1. ดึงค่าปัจจุบัน ลบตัวอักษรที่ไม่ใช่ตัวเลขออก (ยกเว้น จุดทศนิยม)
+    let value = $(this).val().replace(/[^0-9.]/g, '');
+
+    // 2. แยกส่วนจำนวนเต็มและทศนิยม (ป้องกันปัญหาพิมพ์จุดทศนิยมซ้ำ)
+    let parts = value.split('.');
+    
+    // 3. ใส่ Commas ให้ส่วนจำนวนเต็ม
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // 4. แสดงผลกลับไปยัง Input (จำกัดทศนิยมไม่เกิน 2 ตำแหน่ง)
+    if (parts.length > 1) {
+        $(this).val(parts[0] + '.' + parts[1].substring(0, 2));
+    } else {
+        $(this).val(parts[0]);
+    }
+});
+
+
 $(document).on('keyup', '.customer_id_s', function(){
 	  
 		
