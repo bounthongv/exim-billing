@@ -118,7 +118,7 @@ elseif($customer_id=='New_customer'){
         ) 
        as product_sale
           
-	   group by product_sale.sale_id order by product_sale.sale_id desc");
+	   group by product_sale.sale_id order by product_sale.sale_id ASC");
 
 
 

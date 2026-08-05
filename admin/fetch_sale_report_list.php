@@ -54,6 +54,7 @@
 		 or customers.customer_name like '%$customer_id%')  ";}
 
 
+		 $i=0;
 if($select_mode=='1'){
 		  
 /*
@@ -101,6 +102,7 @@ if($select_mode=='1'){
           
  			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
+					<th align="center">ລຳດັບ</th>
                 	<th align="center">ເລກທີ</th>
 					<th align="center">ວັນທີ</th>
                     <th align="center">ຊື່ລູກຄ້າ</th>
@@ -118,9 +120,10 @@ if($select_mode=='1'){
                 </tr>
            <?php
             while($s=mysqli_fetch_array($sp)){
-            
+            $i++;
 			?>
             	<tr>
+				<td><?= $i;?></td>
 			    <td><?= $s["sale_id"];?></td>
 				<td><?= $s["sale_date"];?></td>
                 <td><?= $s["customer_name"];?></td>
@@ -211,7 +214,7 @@ if($select_mode=='1'){
         
  			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
-                	
+                	<th align="center">ລຳດັບ</th>
 					<th align="center">ລະຫັດສິນຄ້າ</th>
                     <th align="center">ຊື່ສິນຄ້າ</th>  
 					 <th align="center" >ຫົວຫນ່ວຍ</th>
@@ -226,10 +229,10 @@ if($select_mode=='1'){
                 </tr>
            <?php
             while($s=mysqli_fetch_array($sp)){
-            
+            $i++;
 			?>
             	<tr>
-			    
+			    <td><?= $i;?></td>
 				<td align="center"><?=$s["Product_ID"];?></td>
             	<td><?=$s["Product_Name"];?></td>
                 
@@ -322,7 +325,7 @@ SELECT sale_import.*
         
  			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
-                	
+                	<th align="center">ລຳດັບ</th>
 					<th align="center">ເລກບິນ</th>
                     <th align="center">ວັນທີຂາຍ</th>
                     <th align="center">ຊື່ລູກຄ້າ</th> 	
@@ -337,10 +340,10 @@ SELECT sale_import.*
                 </tr>
            <?php
             while($s=mysqli_fetch_array($sp)){
-            
+            $i++;
 			?>
             	<tr>
-			    
+			    <td><?= $i;?></td>
 				<td align="center"><?=$s["sale_id"];?></td>
             	<td><?=$s["sale_date"];?></td>
                 
@@ -389,7 +392,7 @@ SELECT sale_import.*
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="3">ລວມ</td>
+			<td align="right" colspan="4">ລວມ</td>
 			<td align="right"><?=@number_format($t_qty,0);?></td>
             <td align="right"><?=@number_format($t_amt,0);?></td>
              <td align="right" colspan="4"></td>

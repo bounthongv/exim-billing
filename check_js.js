@@ -16,11 +16,11 @@ $("#passs").keyup(function() {
 function query_user(){
 	
 	var username = $('#username').val();
-	  var office = $('#office').find(":selected").val();
+  var office = $('#office').find(":selected").val();
 
 	//alert(office);   // removed: #office does not exist on login page -> "undefined" popup steals focus
 
-	        $.ajax({
+        $.ajax({
             type:'POST',
             url:'query_user.php',
           //  dataType: "json",
