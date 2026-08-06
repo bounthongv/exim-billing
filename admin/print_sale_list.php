@@ -95,8 +95,8 @@ font-size:10px;
 		   @$to_date= mysqli_real_escape_string($con,$_GET['to_date']);	
 		   $today=date("Y-m-d");
 /*
-    if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+    if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 */
  
 
@@ -178,7 +178,7 @@ echo "SELECT product_sale.*,sum(product_sale.total_amt) as t_total_amt,count(pro
 	  @$sp=mysqli_query($con,"SELECT 
       Invoice_Number as sale_id,
       Display_ID as order_id,
-      DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
+      DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
       Outlet_Name as customer_name,
       sum(Quantity) as qty_p,
       sum(Total) as total_amt,
@@ -186,7 +186,7 @@ echo "SELECT product_sale.*,sum(product_sale.total_amt) as t_total_amt,count(pro
       FROM sale_import
       WHERE 1=1
       $btw $r_id $c_id $sr_id
-      group by Invoice_Number order by DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) desc
+      group by Invoice_Number order by DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) desc
       ");
 */
 

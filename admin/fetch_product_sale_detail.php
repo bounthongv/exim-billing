@@ -41,7 +41,7 @@
 
 "SELECT  
 		  Invoice_Number as sale_id,
-		  DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
+		  DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
 		  Product_SKU as Product_ID,
 		  Product_Name,
 		  Quantity as qty,

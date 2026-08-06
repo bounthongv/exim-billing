@@ -13,8 +13,8 @@ $Detailed = mysqli_real_escape_string($con,$_POST['Detailed']);
 	
 
 /*
- if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+ if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 */
 
 
@@ -120,7 +120,7 @@ $query = "INSERT INTO tb_statement (
 )
 SELECT 
     Invoice_Number as sale_id, 
-    DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
+    DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
     Total, 
     Outlet_External_ID,
 \n$str_cases
@@ -128,7 +128,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ($str_in_products)
   $btw $c 
   AND Total != '0' 
-ORDER BY Outlet_External_ID, Invoiced_Date ASC
+ORDER BY Outlet_External_ID, Created_Date ASC
 ";
 */
 $query = "INSERT INTO tb_statement (
@@ -203,7 +203,7 @@ $query = "INSERT INTO tb_statement (
 )
 SELECT 
     Invoice_Number as sale_id, 
-    DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
+    DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
     Total as amount, 
     Outlet_External_ID,
     CASE WHEN Product_SKU = '10031707'  THEN Quantity ELSE 0 END,
@@ -229,7 +229,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ('10031707','10031707D','10031708','10031708D','10031709','10031709D','10031710','10031710D','10031711','10031711D','10031712','10031713','10031713D','10031777','10031777D','10126756','10128824','10128824D','10135854')
   $btw $c 
   AND Total != '0' 
-ORDER BY Outlet_External_ID,Invoiced_Date ASC
+ORDER BY Outlet_External_ID,Created_Date ASC
 ";
 
 @$sp = mysqli_query($con, $query);
@@ -370,7 +370,7 @@ $query = "INSERT INTO tb_statement (
 )
 SELECT 
     MAX(Invoice_Number) as sale_id, -- เลือกเลขที่บิลล่าสุดหรือใช้ MAX ยุบกลุ่ม
-    MAX(DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )) as sale_date, 
+    MAX(DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )) as sale_date, 
     SUM(Total) as inv_amt,          -- รวมยอดเงินบิลทั้งหมดของลูกค้ารายนี้
     Outlet_External_ID as customer_id,
 \n$str_sum_cases

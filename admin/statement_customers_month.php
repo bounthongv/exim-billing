@@ -25,9 +25,9 @@ else{ $btw="and (month(sale_date)='$month' and year(sale_date)='$year')
 
 
 /*
- if($month=='' || $month=='00'){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y' )='$year'";} 
-		  else{ $btw="and (DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%m' )='$month' 
-		  and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y' )='$year')
+ if($month=='' || $month=='00'){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y' )='$year'";} 
+		  else{ $btw="and (DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%m' )='$month' 
+		  and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y' )='$year')
 		  ";}
 		  */
 /*
@@ -130,7 +130,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ('10031707','10031707D','10031708','10031708D','10031709','10031709D','10031710','10031710D','10031711','10031711D','10031712','10031713','10031713D','10031777','10031777D','10126756','10128824','10128824D','10135854')
   $btw
   AND Total != '0' 
-ORDER BY Invoiced_Date
+ORDER BY Created_Date
 ";
 @$sp = mysqli_query($con, $query);
 */
@@ -222,8 +222,8 @@ WHERE
         SELECT Outlet_External_ID COLLATE utf8mb3_general_ci
         FROM sale_import 
         WHERE 
-            DATE_FORMAT(STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = '$mn'
-            AND DATE_FORMAT(STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y') = '$year'
+            DATE_FORMAT(STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = '$mn'
+            AND DATE_FORMAT(STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y') = '$year'
         GROUP BY Outlet_External_ID
     )
 ");	
@@ -310,23 +310,23 @@ SELECT
     SI.Outlet_External_ID AS Customers_ID,
 
     
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Jan' THEN SI.Quantity ELSE 0 END) AS Jan,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Feb' THEN SI.Quantity ELSE 0 END) AS Feb,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Mar' THEN SI.Quantity ELSE 0 END) AS Mar,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Apr' THEN SI.Quantity ELSE 0 END) AS Apr,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'May' THEN SI.Quantity ELSE 0 END) AS May,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Jun' THEN SI.Quantity ELSE 0 END) AS Jun,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Jul' THEN SI.Quantity ELSE 0 END) AS Jul,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Aug' THEN SI.Quantity ELSE 0 END) AS Aug,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Sep' THEN SI.Quantity ELSE 0 END) AS Sep,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Oct' THEN SI.Quantity ELSE 0 END) AS Oct,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Nov' THEN SI.Quantity ELSE 0 END) AS Nov,
-    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Dec' THEN SI.Quantity ELSE 0 END) AS `Dec`
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Jan' THEN SI.Quantity ELSE 0 END) AS Jan,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Feb' THEN SI.Quantity ELSE 0 END) AS Feb,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Mar' THEN SI.Quantity ELSE 0 END) AS Mar,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Apr' THEN SI.Quantity ELSE 0 END) AS Apr,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'May' THEN SI.Quantity ELSE 0 END) AS May,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Jun' THEN SI.Quantity ELSE 0 END) AS Jun,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Jul' THEN SI.Quantity ELSE 0 END) AS Jul,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Aug' THEN SI.Quantity ELSE 0 END) AS Aug,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Sep' THEN SI.Quantity ELSE 0 END) AS Sep,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Oct' THEN SI.Quantity ELSE 0 END) AS Oct,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Nov' THEN SI.Quantity ELSE 0 END) AS Nov,
+    SUM(CASE WHEN DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%b') = 'Dec' THEN SI.Quantity ELSE 0 END) AS `Dec`
 
 FROM `sale_import` SI
 WHERE 
     SI.Product_SKU IN ('10031707','10031708','10031709','10031710','10031711','10126756','10128824','10135854','10031712','10031713','10031777')
-    AND DATE_FORMAT(STR_TO_DATE(SI.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y') = '$year'
+    AND DATE_FORMAT(STR_TO_DATE(SI.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y') = '$year'
     AND SI.Total != '0'
 GROUP BY SI.Outlet_External_ID
 ORDER BY SI.Outlet_External_ID

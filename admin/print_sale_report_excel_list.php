@@ -97,8 +97,8 @@ font-size:10px;
          if($from_date=='' or $to_date==''){$btw="and product_sale.sale_date='$today'";} 
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
 		  */
-   if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+   if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 
 
 

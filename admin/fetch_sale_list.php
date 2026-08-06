@@ -44,8 +44,8 @@ elseif($customer_id=='New_customer'){
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
 		  
 /*
- if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+ if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 */
 
            @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);	
@@ -126,7 +126,7 @@ elseif($customer_id=='New_customer'){
 		  @$sp=mysqli_query($con,"SELECT 
       Invoice_Number as sale_id,
       Display_ID as order_id,
-      DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
+      DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) AS sale_date,
       Outlet_External_ID as customer_id,
       Outlet_Name as customer_name,
       sum(Quantity) as qty_p,
@@ -134,7 +134,7 @@ elseif($customer_id=='New_customer'){
       FROM sale_import
       WHERE 1=1
       $btw $r_id $c_id $sr_id
-      group by Invoice_Number order by DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) desc
+      group by Invoice_Number order by DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) desc
       ");
 			 */
 			  

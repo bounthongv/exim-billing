@@ -46,7 +46,7 @@ sale_import.Invoice_Number as sale_id
    ,customer_import.phone_number as phone
    ,customer_import.outlet_name as fname
    ,customer_import.external_id as customer_id
-   ,sale_import.Invoiced_Date as sale_date
+   ,sale_import.Created_Date as sale_date
 				 from sale_import 
          LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 
          LEFT JOIN customer_import ON customer_import.external_id = sale_import.Outlet_External_ID

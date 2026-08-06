@@ -24,8 +24,8 @@ else{ $btw="and (sale_date>='$from_date' and sale_date<='$to_date')";}
 	
 
 /*
- if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+ if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 */
 
 
@@ -93,7 +93,7 @@ $query = "INSERT INTO tb_statement (
 )
 SELECT 
     Invoice_Number as sale_id, 
-    DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
+    DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
     Total, 
     Outlet_External_ID,
     CASE WHEN Product_SKU = '10031707'  THEN Quantity ELSE 0 END,
@@ -119,7 +119,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ('10031707','10031707D','10031708','10031708D','10031709','10031709D','10031710','10031710D','10031711','10031711D','10031712','10031713','10031713D','10031777','10031777D','10126756','10128824','10128824D','10135854')
   $btw $c 
   AND Total != '0' 
-ORDER BY Invoiced_Date
+ORDER BY Created_Date
 ";
 
 @$sp = mysqli_query($con, $query);
@@ -247,7 +247,7 @@ $query = "INSERT INTO tb_statement (
 )
 SELECT 
     Invoice_Number as sale_id, 
-    DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
+    DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) as sale_date, 
     Total as amount, 
     Outlet_External_ID,
     CASE WHEN Product_SKU = '10031707'  THEN Quantity ELSE 0 END,
@@ -273,7 +273,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ('10031707','10031707D','10031708','10031708D','10031709','10031709D','10031710','10031710D','10031711','10031711D','10031712','10031713','10031713D','10031777','10031777D','10126756','10128824','10128824D','10135854')
   $btw $c 
   AND Total != '0' 
-ORDER BY Invoiced_Date
+ORDER BY Created_Date
 ";
 @$sp = mysqli_query($con, $query);
 	
