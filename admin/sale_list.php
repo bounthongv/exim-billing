@@ -398,6 +398,16 @@ $(document).on('click', '#print', function(){
     
     <button type="submit" name="import">นำเข้าข้อมูล</button>
 </form>
+
+
+<?php /*
+<form action="import_check_sale_file.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="excel_file_2" accept=".csv" required> 
+    
+    <button type="submit" name="import2">นำเข้าข้อมูล 2</button>
+</form>
+*/ ?>
+
 </td>
 
 
