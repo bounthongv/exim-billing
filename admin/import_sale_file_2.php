@@ -42,7 +42,7 @@ if (isset($_POST['import'])) {
         $worksheet = $spreadsheet->getActiveSheet();
 
         // 3. เตรียมคำสั่ง SQL
-        $sql = "INSERT INTO sale_import (Item_ID,Display_ID,Created_Date,Invoice_Number,Outlet_External_ID,Outlet_Name,Extended_Status,Product_SKU,Product_Name, Quantity, Price, Total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO sale_import (Item_ID,Display_ID,Invoiced_Date,Invoice_Number,Outlet_External_ID,Outlet_Name,Extended_Status,Product_SKU,Product_Name, Quantity, Price, Total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $sql);
 
         if ($stmt) {
@@ -62,7 +62,7 @@ $extendedStatus = trim((string)$worksheet->getCell('U' . $rowIndex)->getValue())
 
                 $Item_ID = trim((string)$worksheet->getCell('A' . $rowIndex)->getValue());
                 $Display_ID = trim((string)$worksheet->getCell('C' . $rowIndex)->getValue());
-                $Created_Date = trim((string)$worksheet->getCell('I' . $rowIndex)->getValue());
+                $Invoiced_Date = trim((string)$worksheet->getCell('I' . $rowIndex)->getValue());
                 $Invoice_Number = trim((string)$worksheet->getCell('M' . $rowIndex)->getValue());
                 $Outlet_External_ID = trim((string)$worksheet->getCell('AL' . $rowIndex)->getValue());
                 $Outlet_Name = trim((string)$worksheet->getCell('AK' . $rowIndex)->getValue());
@@ -75,7 +75,7 @@ $extendedStatus = trim((string)$worksheet->getCell('U' . $rowIndex)->getValue())
 
                 // ตรวจสอบ: บันทึกเฉพาะแถวที่มีเลขที่ Invoice เท่านั้น (ป้องกันแถวว่างท้ายไฟล์)
                 if ($Invoice_Number !== '') {
-                    mysqli_stmt_bind_param($stmt, "ssssssssssss", $Item_ID, $Display_ID, $Created_Date, $Invoice_Number,$Outlet_External_ID,$Outlet_Name, $Extended_Status,$Product_SKU,$Product_Name, $Quantity, $Price, $Total);
+                    mysqli_stmt_bind_param($stmt, "ssssssssssss", $Item_ID, $Display_ID, $Invoiced_Date, $Invoice_Number,$Outlet_External_ID,$Outlet_Name, $Extended_Status,$Product_SKU,$Product_Name, $Quantity, $Price, $Total);
                     mysqli_stmt_execute($stmt);
                     $count++;
                 }

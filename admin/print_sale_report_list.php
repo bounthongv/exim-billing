@@ -95,8 +95,8 @@ font-size:10px;
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
 		  */
  
-   if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+   if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 
 
 
@@ -164,7 +164,7 @@ if($select_mode=='1'){
    ,customer_import.phone_number as phone
    ,customer_import.outlet_name as fname
    ,customer_import.external_id as customer_id
-   ,sale_import.Created_Date as sale_date
+   ,sale_import.Invoiced_Date as sale_date
 
 		   FROM  sale_import 
 		  LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 
@@ -268,7 +268,7 @@ if($select_mode=='1'){
    ,customer_import.phone_number as phone
    ,customer_import.outlet_name as fname
    ,customer_import.external_id as customer_id
-   ,sale_import.Created_Date as sale_date
+   ,sale_import.Invoiced_Date as sale_date
 
 		   FROM  sale_import 
 		  LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 
@@ -376,7 +376,7 @@ if($select_mode=='1'){
    ,customer_import.phone_number as phone
    ,customer_import.outlet_name as fname
    ,customer_import.external_id as customer_id
-   ,sale_import.Created_Date as sale_date
+   ,sale_import.Invoiced_Date as sale_date
 
 		   FROM  sale_import 
 		  LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 

@@ -12,8 +12,8 @@ $Detailed = mysqli_real_escape_string($con,$_POST['Detailed']);
 		  else{ $btw="and (sale_date>='$from_date' and sale_date<='$to_date')";}
 	
 /*
- if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
-		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
+ if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
+		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 */
 
 
@@ -107,7 +107,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ('10031707','10031707D','10031708','10031708D','10031709','10031709D','10031710','10031710D','10031711','10031711D','10031712','10031713','10031713D','10031777','10031777D','10126756','10128824','10128824D','10135854')
   $btw $c 
   AND Total != '0' 
-ORDER BY Outlet_External_ID,Created_Date ASC
+ORDER BY Outlet_External_ID,Invoiced_Date ASC
 ";
 */
 
@@ -164,7 +164,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ($str_in_products)
   $btw $c 
   AND Total != '0' 
-ORDER BY Outlet_External_ID, Created_Date ASC
+ORDER BY Outlet_External_ID, Invoiced_Date ASC
 ";
 */
 $query = "INSERT INTO tb_statement_customers (
@@ -301,7 +301,7 @@ FROM `sale_import`
 WHERE Product_SKU IN ('10031707','10031707D','10031708','10031708D','10031709','10031709D','10031710','10031710D','10031711','10031711D','10031712','10031713','10031713D','10031777','10031777D','10126756','10128824','10128824D','10135854')
   $btw $c 
   AND Total != '0' 
-ORDER BY Outlet_External_ID,Created_Date ASC
+ORDER BY Outlet_External_ID,Invoiced_Date ASC
 ";
 @$sp = mysqli_query($con, $query);
 
