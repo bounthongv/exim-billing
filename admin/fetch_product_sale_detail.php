@@ -21,7 +21,7 @@
 		 else{
 		 
 
-
+/*
 "SELECT product_sale.* ,sum(product_sale.qty) as qty,sum(product_sale.amount) as amount,
 	   stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
 			,tb_groups.Group_Name,products.version
@@ -89,7 +89,7 @@
        
        
      where 1=1 $r_id and product_sale.qty>0";
-
+*/
 
 
 		  @$sp=mysqli_query($con,"SELECT product_sale.* ,(product_sale.qty) as qty,(product_sale.total) as total,

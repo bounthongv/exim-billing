@@ -10,21 +10,25 @@
 		   @$from_date= mysqli_real_escape_string($con,$_POST['from_date']);	
 		   @$to_date= mysqli_real_escape_string($con,$_POST['to_date']);	
 		   $today=date("Y-m-d");
-/*
+
          if($from_date=='' or $to_date==''){$btw="and product_sale.sale_date='$today'";} 
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
-		  */
+		  
+
+/*
   if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
-
+*/
 
  
            @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);
-/*
-		   if($sale_id==''){$sa_id="";}  else{ $sa_id="and  product_sale.sale_id='$sale_id' ";}		
-		   */
- if($sale_id==''){$sa_id="";}  else{ $sa_id="and  sale_import.Invoice_Number='$sale_id' ";}
 
+		   if($sale_id==''){$sa_id="";}  else{ $sa_id="and  product_sale.sale_id='$sale_id' ";}		
+		   
+
+       /*
+ if($sale_id==''){$sa_id="";}  else{ $sa_id="and  sale_import.Invoice_Number='$sale_id' ";}
+*/
 
 
 		    @$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);	   
@@ -34,10 +38,8 @@
       echo $summary;
 if($summary=='1'){
 
-		/*  
-"
-    
-	   select * from (   
+	 
+@$sp=mysqli_query($con,"SELECT * from (   
     
        SELECT product_sale.*,stocks.stock_name
        ,products.Product_Name,products.size,products.Unit 
@@ -52,14 +54,12 @@ if($summary=='1'){
 	   group by product_sale.sale_id   order by product_sale.sale_id 
      
         
-        ) as tb_a where  payment < total_amt  
-	   
-	          "
-*/
+        ) as tb_a where  payment < total_amt");
 
 
 
 
+/*
 		  @$sp=mysqli_query($con,"SELECT * from (
 SELECT 
 sale_import.Invoice_Number as sale_id
@@ -85,10 +85,9 @@ sale_import.Invoice_Number as sale_id
 
         
         ) as tb_a
-        /*
-         where  payment < total_amt  
-	   */
-	          ");
+        ");
+*/
+
 		  if($sp){
           ?>
         
@@ -162,8 +161,8 @@ elseif($summary=='2'){
               </tr>
            <?php
 		   
-/*
-"SELECT * from (   
+
+@$sql_head=mysqli_query($con,"SELECT * from (   
     
        SELECT product_sale.*,stocks.stock_name
        ,products.Product_Name,products.size,products.Unit 
@@ -179,11 +178,11 @@ elseif($summary=='2'){
      
         
         ) as tb_a where  payment < total_amt 
-	  
-	   
-	          "
-*/
+	  ");
 
+
+
+/*
 		   		  @$sql_head=mysqli_query($con,"SELECT * from (   
     
        SELECT 
@@ -209,13 +208,8 @@ sale_import.*
 	   group by sale_import.Invoice_Number   order by sale_import.Invoice_Number 
      
         
-        ) as tb_a 
-        /*
-        where  payment < total_amt 
-	  */
-	   
-	          ");
-			  
+        ) as tb_a ");
+			  */
 		 
 			 
 		while($fh=mysqli_fetch_array($sql_head)){

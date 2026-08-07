@@ -26,7 +26,7 @@ extract($_GET);
     </thead>
     <tbody>
   <?php
-    $sp=mysqli_query($con,"    select menu_user.user_id,menu_list.header_id,  menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
+    $sp=mysqli_query($con,"SELECT menu_user.user_id,menu_list.header_id,  menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
      
      from menu_user
      
@@ -44,8 +44,11 @@ extract($_GET);
         
         <td colspan="2"  class="bgtd"><?php echo $s['header_id']; ?> &nbsp;<?php echo $s['header_name']; ?></td>
     <?php    
-        $spd=mysqli_query($con," 
-		select menu_user.user_id,menu_list.header_id,  menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name,menu_user.status
+
+
+
+
+        $spd=mysqli_query($con,"SELECT menu_user.user_id,menu_list.header_id,  menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name,menu_user.status
      
      from menu_user
      

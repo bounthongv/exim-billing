@@ -21,8 +21,8 @@ include("init.php");
 <?php 
 $sale_id=mysqli_real_escape_string($con,$_GET['sale_id']);
 
-/*
- select product_sale.*,sum(product_sale.qty) as qty
+
+$sql_h = mysqli_query($con,"SELECT product_sale.*,sum(product_sale.qty) as qty
                                ,sum(product_sale.amount) as amount
 				 ,products.Product_Name,customers.customer_name ,stocks.stock_name,customers.address,customers.phone
 				 ,users.User_Name
@@ -33,11 +33,11 @@ $sale_id=mysqli_real_escape_string($con,$_GET['sale_id']);
 		 LEFT JOIN stocks ON product_sale.stock_id = stocks.stock_id 
 		 LEFT JOIN users ON product_sale.user_id = users.User_ID 
          
-		 where product_sale.sale_id='$sale_id'  group by product_sale.product_id
-     */
+		 where product_sale.sale_id='$sale_id'  group by product_sale.product_id");
+     
      
 
-
+/*
 $sql_h = mysqli_query($con,"SELECT sale_import.*,
 sale_import.Invoice_Number as sale_id,
 sum(sale_import.Quantity) as t_qty
@@ -55,7 +55,7 @@ sum(sale_import.Quantity) as t_qty
          where sale_import.Invoice_Number='$sale_id'
 		   group by sale_import.Product_SKU
        ");
-
+*/
 
               $ff = mysqli_fetch_array($sql_h);
 			  $date_x=$ff['sale_date'];
@@ -155,8 +155,8 @@ tr.border_top td{
      where products.Group_ID='001' ");*/
 
 
-/*
- "SELECT product_sale.* ,sum(product_sale.qty) as t_qty
+
+ $sql = mysqli_query($con,"SELECT product_sale.* ,sum(product_sale.qty) as t_qty
 	 ,sum(product_sale.amount) as t_amount
 	 ,products.Product_ID,products.Product_Name,customers.customer_name 
 				 ,stocks.stock_name,customers.address,customers.phone,products.Unit
@@ -165,11 +165,11 @@ tr.border_top td{
          LEFT JOIN customers ON customers.customer_id = product_sale.customer_id
 		  LEFT JOIN stocks ON product_sale.stock_id = stocks.stock_id 
          
-		 where product_sale.sale_id='$sale_id'  group by product_sale.product_id";
-
-*/
+		 where product_sale.sale_id='$sale_id'  group by product_sale.product_id");
 
 
+
+/*
 	 $sql = mysqli_query($con,"SELECT sale_import.* ,sum(sale_import.Quantity) as t_qty,
    sale_import.Price as price
 	 ,sum(sale_import.Total) as t_amount
@@ -182,7 +182,9 @@ tr.border_top td{
          where sale_import.Invoice_Number='$sale_id'
 		    group by sale_import.Product_SKU,sale_import.Item_ID
      ");
-		 
+		 */
+
+
 		 $e=0;
                         while($f = mysqli_fetch_array($sql)){
                        // $total = $f['qty_iv'] * $f['prices'];

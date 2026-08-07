@@ -90,14 +90,14 @@ font-size:10px;
 		     @$to_date= mysqli_real_escape_string($con,$_GET['to_date']);
 			 	
 		   $today=date("Y-m-d");
-		   /*
+		   
          if($from_date=='' or $to_date==''){$btw="and product_sale.sale_date='$today'";} 
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
-		  */
- 
+		  
+ /*
    if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$to_date'";} 
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
-
+*/
 
 
            @$sale_id= mysqli_real_escape_string($con,$_GET['sale_id']);	  
@@ -109,12 +109,12 @@ font-size:10px;
 		 
 		 
 		  @$product_id= mysqli_real_escape_string($con,$_GET['product_id']);
-/*
+
          if($product_id==''){$p_id="";}  else{ $p_id="and (product_sale.product_id like '$product_id%'  )";}
-*/
 
+/*
 		  if($product_id==''){$p_id="";}  else{ $p_id="and  sale_import.Product_SKU like '$product_id' ";}
-
+*/
 
 		 
 		 @$user_id= mysqli_real_escape_string($con,$_POST['user_id']);	
@@ -134,8 +134,8 @@ font-size:10px;
 if($select_mode=='1'){
 		  
 
-/*
-       SELECT product_sale.* ,stocks.stock_name,products.Product_ID
+
+       @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
 			,sum(product_sale.qty) as t_qty
@@ -151,9 +151,9 @@ if($select_mode=='1'){
      where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id 
 	 group by product_sale.product_id,product_sale.sale_id
 	order by  product_sale.sale_id,product_sale.product_id asc 
-         */
+         ");
 
-  
+  /*
       @$sp=mysqli_query($con,"SELECT sale_import.*
 ,sale_import.Invoice_Number as sale_id
 ,sum(sale_import.Quantity) as qty
@@ -174,6 +174,8 @@ if($select_mode=='1'){
 
 	 group by sale_import.Product_SKU,sale_import.Invoice_Number
 	 order by sale_import.Invoice_Number,sale_import.Product_SKU asc");
+*/
+
 		  if($sp){
           ?>
           
@@ -240,8 +242,8 @@ if($select_mode=='1'){
       }
 		elseif($select_mode=='2'){ 
 		
-		/*
- SELECT product_sale.* ,stocks.stock_name,products.Product_ID,sum(product_sale.qty) as qty
+		
+ @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID,sum(product_sale.qty) as qty
 	   ,sum(product_sale.amount) as amount
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
@@ -254,10 +256,11 @@ if($select_mode=='1'){
        
        
      where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id group by product_sale.product_id,product_sale.price
-	  order by  product_sale.sale_id, product_sale.product_id asc 
-         */
+	  order by  product_sale.sale_id, product_sale.product_id asc ");
+         
 
 
+/*
 		      @$sp=mysqli_query($con,"SELECT sale_import.*
 ,sale_import.Invoice_Number as sale_id
 ,sum(sale_import.Quantity) as qty
@@ -278,6 +281,8 @@ if($select_mode=='1'){
 
 	 group by sale_import.Product_SKU
 	 order by sale_import.Product_SKU asc");
+*/
+
 		  if($sp){
           ?>
           
@@ -339,8 +344,8 @@ if($select_mode=='1'){
 <?php }	
 		  }
 		elseif($select_mode=='3'){ 
-		/*
-		 SELECT product_sale.* ,stocks.stock_name,products.Product_ID
+		
+		 @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
 	   ,sum(product_sale.qty) as t_qty
 	   ,sum(product_sale.amount) as t_amount
 	   
@@ -364,8 +369,10 @@ if($select_mode=='1'){
 	 
 	  group by product_sale.sale_id
 	
-	  order by product_sale.sale_id asc  
-         */
+	  order by product_sale.sale_id asc"); 
+         
+
+/*
 		      @$sp=mysqli_query($con,"SELECT sale_import.*
 ,sale_import.Invoice_Number as sale_id
 ,sum(sale_import.Quantity) as qty
@@ -386,6 +393,8 @@ if($select_mode=='1'){
 
 	 group by sale_import.Invoice_Number
 	 order by sale_import.Invoice_Number asc");
+*/
+
 		  if($sp){
           ?>
         

@@ -93,7 +93,7 @@ if (isset($_POST['import'])) {
             // -----------------------------------------------------------------
             $colA  = excelColumnToIndex('A');
             $colC  = excelColumnToIndex('C');
-            $colE  = excelColumnToIndex('E');
+            $colI  = excelColumnToIndex('I');
             $colM  = excelColumnToIndex('M');
             $colZ  = excelColumnToIndex('Z');
             $colAK = excelColumnToIndex('AK');
@@ -124,7 +124,7 @@ if (isset($_POST['import'])) {
 
                 $Item_ID             = isset($data[$colA])  ? trim((string)$data[$colA])  : '';
                 $Display_ID          = isset($data[$colC])  ? trim((string)$data[$colC])  : '';
-                $Created_Date       = isset($data[$colE])  ? trim((string)$data[$colE])  : '';
+                $Invoiced_Date       = isset($data[$colI])  ? trim((string)$data[$colI])  : '';
                 $Invoice_Number      = isset($data[$colM])  ? trim((string)$data[$colM])  : '';
                 $Item_Promotion_Code = isset($data[$colZ])  ? trim((string)$data[$colZ])  : '';
 
@@ -136,16 +136,16 @@ if (isset($_POST['import'])) {
                 $Price               = isset($data[$colBP]) ? trim((string)$data[$colBP]) : '';
                 $Total               = isset($data[$colBU]) ? trim((string)$data[$colBU]) : '';
 
-                if ($Invoice_Number === '' || $Item_ID === '' || $Created_Date === '') {
+                if ($Invoice_Number === '' || $Item_ID === '' || $Invoiced_Date === '') {
                     continue;
                 }
 
-                $dates_in_csv[$Created_Date] = true;
-                $csv_record_keys[$Item_ID . '_' . $Created_Date] = true;
+                $dates_in_csv[$Invoiced_Date] = true;
+                $csv_record_keys[$Item_ID . '_' . $Invoiced_Date] = true;
 
                 // ✅ แก้ไข: เก็บครบ 13 คอลัมน์ (เพิ่ม Item_Promotion_Code เป็น Index ที่ 12)
                 $rows_to_insert[] = [
-                    $Item_ID, $Display_ID, $Created_Date, $Invoice_Number,
+                    $Item_ID, $Display_ID, $Invoiced_Date, $Invoice_Number,
                     $Outlet_External_ID, $Outlet_Name, $Extended_Status,
                     $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
                     $Item_Promotion_Code
@@ -175,10 +175,10 @@ if (isset($_POST['import'])) {
                 }
                 $date_range_str = implode(',', $date_escaped);
 
-                $res_existing = mysqli_query($con, "SELECT Item_ID, Created_Date FROM sale_import WHERE Created_Date IN ($date_range_str)");
+                $res_existing = mysqli_query($con, "SELECT Item_ID, Invoiced_Date FROM sale_import WHERE Invoiced_Date IN ($date_range_str)");
                 if ($res_existing) {
                     while ($r = mysqli_fetch_assoc($res_existing)) {
-                        $existing_keys[$r['Item_ID'] . '_' . $r['Created_Date']] = true;
+                        $existing_keys[$r['Item_ID'] . '_' . $r['Invoiced_Date']] = true;
                     }
                 }
             }
@@ -202,7 +202,7 @@ if (isset($_POST['import'])) {
             // ---- Batch INSERT สำหรับแถวใหม่ ----
             if (!empty($rows_for_insert)) {
                 $sql_insert_base = "INSERT INTO sale_import (
-                                    Item_ID, Display_ID, Created_Date, Invoice_Number,
+                                    Item_ID, Display_ID, Invoiced_Date, Invoice_Number,
                                     Outlet_External_ID, Outlet_Name, Extended_Status,
                                     Product_SKU, Product_Name, Quantity, Price, Total,
                                     Item_Promotion_Code
@@ -256,7 +256,7 @@ if (isset($_POST['import'])) {
                                 Outlet_External_ID = ?, Outlet_Name = ?, Extended_Status = ?,
                                 Product_SKU = ?, Product_Name = ?, Quantity = ?, Price = ?, Total = ?,
                                 Item_Promotion_Code = ?
-                            WHERE Item_ID = ? AND Created_Date = ?";
+                            WHERE Item_ID = ? AND Invoiced_Date = ?";
                 $stmt_update = mysqli_prepare($con, $sql_update);
 
                 if (!$stmt_update) {
@@ -267,7 +267,7 @@ if (isset($_POST['import'])) {
                 foreach ($rows_for_update as $row) {
                     $Item_ID             = $row[0];
                     $Display_ID          = $row[1];
-                    $Created_Date       = $row[2];
+                    $Invoiced_Date       = $row[2];
                     $Invoice_Number      = $row[3];
                     $Outlet_External_ID  = $row[4];
                     $Outlet_Name         = $row[5];
@@ -285,7 +285,7 @@ if (isset($_POST['import'])) {
                         $Outlet_External_ID, $Outlet_Name, $Extended_Status,
                         $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
                         $Item_Promotion_Code,
-                        $Item_ID, $Created_Date
+                        $Item_ID, $Invoiced_Date
                     );
                     mysqli_stmt_execute($stmt_update);
                     $update_count++;
@@ -326,8 +326,8 @@ if (isset($_POST['import'])) {
                 $key_range_str = implode(',', $key_escaped);
 
                 $delete_sql = "DELETE FROM sale_import
-                                WHERE Created_Date IN ($date_range_str)
-                                AND CONCAT(Item_ID, '_', Created_Date) NOT IN ($key_range_str)";
+                                WHERE Invoiced_Date IN ($date_range_str)
+                                AND CONCAT(Item_ID, '_', Invoiced_Date) NOT IN ($key_range_str)";
 
                 if (mysqli_query($con, $delete_sql)) {
                     $delete_count = mysqli_affected_rows($con);
@@ -352,8 +352,8 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.price       = si.Price,
         ps.qty         = si.Quantity,
         ps.Total       = si.total,
-        ps.sale_date   = DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+        ps.sale_date   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
         ps.free        = si.Item_Promotion_Code
@@ -370,8 +370,8 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Price,
         si.Quantity,
         si.total,
-        DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+        DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         si.Display_ID,
         si.Invoice_Number,
         sale_import_2.remain,

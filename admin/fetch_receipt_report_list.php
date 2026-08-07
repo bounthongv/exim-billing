@@ -36,9 +36,7 @@
 
 if($select_mode=='1'){
 		  
-  @$sp=mysqli_query($con,"
-       
-         select product_sale.* 
+  @$sp=mysqli_query($con,"SELECT product_sale.* 
 		 ,customers.customer_name
 		 ,customer_payment.payment_id,customer_payment.payment_date,customer_payment.amount as total_payment
 		 from  product_sale
@@ -144,204 +142,144 @@ if($select_mode=='1'){
 	      <p><br>
 	        <?php }
       }
-		elseif($select_mode=='2'){ 
-		
-		  @$sp=mysqli_query($con,"
-       select *
-	     ,sum(total)  as t_total 
-		 ,sum(total_payment) as t_total_payment
-		 ,sum(remain) as t_remain
-  
-  	 from (
-        select product_sale.* 
-		 ,customers.customer_name
-		 ,customer_payment.payment_id,customer_payment.payment_date,customer_payment.amount as total_payment
-		 from  product_sale
-		 left join customers on product_sale.customer_id=customers.customer_id
-		 left join customer_payment on product_sale.sale_id=customer_payment.sale_id
-		 
-		 where 1=1 $btw $r_id $c_id $st
-		 group by product_sale.sale_id
-		 
-		) as tb_report group by customer_id
-		 
-	   
-	          ");
-		  if($sp){
-          ?>
-	        
-</p>
-		    <table id="myTable" border="1" width="100%"  class="table-bordered" align="left">
-             <thead>
-            	<tr>
-                       <th  ></th>
-            	
-                     <th align="center">ລ/ດ</th>	
-                     <th align="center">ລູກຄ້າ</th>
-                     <th align="center" >ມູນຄ່າຂາຍ</th>
-                     <th align="center" >ມູນຄ່າຈ່າຍ</th>
-                     <th align="center" >ຍອດເຫຼືອ</th>     
-                	
-				         
-					 
-                    
-                 
-                    
-                </tr>
-                 </thead>
-                <tbody>
-           <?php
-		   
-		
-		   $e_list=0;
-            while($s=mysqli_fetch_array($sp)){
-				
-				$e_list++;
-            
-			?>
-            	<tr>
-                <td class="hdc" data-toggle="collapse" data-target="#group-of-rows-<?php echo $e_list;?>"
-                  aria-expanded="false" aria-controls="group-of-rows-<?php echo $e_list;?>" align="center" >
-                   <i class="fa fa-plus"></i></td>
-              
+		elseif($select_mode=='2'){
+
+    // ดึงรายละเอียดทั้งหมดครั้งเดียว (ไม่ query ซ้ำในลูป)
+    @$detail_q = mysqli_query($con, "SELECT product_sale.*,
+               customers.customer_name,
+               customer_payment.payment_id,
+               customer_payment.payment_date,
+               customer_payment.amount as total_payment
+        FROM product_sale
+        LEFT JOIN customers ON product_sale.customer_id = customers.customer_id
+        LEFT JOIN customer_payment ON product_sale.sale_id = customer_payment.sale_id
+        WHERE 1=1 $btw $r_id $c_id $st
+        GROUP BY product_sale.sale_id
+        ORDER BY product_sale.customer_id
+    ");
+
+    // จัดกลุ่มข้อมูลตาม customer_id ด้วย PHP
+    $customers_data = [];
+    while($row = mysqli_fetch_array($detail_q)){
+        $cid = $row["customer_id"];
+
+        if(!isset($customers_data[$cid])){
+            $customers_data[$cid] = [
+                "customer_name" => $row["customer_name"],
+                "rows" => [],
+                "t_total" => 0,
+                "t_total_payment" => 0,
+                "t_remain" => 0
+            ];
+        }
+
+        $customers_data[$cid]["rows"][] = $row;
+        $customers_data[$cid]["t_total"] += $row["total"];
+        $customers_data[$cid]["t_total_payment"] += $row["total_payment"];
+        $customers_data[$cid]["t_remain"] += $row["remain"];
+    }
+
+    if(count($customers_data) > 0){
+    ?>
+    <table id="myTable" border="1" width="100%" class="table-bordered" align="left">
+        <thead>
+            <tr>
+                <th></th>
+                <th align="center">ລ/ດ</th>
+                <th align="center">ລູກຄ້າ</th>
+                <th align="center">ມູນຄ່າຂາຍ</th>
+                <th align="center">ມູນຄ່າຈ່າຍ</th>
+                <th align="center">ຍອດເຫຼືອ</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        $e_list = 0;
+        $t_amt = 0; $t_total_payment = 0; $t_remain = 0;
+
+        foreach($customers_data as $cid => $cust){
+            $e_list++;
+        ?>
+            <tr>
+                <td class="hdc" data-toggle="collapse" data-target="#group-of-rows-<?=$e_list;?>"
+                    aria-expanded="false" aria-controls="group-of-rows-<?=$e_list;?>" align="center">
+                    <i class="fa fa-plus"></i>
+                </td>
                 <td align="center"><?=$e_list;?></td>
-                <td align="left"><?=$s["customer_id"];?> <?=$s["customer_name"];?></td>			   
-            	 <td align="right"><?=@number_format($s["t_total"],0);?></td>
-                 <td align="right"><?=@number_format($s["t_total_payment"]);?></td>	
-            	 <td align="right"><?=@number_format($s["t_remain"]);?></td>
-				 
-				</tr>
-                
-                           <tbody>
-             
-            <tbody id="group-of-rows-<?php echo $e_list;?>" class="collapse">
-      
-      <td colspan="14" align="center">
-      <table width="100%">
-       <tr align="center" bgcolor="#F9F8FA">
-       
-                     
+                <td align="left"><?=$cid;?> <?=$cust["customer_name"];?></td>
+                <td align="right"><?=number_format($cust["t_total"],0);?></td>
+                <td align="right"><?=number_format($cust["t_total_payment"]);?></td>
+                <td align="right"><?=number_format($cust["t_remain"]);?></td>
+            </tr>
+
+            <tbody id="group-of-rows-<?=$e_list;?>" class="collapse">
+            <td colspan="14" align="center">
+            <table width="100%">
+                <tr align="center" bgcolor="#F9F8FA">
                     <th align="center">ລ/ດ</th>
-                	<th align="center">ລູກຄ້າ</th> 
+                    <th align="center">ລູກຄ້າ</th>
                     <th align="center">ບິນຂາຍ</th>
-					<th align="center">ວັນທີ</th>
-                    <th align="center">ເລກທີສັ່ງຊື້</th>
-					<th align="center" >ມູນຄ່າຂາຍ</th>
-                    <th align="center" >ຮູບແບບ</th>                    
-                    <th align="center" >ບິນຮັບເງີນ</th>
                     <th align="center">ວັນທີ</th>
-                   <th align="center" >ມູນຄ່າຈ່າຍ</th>
-                   <th align="center" >ຍອດເຫຼືອ</th>
-                   </tr>
-                   <?php
-		      @$ssp=mysqli_query($con,"
-       
-         select product_sale.* 
-		 ,customers.customer_name
-		 ,customer_payment.payment_id,customer_payment.payment_date,customer_payment.amount as total_payment
-		 from  product_sale
-		 left join customers on product_sale.customer_id=customers.customer_id
-		 left join customer_payment on product_sale.sale_id=customer_payment.sale_id
-		 
-		 where 1=1 $btw $r_id $c_id $st and product_sale.customer_id='".$s["customer_id"]."'
-		 group by product_sale.sale_id
-		 
-	   
-	          ");
-		   $ee_list=0;
-            while($ss=mysqli_fetch_array($ssp)){
-				
-				$ee_list++;
-				$date1=$ss["sale_date"];
-				$date1=date_create($date1);
-				
-				$date2=$ss["payment_date"];
-				$date2=date_create($date2);
-               
-            
-			?>
-            	<tr>
-                 
-              
-                <td align="center"><?=$ee_list;?></td>
-                <td><?=$ss["customer_name"];?></td>
-                
-			    <td align="center"><?=$ss["sale_id"];?></td>
-				<td align="center"><?php if($s["sale_date"]==''){}else{
-				echo	date_format($date1,"d/m/Y");
-					}?></td>
-                <td align="center"><?=$ss["order_id"];?></td>				
-            	<td align="right"><?=@number_format($ss["total"],0);?></td>
-                 <td align="center"><?php 
-				 if($ss["status_payment"]=='2'){ ?><button type="button" class="btn btn-success btn-sm">ສົດ</button> <?php }
-			elseif($ss["status_payment"]=='1' or $s["status_payment"]==''){?><button type="button" class="btn btn-danger btn-sm">ຕິດໜີ້</button><?php }
-				 ?></td>
-                <td align="center"><?php 
-				if($ss["payment_id"]==''){}else{?><button type="button" class="btn btn-success btn-sm"><?=$ss["payment_id"];?></button><?php }
-				
-				?></td>
-                <td align="center"><?php if($ss["payment_date"]==''){}else{
-				echo	date_format($date2,"d/m/Y");
-					}?></td>
-                 <td align="right"><?=@number_format($ss["total_payment"]);?></td>	
-                 <td align="right"><?=@number_format($ss["remain"],0);?></td>
-                
-                
-            	
-				
-			  </tr>
-              <?php
-          
-		   @$t_amts +=$ss["total"];
-		   @$t_total_payments +=$ss["total_payment"];
-		   @$t_remains +=$ss["remain"];
-		 
-             } 
-			 ?>
- 
-             
-             
-             
-             
-			<!--<tr>
-			<td align="right" colspan="5">ລວມ</td>
-            <td align="right"><?=@number_format($t_amts,0);?></td>
-            <td colspan="3"></td>
-             <td align="right"><?=@number_format($t_total_payments,0);?></td>
-             <td align="right"><?=@number_format($t_remains,0);?></td>
-           
-           </tr>-->
-			
-        
-        
+                    <th align="center">ເລກທີສັ່ງຊື້</th>
+                    <th align="center">ມູນຄ່າຂາຍ</th>
+                    <th align="center">ຮູບແບບ</th>
+                    <th align="center">ບິນຮັບເງີນ</th>
+                    <th align="center">ວັນທີ</th>
+                    <th align="center">ມູນຄ່າຈ່າຍ</th>
+                    <th align="center">ຍອດເຫຼືອ</th>
+                </tr>
+                <?php
+                $ee_list = 0;
+                foreach($cust["rows"] as $ss){
+                    $ee_list++;
+                    $date1 = $ss["sale_date"] ? date_create($ss["sale_date"]) : null;
+                    $date2 = $ss["payment_date"] ? date_create($ss["payment_date"]) : null;
+                ?>
+                    <tr>
+                        <td align="center"><?=$ee_list;?></td>
+                        <td><?=$ss["customer_name"];?></td>
+                        <td align="center"><?=$ss["sale_id"];?></td>
+                        <td align="center"><?=$date1 ? date_format($date1,"d/m/Y") : '';?></td>
+                        <td align="center"><?=$ss["order_id"];?></td>
+                        <td align="right"><?=number_format($ss["total"],0);?></td>
+                        <td align="center">
+                            <?php if($ss["status_payment"]=='2'){ ?>
+                                <button type="button" class="btn btn-success btn-sm">ສົດ</button>
+                            <?php } else { ?>
+                                <button type="button" class="btn btn-danger btn-sm">ຕິດໜີ້</button>
+                            <?php } ?>
+                        </td>
+                        <td align="center">
+                            <?php if($ss["payment_id"]){ ?>
+                                <button type="button" class="btn btn-success btn-sm"><?=$ss["payment_id"];?></button>
+                            <?php } ?>
+                        </td>
+                        <td align="center"><?=$date2 ? date_format($date2,"d/m/Y") : '';?></td>
+                        <td align="right"><?=number_format($ss["total_payment"]);?></td>
+                        <td align="right"><?=number_format($ss["remain"],0);?></td>
+                    </tr>
+                <?php } ?>
+            </table>
+            </td>
+            </tbody>
+        <?php
+            $t_amt += $cust["t_total"];
+            $t_total_payment += $cust["t_total_payment"];
+            $t_remain += $cust["t_remain"];
+        }
+        ?>
+            <tr>
+                <td align="right" colspan="3">ລວມ</td>
+                <td align="right"><?=number_format($t_amt,0);?></td>
+                <td align="right"><?=number_format($t_total_payment,0);?></td>
+                <td align="right"><?=number_format($t_remain,0);?></td>
+            </tr>
+        </tbody>
     </table>
-    </td>
-    </tbody>  
-                
-                
-              <?php
-          
-		   
-		   @$t_amt +=$s["t_total"];
-		   @$t_total_payment +=$s["t_total_payment"];
-		   @$t_remain +=$s["t_remain"];
-		 
-             } 
-			 ?>
-			<tr>
-			<td align="right" colspan="3">ລວມ</td>
-             <td align="right"><?= @number_format($t_amt,0);?></td>
-             <td align="right"><?= @number_format($t_total_payment,0);?></td>
-             <td align="right"><?= @number_format($t_remain,0);?></td>
-              
-           </tr>
-           
-			
-        </table>
-		 <br><br><br>
-<?php	
-		  }
-	     }else{}
+    <br><br><br>
+    <?php
+    }
+}else{}
 		
 		
 		
