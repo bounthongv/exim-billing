@@ -63,7 +63,7 @@
 				
 
 
-	      @$sql_d=mysqli_query($con,"SELECT product_sale.*,sum(product_sale.qty) as qty,sum(product_sale.discount) as discount,stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
+	      @$sql_d=mysqli_query($con,"SELECT product_sale.*,sum(product_sale.qty) as qty,stocks.stock_name,products.Product_ID,products.Product_Name,products.size,products.Unit 
 			,tb_groups.Group_Name,products.version,customers.customer_name
 		   FROM  product_sale 
 		   left join products on products.Product_ID=product_sale.product_id
@@ -106,7 +106,7 @@
              <td colspan='3'></td>-->
              
              
-			<?  
+			<?php 
 			 while($s=mysqli_fetch_array($sql_d)){
 			?>	<tr>
                 <td align="center"><?=$i;?></td>

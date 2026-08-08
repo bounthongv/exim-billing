@@ -85,7 +85,7 @@ $(document).ready(function(){
 	{
 			$.ajax({
 			url:"fetch_best_seller.php",
-			method:"POST",
+			//method:"POST",
 			//dataType:"json",
 			success:function(data)
 			{
@@ -102,31 +102,32 @@ $(document).ready(function(){
 
 $(function(){
   $('#search_product').click(function(){
-   
- 
-   var stock_id = $('#stock_id').val(); 
-   var sale_id = $('#sale_id').val();   
-   var from_date = $('#from_date').val();
-   var to_date = $('#to_date').val();
- //  var product_id = $('#product_id').val(); 
-   var group_id = $('#group_id').val(); 
-   
- //  alert(stock_id);
-   
-         $.ajax({
-				url:"fetch_best_seller.php",
-				method:"POST",
-				data:{  stock_id:stock_id,from_date:from_date,to_date:to_date,sale_id:sale_id,group_id:group_id },
-				success:function(data)
-				{
-					$('#head_list').html(data);
 
-				}
-			});
+    var stock_id  = $('#stock_id').val(); 
+    var sale_id   = $('#sale_id').val();   
+    var from_date = $('#from_date').val();
+    var to_date   = $('#to_date').val();
+    var group_id  = $('#group_id').val(); 
+
+  
+    $.ajax({
+      url: "fetch_best_seller.php",
+      method: "POST",
+      data: {
+        stock_id: stock_id,
+        from_date: from_date,
+        to_date: to_date,
+        sale_id: sale_id,
+        group_id: group_id
+      },
+      success: function(data){
+        $('#head_list').html(data);
+      }
+
+    });
 
   });
-
- });
+});
 $(document).on('click', '.delete_Id', function(){
 	
 		var sale_id = $(this).attr("id");

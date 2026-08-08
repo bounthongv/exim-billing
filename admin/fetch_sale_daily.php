@@ -147,7 +147,7 @@
 
 
              
-			<?  
+			<?php 
 			 while($s=mysqli_fetch_array($sql_d)){
 			?>	<tr>
                 <td align="center"><?=$i;?></td>
