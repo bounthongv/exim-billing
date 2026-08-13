@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ==========================================
 include("init.php");
 
+mysqli_query($con,"TRUNCATE customer_import");
+
 if (!isset($con) || !$con) {
     die("❌ <b>การเชื่อมต่อล้มเหลว:</b> ไม่พบตัวแปรเชื่อมต่อฐานข้อมูล <code>\$con</code> กรุณาตรวจสอบไฟล์ init.php");
 }
@@ -225,7 +227,7 @@ SELECT external_id, outlet_name, phone_number, village,district
 FROM customer_import");
 
 
-mysqli_query($con,"TRUNCATE customer_import");
+
 
 mysqli_close($con);
 ?>
