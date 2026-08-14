@@ -102,9 +102,9 @@ include("init.php");
 		$_SESSION['send_date'] =$f["send_date"];
 		$_SESSION['send_time'] =$f["send_time"];
 		$_SESSION['s_stock_id'] =$f["stock_id"];
+		$_SESSION['s_stock_name'] =$f["stock_name"];
 		
-		
-	  
+	$_SESSION['status'] =$f["status"];
 	 
 	  
 	  

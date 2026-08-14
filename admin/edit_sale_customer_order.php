@@ -133,6 +133,8 @@ th{ text-align:center;}
   
   
 
+<input type="hidden" class="form-control ss" name="status" id="status" value="<?php echo $_SESSION['status'];?>" >
+
   
 <table border="0">
 
@@ -140,6 +142,24 @@ th{ text-align:center;}
     <td align="center">ເລກທີ: <br><input type="text" class="form-control ss" name="sale_id" id="sale_id" value="<?php echo @$sale_id;  ?>" readonly></td>
   <td align="center">ວັນທີຂາຍ: <br><input type="date" class="form-control" name="sale_date" id="sale_date" value="<?php echo $_SESSION['sale_date'];  ?>"  required></td>
  
+
+  <td align="center">ລົດ: <br>
+
+  <select name="stock_id" id="stock_id" class="form-control" style="width:220px;" >
+
+<option value="<?php echo $_SESSION['s_stock_id'];?>"><?php echo $_SESSION['s_stock_id'];?> &nbsp; <?php echo $_SESSION['s_stock_name'];?></option>
+
+  <?php
+  $sql=mysqli_query($con,"select * from stocks");	
+	 while($f = mysqli_fetch_array($sql)){ ?>
+		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
+	<?php } ?>
+    </select>
+</td>
+
+
+
+
  <?php /*
   <td align="center">ເວລາ: <br> <input type="time" class="form-control" name="sale_time" id="sale_time" value="<?php echo $_SESSION['sale_time'];  ?>"  required> </td>
     <td align="center">ວັນທີຕ້ອງການສົ່ງ: <br><input type="date" class="form-control" name="send_date" id="send_date" value="<?php echo $_SESSION['send_date'];  ?>" 
@@ -186,20 +206,24 @@ th{ text-align:center;}
 		<option value="<?php echo $_SESSION['s_route_id']?>"><?php echo $_SESSION['s_route_id']?> &nbsp; <?php echo $_SESSION['s_route_name']?></option>
 		
 		<?php } ?>   	
-    <?PHP 
+    <?php 
 	
 	$stock_id=$_SESSION["s_stock_id"];
 	
 	 $sql=mysqli_query($con,"select * from routes  ");	
 	while($f = mysqli_fetch_array($sql)){?>
 		<option value="<?php echo $f['route_id']?>"><?php echo $f['route_id']?> &nbsp; <?php echo $f['route_name']?></option>
-	<?PHP } ?>
+	<?php } ?>
     </select>
     
+<?php /*
     <input type="hidden" name="stock_id" id="stock_id" class="form-control " value="<?php echo $_SESSION["s_stock_id"]; ?>" required> 
+*/ ?>
+
+
     </td>
   <td><input type="radio" name="status_payment" value="2" <?php if($_SESSION['s_status_payment']=='2'){echo "checked";} ?> >ງີນສົດ
-   <input type="radio" name="status_payment" value="3" <?php if($_SESSION['s_status_payment']=='3'){echo "checked";} ?>> ເງີນໂອນ <br><br><input type="radio" name="status_payment" value="1" <?php if($_SESSION['s_status_payment']=='1'){echo "checked";} ?>> ຕິດໜີ້</td>
+   <input type="radio" name="status_payment" value="3" <?php if($_SESSION['s_status_payment']=='3'){echo "checked";} ?>> ເງີນໂອນ <br><br><input type="radio" name="status_payment" value="1" <?php if($_SESSION['s_status_payment']=='1' || $_SESSION['s_status_payment']==''){echo "checked";} ?>> ຕິດໜີ້</td>
    <td>ພະນັກງານຂາຍ: <br><?PHP 
 	
 	$sql=mysqli_query($con,"select * from sr_list");

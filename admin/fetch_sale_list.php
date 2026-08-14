@@ -59,7 +59,7 @@ elseif($customer_id=='New_customer'){
 
 
 		  @$sale_order_id= mysqli_real_escape_string($con,$_POST['sale_order_id']);		   
-		 if($sale_order_id==''){$sr_id="";}  else{ $sr_id="and  Display_ID='$sale_order_id' ";  }
+		 if($sale_order_id==''){$sr_id="";}  else{ $sr_id="and product_sale.order_id='$sale_order_id'";$btw="";  }
 		 
 
 
@@ -105,20 +105,20 @@ elseif($customer_id=='New_customer'){
        left join tb_groups on tb_groups.Group_ID=products.group_id
        left join sr_list on product_sale.sr=sr_list.sr_id
 	   
-	  LEFT JOIN (select sum(product_sale.qty) as qty_p ,product_sale.sale_id
+	  LEFT JOIN (select sum(product_sale.qty) as qty_p ,product_sale.sale_id,product_sale.sale_date
            from  product_sale 
      	          left join products on products.Product_ID=product_sale.product_id
 		          left join tb_groups on tb_groups.Group_ID=products.group_id
-              where 1=1 and tb_groups.Group_ID='001'  $sr_id $btw $r_id $st_id $sta group by sale_id) as custoemr_sale_order 
+              where 1=1 and tb_groups.Group_ID='001'  $sr_id $btw $r_id $st_id $sta group by sale_id,sale_date) as custoemr_sale_order 
       
-		             on product_sale.sale_id=custoemr_sale_order.sale_id
+		             on product_sale.sale_id=custoemr_sale_order.sale_id and product_sale.sale_date=custoemr_sale_order.sale_date
 					 
 	   
        where 1=1   $sr_id $btw $r_id $st_id $user_show $c_id $sta
         ) 
        as product_sale
           
-	   group by product_sale.sale_id order by product_sale.sale_id ASC");
+	   group by product_sale.sale_id,product_sale.sale_date order by product_sale.sale_id,product_sale.sale_date ASC");
 
 
 
@@ -160,6 +160,7 @@ elseif($customer_id=='New_customer'){
 				   
                 <th align="center">ລະຫັດລູກຄ້າ</th>
                 <th align="center">ລູກຄ້າ</th>
+                <th align="center">ລົດ</th>
                 <th align="center">ພະນັກງານຂາຍ</th>
                 <th align="center">ຈຳນວນ</th>
               <th align="center">ມູນຄ່າລວມ</th>
@@ -218,25 +219,29 @@ elseif($customer_id=='New_customer'){
 */ ?>
 
 
+        <td align="center"><?=$s["sale_id"];?></td>
 
-		 <td align="center">
+		
+               
+               
+                <!--<td><?=$s["refer_no"];?></td>-->
+            <td>
          <?php   if($s["status_off"]=='0') {  ?> 
-         <input type="button" name="show" id="<?= $s["sale_id"];?>" value="<?=$s["sale_id"];?>" class="btn btn-success show_detail btn-sm" 
+         <input type="button" name="show" id="<?= $s["order_id"];?>" value="<?=$s["order_id"];?>" class="btn btn-success show_detail btn-sm" 
 			   data-toggle="modal" data-target="#pro_detail" >
           <?php   }else {  ?> 
-         <input type="button" name="show" id="<?= $s["sale_id"];?>" value="<?=$s["sale_id"];?>" class="btn btn-warning show_detail btn-sm" 
+         <input type="button" name="show" id="<?= $s["order_id"];?>" value="<?=$s["order_id"];?>" class="btn btn-warning show_detail btn-sm" 
 			   data-toggle="modal" data-target="#pro_detail" >     
            <?php   } ?>     
                
                </td> 
-               
-               
-                <!--<td><?=$s["refer_no"];?></td>-->
-                 <td><?=$s["order_id"];?></td>
+
+
 				<td align="center"><?=date_format($dd,"d/m/Y");?></td>
 	
             <td><?=$s["customer_id"];?></td>
             	<td><?=$s["customer_name"];?></td>
+                <td><?=$s["stock_name"];?></td>
                <td><?=$s["sr_fname"];?>&nbsp;<?=$s["sr_lname"];?></td>
             	<td align="center"><?=@$s["qty_p"];?></td>
                 <td align="right"><?php echo @number_format($s["total_2"],0);?></td>
@@ -396,7 +401,7 @@ elseif($customer_id=='New_customer'){
 				
 				
              } ?>
-             <td colspan="7" align="right">ລວມ</td>
+             <td colspan="8" align="right">ລວມ</td>
              <td colspan="1" align="center"><?=@number_format($t_qty_p,0);?></td>
              <td colspan="1" align="right"><?=@number_format($t_amt,0);?></td>
            <!--  <td colspan="1" align="right"><?=@number_format($total_dis,0);?></td>

@@ -14,7 +14,7 @@ include("init.php");
 			unset($_SESSION["sale_delete_array"]);
 		}
 	   
-	 $sql_q=mysqli_query($con,"select product_sale.*,products.Group_ID
+	 $sql_q=mysqli_query($con,"SELECT product_sale.*,products.Group_ID
 	   from product_sale
 	 left join products on product_sale.product_id=products.product_id
 	 
@@ -65,6 +65,7 @@ include("init.php");
 date_default_timezone_set("Asia/Bangkok");
 
  $sale_id = mysqli_real_escape_string($con,$_POST['sale_id']);
+ $stock_id = mysqli_real_escape_string($con,$_POST['stock_id']);
 
  $sale_date = mysqli_real_escape_string($con,$_POST['sale_date']);
  //$sale_time=date('H:i:s');
@@ -98,7 +99,7 @@ date_default_timezone_set("Asia/Bangkok");
 	//$total_all = mysqli_real_escape_string($con,$_POST['total_all']);
     //$total_all = filter_var($total_all,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
    
-
+$status= mysqli_real_escape_string($con,$_POST['status']);
 	
     $status_payment = mysqli_real_escape_string($con,$_POST['status_payment']);
 	
@@ -185,11 +186,11 @@ if($free==''){
 
 	$sql_in=mysqli_query($con,"INSERT INTO product_sale (stockin_id,sale_id,sale_date
 		,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
-		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr,free,Item_ID) 
+		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,`status`,sr,free,Item_ID) 
 		
 		values('','$sale_id','$sale_date','$order_id'
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
-		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr','$free'
+		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$status','$sr','$free'
 		,'$Item_ID') ");
 			
 			

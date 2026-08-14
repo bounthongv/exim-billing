@@ -5,10 +5,10 @@
       
 		  
  
-        @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
-		 if($sale_id==''){$r_id="";}  else{ 
+        @$order_id= mysqli_real_escape_string($con,$_POST['order_id']);		   
+		 if($order_id==''){$r_id="";}  else{ 
 			
-		 $r_id="and  product_sale.sale_id='$sale_id' ";
+		 $r_id="and  product_sale.order_id='$order_id' ";
 		 
 /*
 		$r_id="and Invoice_Number='$sale_id' ";
@@ -17,7 +17,7 @@
 		 }
 		
 		
-		 if($sale_id==''){}
+		 if($order_id==''){}
 		 else{
 		 
 

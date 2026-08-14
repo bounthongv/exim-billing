@@ -156,13 +156,13 @@ $(document).on('keyup', '#Price', function(){
 
 $(document).on('click', '.show_detail', function(){
 	
-		var sale_id = $(this).attr("id");		
+		var order_id = $(this).attr("id");		
 		var action = "show";
 
 			$.ajax({
 				url:"fetch_product_sale_detail.php",
 				method:"POST",
-				data:{   sale_id:sale_id,action:action },
+				data:{   order_id:order_id,action:action },
 				success:function(data)
 				{
 					$('#display_product').html(data);
@@ -215,36 +215,50 @@ $(document).on('click', '.show_detail', function(){
 });
 
 $(function(){
-  $('#search_product').click(function(){
-   
- 
-  // var stock_id = $('#stock_id').val(); 
-   var sale_id = $('#sale_id').val();   
-   var from_date = $('#from_date').val();
-   var to_date = $('#to_date').val();
-   var status_payment = $('#status_payment').val();
-   var customer_id = $('#customer_id').val();
+
+  // 1. แยกฟังก์ชันการค้นหาออกมาไว้ด้านนอก
+  function performSearch() {
+    var sale_id = $('#sale_id').val();   
+    var from_date = $('#from_date').val();
+    var to_date = $('#to_date').val();
+    var status_payment = $('#status_payment').val();
+    var customer_id = $('#customer_id').val();
     var status = $('#status').val();
-	
-	var sale_order_id = $('#sale_order_id').val();
-   
-   
- //  alert(stock_id);
-   
-         $.ajax({
-				url:"fetch_sale_list.php",
-				method:"POST",
-data:{  from_date:from_date,to_date:to_date,sale_id:sale_id,status_payment:status_payment,customer_id:customer_id,status:status,sale_order_id:sale_order_id },
-				success:function(data)
-				{
-					$('#head_list').html(data);
+    var sale_order_id = $('#sale_order_id').val();
 
-				}
-			});
+    $.ajax({
+      url: "fetch_sale_list.php",
+      method: "POST",
+      data: {
+        from_date: from_date,
+        to_date: to_date,
+        sale_id: sale_id,
+        status_payment: status_payment,
+        customer_id: customer_id,
+        status: status,
+        sale_order_id: sale_order_id 
+      },
+      success: function(data) {
+        $('#head_list').html(data);
+      }
+    });
+  }
 
+  // 2. เมื่อคลิกที่ปุ่มให้เรียกใช้งานฟังก์ชัน
+  $('#search_product').click(function(){
+    performSearch();
   });
 
- });
+  // 3. ดักจับการกด Enter ในช่อง input ทั้งหมด
+  $('input').keypress(function(e){
+    if (e.which == 13) { // 13 คือ KeyCode ของปุ่ม Enter
+      e.preventDefault(); // ป้องกันไม่ให้ Form submit หรือ Reload หน้าเว็บ
+      performSearch();
+    }
+  });
+
+});
+
 $(document).on('click', '.delete_Id', function(){
 	
 		var sale_id = $(this).attr("id");
