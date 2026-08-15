@@ -179,9 +179,12 @@ th{ text-align:center;}
      <td align="center">ເລກທີສັ່ງຊື້:  <br>
     <div class="input-group input-group-sm">
     <input type="text" class="form-control ss" name="order_id" id="order_id" value="<?php if($_SESSION['s_order_id']!=''){ echo $_SESSION['s_order_id'];} ?>"   readonly >      
-   <span class="input-group-addon">
+   <?php /*
+	<span class="input-group-addon">
+
    <button type="button" name="cc" class="btn btn-sm " data-toggle="modal" data-target="#order_add" onclick="get_order()" ><i class="fa fa-search"></i></button> </span>   
-    </div>
+    */ ?>
+</div>
   
       </td>
       
@@ -190,9 +193,14 @@ th{ text-align:center;}
     <td align="center">ລູກຄ້າ:  <br>
     <div class="input-group input-group-sm">
     <input type="text" class="form-control ss" name="customer_name" id="customer_name" value="<?php if($_SESSION['customer_name']!=''){ echo $_SESSION['customer_name'];} ?>" required  readonly>      
-   <span class="input-group-addon">
+   <?php /*
+	<span class="input-group-addon">
+
+
    <button type="button" name="cc" class="btn btn-sm " data-toggle="modal" data-target="#customer_add" onclick="get_customer()" ><i class="fa fa-search"></i></button> </span>   
-    </div>
+    */ ?>
+
+</div>
     <input type="hidden" class="form-control" name="customer_id"   id="customer_id" value="<?php if($_SESSION['customer_id']!=''){ echo $_SESSION['customer_id'];} ?>"  >
       </td>
       
@@ -203,10 +211,16 @@ th{ text-align:center;}
    
     </td>
     <td align="center" >ສາຍທາງ: <br>  
+
+<select name="route_id" id="route_id" class="form-control" style="pointer-events: none; background-color: #e9ecef;" tabindex="-1">
+<option selected value="<?php echo $_SESSION['s_route_id'];?>"><?php echo $_SESSION['s_route_id'];?> &nbsp; <?php echo $_SESSION['s_route_name'];?></option>
+</select>
+
+ <?php /*
     <select name="route_id" id="route_id" class="form-control " > 
     <option value="<?php echo $_SESSION['s_route_id'];?>"><?php echo $_SESSION['s_route_id'];?> &nbsp; <?php echo $_SESSION['s_route_name'];?></option>
 
-    <?php /*
+   
 	
 	if(isset($_SESSION['s_route_id'])){ ?>
 		<option value="<?php echo $_SESSION['s_route_id']?>"><?php echo $_SESSION['s_route_id']?> &nbsp; <?php echo $_SESSION['s_route_name']?></option>
@@ -222,10 +236,14 @@ th{ text-align:center;}
 		<option value="<?php echo $f['route_id']?>"><?php echo $f['route_id']?> &nbsp; <?php echo $f['route_name']?></option>
 	<?php 
 	} 
-	*/
-	?>
+	
     </select>
-    
+    */
+	?>
+
+
+
+
 <?php /*
     <input type="hidden" name="stock_id" id="stock_id" class="form-control " value="<?php echo $_SESSION["s_stock_id"]; ?>" required> 
 */ ?>
@@ -247,12 +265,10 @@ th{ text-align:center;}
 	$sql=mysqli_query($con,"select * from sr_list");
 	
 	?>
-    <select name="sr" id="sr" class="form-control select2" style="width:220px;" >
-	<option value="<?php echo $_SESSION['s_sr_id'];?>" ><?php echo $_SESSION['s_sr_fname']; ?> <?php echo $_SESSION['s_sr_lname']; ?></option>
+    <select name="sr" id="sr" class="form-control" style="pointer-events: none; background-color: #e9ecef;" tabindex="-1" >
+	<option selected value="<?php echo $_SESSION['s_sr_id'];?>" ><?php echo $_SESSION['s_sr_fname']; ?> <?php echo $_SESSION['s_sr_lname']; ?></option>
 
-    <?php 
-	/*
-	
+    <?php
 	if(isset($_SESSION['s_sr_id'])){ ?> 
 	      <option value="<?php echo $_SESSION['s_sr_id'];?>" ><?php echo $_SESSION['s_sr_fname']; ?> <?php echo $_SESSION['s_sr_lname']; ?></option>
 	<? }else{  ?>
@@ -263,7 +279,7 @@ th{ text-align:center;}
 		<option value="<?php echo $f['sr_id']?>"><?php echo $f['sr_fname']?> &nbsp; <?php echo $f['sr_lname']?></option>
 	<?PHP } 
 	
-	*/
+
 	?>
     </select></td>
   </tr>
