@@ -104,7 +104,7 @@ include("init.php");
 		$_SESSION['s_stock_id'] =$f["stock_id"];
 		$_SESSION['s_stock_name'] =$f["stock_name"];
 		
-	$_SESSION['status'] =$f["status"];
+	$_SESSION['sale_status'] =$f["status"];
 	 
 	  
 	  

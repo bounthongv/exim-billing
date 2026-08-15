@@ -133,7 +133,7 @@ th{ text-align:center;}
   
   
 
-<input type="hidden" class="form-control ss" name="status" id="status" value="<?php echo $_SESSION['status'];?>" >
+<input type="hidden" class="form-control ss" name="status" id="status" value="<?php echo $_SESSION['sale_status'];?>" >
 
   
 <table border="0">
