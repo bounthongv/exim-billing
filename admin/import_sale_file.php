@@ -356,14 +356,15 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
-        ps.free        = si.Item_Promotion_Code
+        ps.free        = si.Item_Promotion_Code,
+        ps.status    = '2'
 ";
 $sync_update_ok = mysqli_query($con, $sql_sync_update);
 $update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
 
 // ---- 4.2 INSERT แถวใหม่ที่ยังไม่มีใน product_sale ----
 $sql_sync_insert = "INSERT INTO product_sale
-        (customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID)
+        (customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID,`status`)
     SELECT
         si.Outlet_External_ID,
         si.Product_SKU,
@@ -376,7 +377,8 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Invoice_Number,
         sale_import_2.remain,
         si.Item_Promotion_Code,
-        si.Item_ID
+        si.Item_ID,
+        '2'
     FROM sale_import si
     LEFT JOIN (
         SELECT Invoice_Number, SUM(Quantity * Price) AS remain

@@ -126,8 +126,11 @@ th{ text-align:center;}
       
       <button type="submit" name="save"  class="btn btn-primary" ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
       
+<?php /*
       <a href="cart_edit_sale_customer_order.php?action=empty" ><button type="button" name="reset" value="reset" class="btn btn-warning"><i class="fa fa-trash-o"></i>&nbsp;ລືບ</button></a>
-     </div>
+     */ ?>
+	
+	</div>
      </div>
   
   
@@ -140,7 +143,7 @@ th{ text-align:center;}
 
   <tr>
     <td align="center">ເລກທີ: <br><input type="text" class="form-control ss" name="sale_id" id="sale_id" value="<?php echo @$sale_id;  ?>" readonly></td>
-  <td align="center">ວັນທີຂາຍ: <br><input type="date" class="form-control" name="sale_date" id="sale_date" value="<?php echo $_SESSION['sale_date'];  ?>"  required></td>
+  <td align="center">ວັນທີຂາຍ: <br><input type="date" class="form-control" name="sale_date" id="sale_date" value="<?php echo $_SESSION['sale_date'];  ?>"  required readonly></td>
  
 
   <td align="center">ລົດ: <br>
@@ -195,25 +198,32 @@ th{ text-align:center;}
       
       
       
-     <td align="center">ປະເພດລູກຄ້າ: <br><input type="text" name="customer_type" id="customer_type" class="form-control" value="<?php if($_SESSION['customer_type']!=''){ echo $_SESSION['customer_type'];} ?>" required readonly>   
-     <input type="hidden" name="price_type" id="price_type" value="<?php if($_SESSION['price_type']!=''){ echo $_SESSION['price_type'];} ?>" class="form-control" required>    	
+     <td align="center">ປະເພດລູກຄ້າ: <br><input type="text" name="customer_type" id="customer_type" class="form-control" value="<?php if($_SESSION['customer_type']!=''){ echo $_SESSION['customer_type'];} ?>" readonly>   
+     <input type="hidden" name="price_type" id="price_type" value="<?php if($_SESSION['price_type']!=''){ echo $_SESSION['price_type'];} ?>" class="form-control">    	
    
     </td>
     <td align="center" >ສາຍທາງ: <br>  
-    <select name="route_id" id="route_id" class="form-control " required> 
-    
-    <?php if(isset($_SESSION['s_route_id'])){ ?>
-		<option value="<?php echo $_SESSION['s_route_id']?>"><?php echo $_SESSION['s_route_id']?> &nbsp; <?php echo $_SESSION['s_route_name']?></option>
-		
-		<?php } ?>   	
-    <?php 
+    <select name="route_id" id="route_id" class="form-control " > 
+    <option value="<?php echo $_SESSION['s_route_id'];?>"><?php echo $_SESSION['s_route_id'];?> &nbsp; <?php echo $_SESSION['s_route_name'];?></option>
+
+    <?php /*
 	
+	if(isset($_SESSION['s_route_id'])){ ?>
+		<option value="<?php echo $_SESSION['s_route_id']?>"><?php echo $_SESSION['s_route_id']?> &nbsp; <?php echo $_SESSION['s_route_name']?></option>
+		<?php } 
+		*/
+		?>   	
+    <?php 
+	/*
 	$stock_id=$_SESSION["s_stock_id"];
 	
 	 $sql=mysqli_query($con,"select * from routes  ");	
 	while($f = mysqli_fetch_array($sql)){?>
 		<option value="<?php echo $f['route_id']?>"><?php echo $f['route_id']?> &nbsp; <?php echo $f['route_name']?></option>
-	<?php } ?>
+	<?php 
+	} 
+	*/
+	?>
     </select>
     
 <?php /*
@@ -222,15 +232,28 @@ th{ text-align:center;}
 
 
     </td>
-  <td><input type="radio" name="status_payment" value="2" <?php if($_SESSION['s_status_payment']=='2'){echo "checked";} ?> >ງີນສົດ
-   <input type="radio" name="status_payment" value="3" <?php if($_SESSION['s_status_payment']=='3'){echo "checked";} ?>> ເງີນໂອນ <br><br><input type="radio" name="status_payment" value="1" <?php if($_SESSION['s_status_payment']=='1' || $_SESSION['s_status_payment']==''){echo "checked";} ?>> ຕິດໜີ້</td>
-   <td>ພະນັກງານຂາຍ: <br><?PHP 
+  <td>
+<div style="pointer-events: none;">
+  <input type="radio" name="status_payment" value="2" <?php if($_SESSION['s_status_payment']=='2'){echo "checked";} ?>> ງິນສົດ
+  
+  <input type="radio" name="status_payment" value="3" <?php if($_SESSION['s_status_payment']=='3'){echo "checked";} ?>> ເງິນໂອນ <br><br>
+  
+  <input type="radio" name="status_payment" value="1" <?php if($_SESSION['s_status_payment']=='1' || $_SESSION['s_status_payment']==''){echo "checked";} ?>> ຕິດໜີ້
+</div>
+ 
+ 
+ <td>ພະນັກງານຂາຍ: <br><?PHP 
 	
 	$sql=mysqli_query($con,"select * from sr_list");
 	
 	?>
     <select name="sr" id="sr" class="form-control select2" style="width:220px;" >
-    <?php if(isset($_SESSION['s_sr_id'])){ ?> 
+	<option value="<?php echo $_SESSION['s_sr_id'];?>" ><?php echo $_SESSION['s_sr_fname']; ?> <?php echo $_SESSION['s_sr_lname']; ?></option>
+
+    <?php 
+	/*
+	
+	if(isset($_SESSION['s_sr_id'])){ ?> 
 	      <option value="<?php echo $_SESSION['s_sr_id'];?>" ><?php echo $_SESSION['s_sr_fname']; ?> <?php echo $_SESSION['s_sr_lname']; ?></option>
 	<? }else{  ?>
     	<option value="" >ເລືອກ</option>
@@ -238,7 +261,10 @@ th{ text-align:center;}
     <?PHP 
 	while($f = mysqli_fetch_array($sql)){?>
 		<option value="<?php echo $f['sr_id']?>"><?php echo $f['sr_fname']?> &nbsp; <?php echo $f['sr_lname']?></option>
-	<?PHP } ?>
+	<?PHP } 
+	
+	*/
+	?>
     </select></td>
   </tr>
 
