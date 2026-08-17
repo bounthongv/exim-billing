@@ -260,7 +260,15 @@ th{ text-align:center;}
 </div>
  
  
- <td>ພະນັກງານຂາຍ: <br><?PHP 
+ <td>ພະນັກງານຂາຍ: <br>
+
+
+     <input type="text" class="form-control" name="sr"   id="sr" value="<?php if($_SESSION['s_sr_id']!=''){ echo $_SESSION['s_sr_id'];} ?>" readonly >
+
+ <?PHP 
+ /*
+
+
 	
 	$sql=mysqli_query($con,"select * from sr_list");
 	
@@ -277,11 +285,12 @@ th{ text-align:center;}
     <?PHP 
 	while($f = mysqli_fetch_array($sql)){?>
 		<option value="<?php echo $f['sr_id']?>"><?php echo $f['sr_fname']?> &nbsp; <?php echo $f['sr_lname']?></option>
-	<?PHP } 
-	
+	<?PHP } ?>
+    </select>
 
-	?>
-    </select></td>
+*/  ?>
+
+</td>
   </tr>
 
   

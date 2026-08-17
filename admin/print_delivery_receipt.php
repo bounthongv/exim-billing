@@ -96,7 +96,7 @@ Email: sale@exim.la,  www.exim.la</td>
   <td  >ຊື່ລູກຄ້າ: <?php echo $ff['customer_name']; ?> <br>ລະຫັດ: <?php echo $ff['customer_id']; ?>  ທີ່ຢູ່ລູກຄ້າ: <?php echo $ff['address']; ?><br> ເບີໂທ: <?php echo $ff['phone']; ?></td>
   <td colspan="2" align="right" valign="top"><strong>Acc Name: EXIM SOLE CO., LTD. &nbsp; Acct: 162.12.00.00335568.001</strong>
   <br> <br>
- <strong> ສາງ: <?php echo $ff['User_Name']; ?> &nbsp;</strong>  </td>
+ <strong> ສາງ: <?php echo $ff['stock_name']; ?> &nbsp;</strong>  </td>
   </tr>
 </table>
 

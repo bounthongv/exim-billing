@@ -106,7 +106,8 @@ include("init.php");
 		
 	$_SESSION['sale_status'] =$f["status"];
 	 
-	  
+	$_SESSION['s_sr_id'] =$f["sr"];
+	$_SESSION['s_sr_fname'] =$f["sr"];
 	  
 	 $_SESSION['s_status_payment']=$f["status_payment"];
 	 	
