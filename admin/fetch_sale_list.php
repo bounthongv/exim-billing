@@ -64,6 +64,11 @@ elseif($customer_id=='New_customer'){
 
 
 
+        @$sr= mysqli_real_escape_string($con,$_POST['sr']);		   
+		if($sr==''){$sr_name="";}  else{ $sr_name="and product_sale.sr='$sr'";$btw="";  }
+
+
+
 		 
 		  @$status= mysqli_real_escape_string($con,$_POST['status']);		   
 		 if($status==''){$sta="";}  
@@ -109,12 +114,12 @@ elseif($customer_id=='New_customer'){
            from  product_sale 
      	          left join products on products.Product_ID=product_sale.product_id
 		          left join tb_groups on tb_groups.Group_ID=products.group_id
-              where 1=1 and tb_groups.Group_ID='001'  $sr_id $btw $r_id $st_id $sta group by sale_id,sale_date) as custoemr_sale_order 
+              where 1=1 and tb_groups.Group_ID='001'  $sr_id $btw $r_id $st_id $sta $s_id $sr_name group by sale_id,sale_date) as custoemr_sale_order 
       
 		             on product_sale.sale_id=custoemr_sale_order.sale_id and product_sale.sale_date=custoemr_sale_order.sale_date
 					 
 	   
-       where 1=1   $sr_id $btw $r_id $st_id $user_show $c_id $sta
+       where 1=1   $sr_id $btw $r_id $st_id $user_show $c_id $sta $s_id $sr_name
         ) 
        as product_sale
           

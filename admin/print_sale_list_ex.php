@@ -1,6 +1,9 @@
 <?php 
 include("init.php");
 
+ header("Content-Type: application/vnd.ms-excel");
+ header("Content-Disposition: attachment;filename=ex_sale_list.xls");
+
 ?>
 
 <!DOCTYPE html>
@@ -142,6 +145,7 @@ echo "SELECT product_sale.*,sum(product_sale.total_amt) as t_total_amt,count(pro
           
 	   group by product_sale.sale_id order by product_sale.sale_id";
 */
+
 
 		  
 		  @$sp=mysqli_query($con,"SELECT product_sale.*

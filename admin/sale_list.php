@@ -225,6 +225,9 @@ $(function(){
     var customer_id = $('#customer_id').val();
     var status = $('#status').val();
     var sale_order_id = $('#sale_order_id').val();
+var stock_id = $('#stock_id').val();  
+var sr = $('#sr').val(); 
+
 
     $.ajax({
       url: "fetch_sale_list.php",
@@ -236,7 +239,9 @@ $(function(){
         status_payment: status_payment,
         customer_id: customer_id,
         status: status,
-        sale_order_id: sale_order_id 
+        sale_order_id: sale_order_id,
+        stock_id: stock_id,
+        sr: sr,
       },
       success: function(data) {
         $('#head_list').html(data);
@@ -284,6 +289,10 @@ $(document).on('click', '.edit_Id', function(){
  
 
 	});
+
+
+
+
 $(document).on('click', '#print', function(){
 	
    var stock_id = $('#stock_id').val();    
@@ -299,29 +308,77 @@ $(document).on('click', '#print', function(){
  
 
 	});
-</script>
 
+
+
+
+$(document).on('click', '#print_ex', function(){
+	
+   var stock_id = $('#stock_id').val();    
+   var from_date = $('#from_date').val();
+   var to_date = $('#to_date').val();
+  // var product_id = $('#product_id').val(); 
+  // var group_id = $('#group_id').val(); 
+	//	var action = $(this).attr("value");
+
+
+     window.open('print_sale_list_ex.php?from_date='+from_date  + '&to_date='+to_date+' ','_blank'); 
+   
+ 
+
+	});
+
+
+</script>
+<!--
 <div class="container">
     <br>
-    <h3 align="center">ລາຍການຂາຍສິນຄ້າ</h3><br>
+    <h3 align="left">ລາຍການຂາຍສິນຄ້າ</h3><br>
    </div>
+-->
+
+<div style="text-align: left !important;">
+  <br>
+    <h3 style="text-align: left !important; margin-left: 0;">ລາຍການຂາຍສິນຄ້າ</h3><br>
+</div>
+
+
     <!-- /.container -->  
 <table>
        <tr>
-     <td> <br>  <a href="index.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
-       <td> <br><a href="add_sale_customer_order.php"  ><button type="button" class="btn btn-success" >
-            <i class="fa fa-plus-square"></i>&nbsp; ຂາຍ</button></a></td>
-            
+<td><br><a href="index.php" class="btn btn-danger" style="width: 100px;"><i class="fa fa-times"></i>&nbsp;ປິດ</a></td>
+
+<td><br><a href="add_sale_customer_order.php" class="btn btn-success" style="width: 100px;"><i class="fa fa-plus-square"></i>&nbsp;ຂາຍ</a></td>
+
+<td><br><button type="button" class="btn btn-warning" style="width: 100px;" id="print">ພິມ</button></td> 
+
+<td><br><button type="button" class="btn btn-success" style="width: 100px;" id="print_ex">ພິມ EXCEL</button></td> 
+
+<td><br><button type="button" class="btn btn-info" style="width: 100px;" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
+
+<td><br>
+<form action="import_sale_file.php" method="post" enctype="multipart/form-data">
+    <input type="file" name="excel_file" accept=".csv" required> 
+    
+    <button type="submit" name="import">นำเข้าข้อมูล</button>
+</form>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
             
             <td>ວັນທີ<br><input type="date" class="form-control" name="from_date" id="from_date" value="<?php echo date("Y-m-d"); ?>"></td> 
             
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
       
 
-<?php /*
 
-      <td>ສາງ<br>
-      <select name="stock_id" id="stock_id" class="form-control" required>   
+
+      <td>ລົດ<br>
+      <select name="stock_id" id="stock_id" class="form-control">   
    <?php
  $user_status=$_SESSION['status'];
  $user_stock_id=$_SESSION['stock_id'];
@@ -344,7 +401,7 @@ $(document).on('click', '#print', function(){
     </select> </td>    
     
 
-*/ ?>
+
 
 
 <?php /*
@@ -392,9 +449,24 @@ $(document).on('click', '#print', function(){
           <?php } ?>   
              </select> 
               </td> 
-               <td><br> <button type="button" class="btn btn-warning" id="print">ພິມ</button></td> 
-               
-             <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
+
+ <td>ພະນັກງານຂາຍ<br>
+
+<select  name="sr" id="sr" class="form-control select2" style="width:210px;"  >
+<option value="">ທັງຫມົດ</option>
+
+      <?php 
+		 $sql=mysqli_query($con,"SELECT DISTINCT(sr) as sr FROM product_sale ORDER BY `product_sale`.`sr` DESC");
+		 while($f=mysqli_fetch_array($sql)){
+		  ?>     
+              <option value="<?php echo $f['sr'];?>"><?php echo $f['sr'];?></option>
+          <?php } ?>  
+
+
+</select>
+</td>
+
+
 
 
 
@@ -407,11 +479,7 @@ $(document).on('click', '#print', function(){
     </form>
 */ ?>
  
-<form action="import_sale_file.php" method="post" enctype="multipart/form-data">
-    <input type="file" name="excel_file" accept=".csv" required> 
-    
-    <button type="submit" name="import">นำเข้าข้อมูล</button>
-</form>
+
 
 
 <?php /*

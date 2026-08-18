@@ -192,7 +192,7 @@ function load_stock_list()
 <table border="0">
   <tr>
     <td width="118" align="right">ລະຫັດ:</td>
-    <td width="222"><input type="text" class="form-control" readonly name="sr_id" id="sr_id" value="<?PHP echo $auto_id;?>"></td>
+    <td width="222"><input type="text" class="form-control" name="sr_id" id="sr_id" value="<?PHP echo $auto_id;?>"></td>
     <input type="hidden" name="id" id="id" >
   </tr>
 
