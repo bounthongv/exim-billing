@@ -32,18 +32,13 @@
 
 
 if($select_mode=='1'){
-		  
 
 
   @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 
-		 where 1=1 $btw $r_id $c_id 
-		 
-		 
-	   
-	          ");
+		 where 1=1 $btw $r_id $c_id order by payment_date asc");
 		  if($sp){
           ?>
           
@@ -113,9 +108,7 @@ if($select_mode=='1'){
       }
 		elseif($select_mode=='2'){ 
 		
-		  @$sp=mysqli_query($con,"
-       
-         select customer_payment.* ,customers.customer_name
+		  @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 

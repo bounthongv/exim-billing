@@ -86,7 +86,7 @@ date_default_timezone_set("Asia/Bangkok");
 	// $send_date = mysqli_real_escape_string($con,$_POST['send_date']);
 	// $send_time = mysqli_real_escape_string($con,$_POST['send_time']);
  //    $staff_id = mysqli_real_escape_string($con,$_POST['staff_id']);  
-     $customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
+     $customer_id = mysqli_real_escape_string($con,$_POST['customer_id_2']);
      $stock_id = mysqli_real_escape_string($con,$_POST['stock_id']);
 	 
 	  $route_id = mysqli_real_escape_string($con,$_POST['route_id']);
@@ -113,7 +113,7 @@ for ($i = 0; $i < count($_POST['list_id']); $i++) {
 		      $Product_ID = mysqli_real_escape_string($con,$_POST['Product_ID'][$i]);
 			  
 				$Item_ID = mysqli_real_escape_string($con,$_POST['Item_ID'][$i]);
-				$customer_id = mysqli_real_escape_string($con,$_POST['customer_id'][$i]);
+			   // $customer_id = mysqli_real_escape_string($con,$_POST['customer_id'][$i]);
 
 
 

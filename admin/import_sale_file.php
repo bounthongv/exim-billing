@@ -361,7 +361,7 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
         ps.free        = si.Item_Promotion_Code,
-        ps.status    = '2'
+        ps.status    = ''
 ";
 $sync_update_ok = mysqli_query($con, $sql_sync_update);
 $update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
@@ -383,7 +383,7 @@ $sql_sync_insert = "INSERT INTO product_sale
         sale_import_2.remain,
         si.Item_Promotion_Code,
         si.Item_ID,
-        '2'
+        ''
     FROM sale_import si
     LEFT JOIN (
         SELECT Invoice_Number, SUM(Quantity * Price) AS remain

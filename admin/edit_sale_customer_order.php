@@ -201,7 +201,7 @@ th{ text-align:center;}
     */ ?>
 
 </div>
-    <input type="hidden" class="form-control" name="customer_id"   id="customer_id" value="<?php if($_SESSION['customer_id']!=''){ echo $_SESSION['customer_id'];} ?>"  >
+    <input type="hidden" class="form-control" name="customer_id_2"   id="customer_id_2" value="<?php if($_SESSION['customer_id']!=''){ echo $_SESSION['customer_id'];} ?>"  >
       </td>
       
       

@@ -456,10 +456,10 @@ $(document).on('click', '#print_ex', function(){
 <option value="">ທັງຫມົດ</option>
 
       <?php 
-		 $sql=mysqli_query($con,"SELECT DISTINCT(sr) as sr FROM product_sale ORDER BY `product_sale`.`sr` DESC");
+		 $sql=mysqli_query($con,"SELECT * FROM sr_list ORDER BY `sr_list`.`sr_id` DESC");
 		 while($f=mysqli_fetch_array($sql)){
 		  ?>     
-              <option value="<?php echo $f['sr'];?>"><?php echo $f['sr'];?></option>
+              <option value="<?php echo $f['sr_id'];?>"><?php echo $f['sr_fname'].' '.$f['sr_lname'];?></option>
           <?php } ?>  
 
 
@@ -500,7 +500,7 @@ $(document).on('click', '#print_ex', function(){
            <br>
          <div class="tableFixHead">  
  <div class="container_xx">          
-             <div id="head_list" align="center"></div>	          
+             <div id="head_list" align="left"></div>	          
          </div>
            
 	</div>

@@ -309,8 +309,31 @@ $(document).on('click', '#print_excel', function(){
 
 
     <br>
-    <h3 align="center">ລາຍງານການຂາຍສິນຄ້າ</h3><br>
+    <h3 align="left">ລາຍງານການຂາຍສິນຄ້າ</h3><br>
    <div style="overflow-x:auto;">
+
+<table>
+
+<?php /*
+   <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i></button></td> 
+              <td><br><button type="button" class="btn btn-warning" id="print"><i class="fa fa-print" aria-hidden="true"></i></button>
+              </td>
+              <td><br>
+       <button type="button" class="btn btn-success" id="print_excel"><i class="fa fa-file-excel" aria-hidden="true"></i></button></td>
+
+*/ ?>
+
+<td><br><button type="button" class="btn btn-info" style="width: 100px;" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
+<td><br><button type="button" class="btn btn-warning" style="width: 100px;" id="print">ພິມ</button></td> 
+
+
+<td><br><button type="button" class="btn btn-success" style="width: 100px;" id="print_excel">ພິມ EXCEL</button></td> 
+
+
+
+</table>
+
+
 <table align="center" width="100%">
        <tr>
     <!--   
@@ -399,11 +422,7 @@ $(document).on('click', '#print_excel', function(){
              </select>
              </td>
       
-              <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i></button></td> 
-              <td><br><button type="button" class="btn btn-warning" id="print"><i class="fa fa-print" aria-hidden="true"></i></button>
-              </td>
-              <td><br>
-       <button type="button" class="btn btn-success" id="print_excel"><i class="fa fa-file-excel" aria-hidden="true"></i></button></td>
+           
                </tr>
      <!-- <tr>  
       <td></td> 
@@ -414,7 +433,7 @@ $(document).on('click', '#print_excel', function(){
       </div>
         
  <div class="container">          
-             <div id="head_list"></div>	
+             <div id="head_list" align="left"></div>	
               <br>
     <br>          
          </div>

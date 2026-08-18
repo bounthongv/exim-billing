@@ -119,7 +119,7 @@ elseif($customer_id=='New_customer'){
 		             on product_sale.sale_id=custoemr_sale_order.sale_id and product_sale.sale_date=custoemr_sale_order.sale_date
 					 
 	   
-       where 1=1   $sr_id $btw $r_id $st_id $user_show $c_id $sta $s_id $sr_name
+       where 1=1   $sr_id $btw $r_id $st_id $c_id $sta $s_id $sr_name
         ) 
        as product_sale
           
@@ -247,7 +247,7 @@ elseif($customer_id=='New_customer'){
             <td><?=$s["customer_id"];?></td>
             	<td><?=$s["customer_name"];?></td>
                 <td><?=$s["stock_name"];?></td>
-               <td><?=$s["sr"];?></td>
+               <td><?=$s["sr_fname"].' '.$s["sr_lname"];?></td>
             	<td align="center"><?=@$s["qty_p"];?></td>
                 <td align="right"><?php echo @number_format($s["total_2"],0);?></td>
                <td align="right">

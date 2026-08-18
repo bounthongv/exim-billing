@@ -157,9 +157,7 @@ for ($i = 0; $i < count($_POST['item_list']); $i++) {
 	 
        
 
-           $sql_d=mysqli_query($con,"
-			  
-			  SELECT products.* $pp,tb_stock_product.stock_qty,tb_product_order.order_qty
+           $sql_d=mysqli_query($con,"SELECT products.* $pp,tb_stock_product.stock_qty,tb_product_order.order_qty
 		             
 		     FROM  products
     left join (select sum(qty) as stock_qty,product_id from stock_product where 1=1 and stock_id='$stock_id' group by product_id ) as tb_stock_product

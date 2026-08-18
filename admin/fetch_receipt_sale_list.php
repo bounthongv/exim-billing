@@ -66,12 +66,7 @@
          group by product_sale.sale_id,product_sale.product_id ) 
        as product_sale
           
-	   group by product_sale.sale_id order by product_sale.sale_id asc
-       
-     
-	  
-	   
-	          ");
+	   group by product_sale.sale_id order by product_sale.sale_id asc");
 		  if($sp){
           ?>
    <script>
