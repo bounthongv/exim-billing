@@ -18,6 +18,7 @@ include("init.php");
 	
 if($action=="Add"){
 
+
 $sad=mysqli_query($con,"INSERT INTO stocks (stock_id,stock_name)
      values('$stock_id', '$stock_name')");
 

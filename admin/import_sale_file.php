@@ -346,7 +346,8 @@ $sql_sync_update = "UPDATE product_sale ps
     INNER JOIN sale_import si
         ON ps.Item_ID = si.Item_ID
     LEFT JOIN (
-        SELECT Invoice_Number, SUM(Quantity * Price) AS remain
+        SELECT Invoice_Number, /*SUM(Quantity * Price) AS remain*/
+        SUM(total) AS remain
         FROM sale_import
         GROUP BY Invoice_Number
     ) AS sale_import_2 ON sale_import_2.Invoice_Number = si.Invoice_Number
@@ -361,7 +362,7 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
         ps.free        = si.Item_Promotion_Code,
-        ps.status    = ''
+        ps.status      = ''
 ";
 $sync_update_ok = mysqli_query($con, $sql_sync_update);
 $update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
@@ -381,12 +382,14 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Display_ID,
         si.Invoice_Number,
         sale_import_2.remain,
+        si.total,
         si.Item_Promotion_Code,
         si.Item_ID,
         ''
     FROM sale_import si
     LEFT JOIN (
-        SELECT Invoice_Number, SUM(Quantity * Price) AS remain
+        SELECT Invoice_Number,/* SUM(Quantity * Price) AS remain*/
+        SUM(total) AS remain
         FROM sale_import
         GROUP BY Invoice_Number
     ) AS sale_import_2 ON sale_import_2.Invoice_Number = si.Invoice_Number
@@ -414,7 +417,7 @@ echo "</div>";
 }
 
 // ล้างตารางพักเมื่อทำงานเสร็จ
-mysqli_query($con, "TRUNCATE sale_import");
+//mysqli_query($con, "TRUNCATE sale_import");
 mysqli_close($con);
 
 echo "<script>alert('นำข้อมูลเข้าสำเร็จ');window.location='sale_list.php';</script>";

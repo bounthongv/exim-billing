@@ -75,12 +75,12 @@ $result = mysqli_query($con, $stmt2);
 
 $row = mysqli_fetch_assoc($result);
 
-
+/*
 if (!$row) {
     echo json_encode(['status' => 'notfound']);
     exit;
 }
-
+*/
 
 if($customer_id != '' || $customer_name != ''){
 

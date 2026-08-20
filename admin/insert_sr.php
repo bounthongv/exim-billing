@@ -45,8 +45,6 @@ values('$insert1', '$insert2',  '$insert3', '$insert4', '$insert5')");
 else if($action=="Update"){
 	
 
-
-
 $sql=mysqli_query($con,"UPDATE sr_list SET sr_id='$insert1', sr_fname='$insert2',sr_lname='$insert3'
 , sr_phone='$insert4',sr_email='$insert5'
   WHERE id='$id' ");

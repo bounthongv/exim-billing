@@ -1,6 +1,8 @@
 <?php 
 include("init.php");
 //unset($_SESSION['cart_trnasfer_mini_stock']);
+
+//unset($_SESSION['cart_receipt']);
 ?>
 <style>
 td{ padding:5px;
@@ -90,7 +92,22 @@ th{ text-align:center;}
 
 	<div class="form-group row">
     <div class="col-sm-10">
+
+<?php /*
       <a href="index.php"><button type="button" name="close"  class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
+*/ ?>
+
+
+<a href="cart_receipt.php?action=close_and_clear">
+    <button type="button" name="close" class="btn btn-danger">
+        <i class="fa fa-times"></i>&nbsp;ປິດ
+    </button>
+</a>
+
+
+
+
+
       <a href="add_receipt.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
       <button type="submit" name="save" class="btn btn-primary" value="save"  ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
       <a href="cart_receipt.php?action=empty" ><button type="button" name="reset" value="reset" class="btn btn-warning"><i class="fa fa-trash"></i>&nbsp;ລືບ</button></a>
@@ -105,7 +122,7 @@ th{ text-align:center;}
     <td ><input type="text" class="form-control" name="payment_id" id="payment_id" value="<?php echo $auto_id; ?>" readonly ></td>
     <td align="right">ວັນທີ:</td>
     <td ><input type="date" class="form-control" name="payment_date" id="payment_date" onchange="get_currency()" 
-   value="<?php if($_SESSION['payment_date']!==''){ echo $_SESSION['payment_date'];}else{ echo @date('Y-m-d'); } ?>"  required> </td>
+   value="<?php /*if($_SESSION['payment_date']!==''){ echo $_SESSION['payment_date'];}else{ echo @date('Y-m-d'); }*/ echo @date('Y-m-d'); ?>"  required> </td>
   </tr>
   <tr>
     <td align="right">ລູກຄ້າ:</td>
@@ -119,6 +136,12 @@ th{ text-align:center;}
     <input type="hidden" class="form-control" name="customer_id" id="customer_id" value="<?php if($_SESSION['customer_id']!==''){ echo $_SESSION['customer_id'];}else{} ?>" > 
     </td>
 
+
+<td align="right">ເລກທີ</td>
+<td><input type="text" class="form-control ss" name="sale_id" id="sale_id" value="<?php if($_SESSION['sale_id']!==''){ echo $_SESSION['sale_id'];}else{} ?>" ></td>
+
+
+
   </tr>
  <tr>
 
@@ -127,13 +150,13 @@ th{ text-align:center;}
   <tr>
     <td align="right">ຜູ້ຈ່າຍເງີນ:</td>
     <td>
-   <input type="text" name="payment_name" id="payment_name" class="form-control" value="<?php if($_SESSION['payment_name']!==''){ echo $_SESSION['payment_name'];}else{} ?>" required>    	
+   <input type="text" name="payment_name" id="payment_name" class="form-control" value="<?php if($_SESSION['payment_name']!==''){ echo $_SESSION['payment_name'];}else{} ?>" required readonly>    	
     
     </td>
     <td align="right" colspan="1">ຜູ້ຮັບເງີນ</td>
     <td colspan="1">  
     
-   <input type="text" name="receipt_name" id="receipt_name" class="form-control" value="<?php if($_SESSION['receipt_name']!==''){ echo $_SESSION['receipt_name'];}else{} ?>" required>
+   <input type="text" name="receipt_name" id="receipt_name" class="form-control" value="<?php if($_SESSION['receipt_name']!==''){ echo $_SESSION['receipt_name'];}else{} ?>" required readonly>
     </td>
   </tr>
 
@@ -521,6 +544,40 @@ $(document).on('keyup', '.qty_enters', function(event){
 }
 });	
 	
+
+
+$(document).on('keyup', '#sale_id', function(event){
+    if(event.which == 13) {
+        event.preventDefault(); // ป้องกันการ Submit Form ซ้ำซ้อน
+        var sale_id = $(this).val();
+		var customer_id = $('#customer_id').val();
+
+        var action = "select_item_2";
+
+        $.ajax({
+            url: "cart_receipt.php",
+            method: "POST",
+            dataType: "json", // *** จำเป็นต้องใส่ เพื่อให้อ่านค่าเป็น Object ได้ ***
+            data: { 'item_list[]': sale_id,customer_id:customer_id, action: action },
+            success: function(data){
+                if(data.status == 'ok'){
+                    // นำค่าไปใส่ใน Input
+                    $('#customer_id').val(data.customer_id);
+                    $('#customer_name').val(data.customer_name);
+					$('#payment_name').val(data.customer_name);
+					$('#sale_id').val(sale_id);
+                }
+                load_order_receipt();
+                load_product(); // โหลดรายการเพิ่มเติม (ถ้ามี)
+            }
+        });
+    }
+});
+
+
+
+
+
 	
 		$(document).on('click', '.add_customer', function(){
 	 
@@ -530,8 +587,8 @@ $(document).on('keyup', '.qty_enters', function(event){
 	  
 		$("#customer_id").val(customer_id);
 		$("#customer_name").val(customer_name);
-		
-      
+		$("#payment_name").val(customer_name);
+      	$("#receipt_name").val('<?php echo $_SESSION['username']; ?>');
 		
 			});
 			

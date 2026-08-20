@@ -29,7 +29,9 @@
 			 
 			 }
 		  
-		  @$sp=mysqli_query($con,"SELECT product_sale.*
+
+
+"SELECT product_sale.*
 		,sum(product_sale.last_amount) as t_total_amt
 		,count(product_sale.total_qty) as total_item
 		 
@@ -66,7 +68,49 @@
          group by product_sale.sale_id,product_sale.product_id ) 
        as product_sale
           
-	   group by product_sale.sale_id order by product_sale.sale_id asc");
+	   group by product_sale.sale_id order by product_sale.sale_id asc";
+
+
+
+
+
+		  @$sp=mysqli_query($con,"SELECT product_sale.*
+		,sum(product_sale.last_amount) as t_total_amt
+		,count(product_sale.total_qty) as total_item
+	/*	,sum(product_sale.total_amt) as total_amt */
+
+,sum(product_sale.qty*price) as total_amt
+,sum(product_sale.qty) as qty_p 
+,sum(product_sale.total) as total_2 
+/* ,product_sale.qty_p */
+		from 	  
+   (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
+   ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
+			,tb_groups.Group_Name,products.version,customers.customer_name
+			,sr_list.sr_fname,sr_list.sr_lname
+	,custoemr_sale_order.qty_p
+		   FROM  product_sale 
+		   left join products on products.Product_ID=product_sale.product_id
+       left join stocks on stocks.stock_id=product_sale.stock_id
+	   left join customers on customers.customer_id=product_sale.customer_id
+       left join tb_groups on tb_groups.Group_ID=products.group_id
+       left join sr_list on product_sale.sr=sr_list.sr_id
+	   
+	  LEFT JOIN (select sum(product_sale.qty) as qty_p ,product_sale.sale_id,product_sale.sale_date
+           from  product_sale 
+     	          left join products on products.Product_ID=product_sale.product_id
+		          left join tb_groups on tb_groups.Group_ID=products.group_id
+              where 1=1 and tb_groups.Group_ID='001'  $s_id $btw $r_id group by sale_id,sale_date) as custoemr_sale_order 
+      
+		             on product_sale.sale_id=custoemr_sale_order.sale_id and product_sale.sale_date=custoemr_sale_order.sale_date
+					 
+	   
+       where 1=1   $s_id $btw $r_id  $user_show and (product_sale.status is null or product_sale.status='' or product_sale.status='0')
+        ) 
+       as product_sale
+          
+	   group by product_sale.sale_id,product_sale.sale_date order by product_sale.sale_id,product_sale.sale_date ASC
+       ");
 		  if($sp){
           ?>
    <script>
@@ -123,7 +167,7 @@
             	<td><?=$s["customer_id"];?>&nbsp;<?=$s["customer_name"];?></td>
                <td><?=$s["sr_fname"];?>&nbsp;<?=$s["sr_lname"];?></td>
             	<td align="center"><?=@$s["qty_p"];?></td>
-                <td align="right"><?=@number_format($s["total_amt"],0);?></td>
+                <td align="right"><?=@number_format($s["total_2"],0);?></td>
                  <td align="right"><?=@number_format($s["payment"],0);?></td>
                   <td align="right"><?=@number_format($s["remain"],0);?></td>
              
@@ -133,7 +177,7 @@
 				</tr>
                
 			<?php	
-				@$t_amt +=$s["total_amt"];
+				@$t_amt +=$s["total_2"];
 				@$t_p +=$s["payment"];
 				@$t_r +=$s["remain"];
 				
