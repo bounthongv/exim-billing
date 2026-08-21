@@ -170,7 +170,7 @@ if($select_mode=='1'){
 				<td><?=$s["customer_name"];?></td>
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
-				 elseif($s["payment_type"]=='1'){ echo "ເງີນໂອນ";}else{}  ?></td>
+				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
             	<td align="right"><?=@number_format($s["amount"],0);?></td>
                 
             	
