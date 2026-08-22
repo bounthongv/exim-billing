@@ -367,53 +367,59 @@ $sql_sync_update = "UPDATE product_sale ps
 $sync_update_ok = mysqli_query($con, $sql_sync_update);
 $update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
 
+
+
+
 // ---- 4.2 INSERT แถวใหม่ที่ยังไม่มีใน product_sale ----
-$sql_sync_insert = "INSERT INTO product_sale (
-    sr, 
-    customer_id, 
-    product_id, 
-    price, 
-    qty, 
-    Total, 
-    sale_date, 
-    sale_time, 
-    order_id, 
-    sale_id, 
-    remain, 
-    free, 
-    Item_ID, 
-    `status`
-)
-SELECT
-    si.Sales_Rep_Code,
-    si.Outlet_External_ID,
-    si.Product_SKU,
-    si.Price,
-    si.Quantity,
-    si.total,
-    DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-    DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
-    si.Display_ID,
-    si.Invoice_Number,
-    sale_import_2.remain,
-    si.Item_Promotion_Code, -- ใส่ค่าโปรโมชัน/ของแถมลงช่อง free
-    si.Item_ID,              -- ใส่ Item_ID ตรงตามคอลัมน์
-    ''                       -- ใส่ค่าว่างลงช่อง status
-FROM sale_import si
-LEFT JOIN (
-    SELECT 
-        Invoice_Number,
+$sql_sync_insert = "INSERT INTO product_sale
+        (sr,customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID,`status`)
+    SELECT
+        si.Sales_Rep_Code,
+        si.Outlet_External_ID,
+        si.Product_SKU,
+        si.Price,
+        si.Quantity,
+        si.total,
+        DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+        si.Display_ID,
+        si.Invoice_Number,
+        sale_import_2.remain,
+        si.total,
+        si.Item_Promotion_Code,
+        si.Item_ID,
+        ''
+    FROM sale_import si
+    LEFT JOIN (
+        SELECT Invoice_Number,/* SUM(Quantity * Price) AS remain*/
         SUM(total) AS remain
-    FROM sale_import
-    GROUP BY Invoice_Number
-) AS sale_import_2 ON sale_import_2.Invoice_Number = si.Invoice_Number
-LEFT JOIN product_sale ps
-    ON ps.sale_id = si.Invoice_Number
-   AND ps.product_id = si.Product_SKU
-WHERE ps.sale_id IS NULL;
+        FROM sale_import
+        GROUP BY Invoice_Number
+    ) AS sale_import_2 ON sale_import_2.Invoice_Number = si.Invoice_Number
+    LEFT JOIN product_sale ps
+        ON ps.sale_id = si.Invoice_Number
+       AND ps.product_id = si.Product_SKU
+    WHERE ps.sale_id IS NULL
 ";
 $sync_insert_ok = mysqli_query($con, $sql_sync_insert);
 $insert_sale_count = $sync_insert_ok ? mysqli_affected_rows($con) : 0;
+
+
+$sql_sync_update_2 = "UPDATE product_sale p
+JOIN (
+    SELECT sale_id, SUM(total) AS total_sum,
+	payment AS total_payment
+    FROM product_sale
+    GROUP BY sale_id
+) AS grouped ON p.sale_id = grouped.sale_id
+SET p.remain = grouped.total_sum-p.payment
+WHERE (p.status IS NULL OR p.status = '' OR p.status = '0')
+and p.payment=0";
+
+$sync_update_ok_2 = mysqli_query($con, $sql_sync_update_2);
+$update_sale_count_2 = $sync_update_ok_2 ? mysqli_affected_rows($con) : 0;
+
+
 
 // 🔍 DEBUG
 echo "<div style='background:#ffe; padding:10px; margin:5px; font-family:monospace;'>";
