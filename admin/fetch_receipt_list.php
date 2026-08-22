@@ -75,11 +75,11 @@ if($select_mode=='1'){
                 <td align="center"><?=$e_list;?></td>
 			    <td align="center"><?=$s["payment_id"];?></td>
 				<td align="center"><?php if($s["payment_date"]==''){}else{
-				echo	date_format($date2,"d/m/Y");
+				echo date_format($date2,"d/m/Y");
 					}?></td>
                 <td align="center"><?=$s["sale_id"];?></td>
 				<td align="center"><?php if($s["sale_date"]==''){}else{
-				echo	date_format($date1,"d/m/Y");
+				echo date_format($date1,"d/m/Y");
 					}?></td>               
 				<td><?=$s["customer_name"];?></td>
                  <td align="center"><?php 
