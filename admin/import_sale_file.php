@@ -118,7 +118,7 @@ if (isset($_POST['import'])) {
 
                 $Extended_Status = isset($data[$colU]) ? trim((string)$data[$colU]) : '';
 
-                if (strtolower($Extended_Status) !== 'delivered') {
+                if (strtolower($Extended_Status) !== 'delivered' && strtolower($Extended_Status) !== 'shipped') {
                     $skippedCount++;
                     continue;
                 }
@@ -385,7 +385,6 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Display_ID,
         si.Invoice_Number,
         sale_import_2.remain,
-        si.total,
         si.Item_Promotion_Code,
         si.Item_ID,
         ''

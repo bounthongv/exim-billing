@@ -360,7 +360,7 @@ $(document).on('click', '#print_ex', function(){
 <form action="import_sale_file.php" method="post" enctype="multipart/form-data">
     <input type="file" name="excel_file" accept=".csv" required> 
     
-    <button type="submit" name="import">นำเข้าข้อมูล</button>
+    <button type="submit" name="import">IMPORT</button>
 </form>
 </td>
 
