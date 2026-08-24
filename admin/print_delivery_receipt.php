@@ -140,7 +140,15 @@ Email: sale@exim.la,  www.exim.la</td>
                         while($f = mysqli_fetch_array($sql)){
                        // $total = $f['qty_iv'] * $f['prices'];
                         //@$amount = $amount + $f["t_amount"];
-@$amount += $f["t_qty"]*$f["price"];
+//@$amount += $f["t_qty"]*$f["price"];
+
+
+if($f["free"]!=''){
+ @$amount += 0;
+				}else{
+
+ @$amount += $f["t_qty"]*$f["price"];
+				}
 
 
 						@$total_last_amount += $f['last_amount'];
@@ -156,8 +164,16 @@ Email: sale@exim.la,  www.exim.la</td>
 <?php /*
     <td align="right"><?php  if($f["t_amount"]=='0'){ echo "Free"; }else{ echo @number_format($f["t_amount"],0); } ?></td>
 */ ?>
-    <td align="right"><?php  echo @number_format($f["t_qty"]*$f["price"],0);?></td>
+     <td align="right"><?php 
+				
+				if($f["free"]!=''){
+echo '0';
+				}else{
 
+echo @number_format($f["t_qty"]*$f["price"],0);
+				}
+
+				?> </td>
 
 
 
