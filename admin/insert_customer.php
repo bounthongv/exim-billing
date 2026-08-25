@@ -102,6 +102,39 @@ values('$customer_id', '$customer_name',  '$address', '$phone', '$fax', '$email'
 ,'$village','$district','$sr','$segment','$grade','$up','$brand','$class','$debit_amt','$bill')");
 
 
+
+
+
+
+
+  if($customer_id==""){ $gp_id="customer_id=''";}
+else{$gp_id="customer_id='$customer_id'";}	
+
+mysqli_query($con,"INSERT INTO customer_import(external_id)values('$customer_id')");
+
+$sql=mysqli_query($con,"UPDATE customer_import SET 
+outlet_name='$customer_name',
+outlet_name_la='$outlet_name_la',
+phone_number='$phone',
+village='$village',
+district='$district',
+Province='$Province',
+latitude='$latitude',
+longitude='$longitude',
+business_segment_code='$business_segment_code',
+channel_code='$channel_code',
+sub_channel_full='$sub_channel_full',
+classification_code='$classification_code',
+Sale_Id='$Sale_Id',
+Sale_full_name='$Sale_full_name',
+`credit`='$credit',
+`Debt_collection`='$Debt_collection',
+`Number_of_days_overdue`='$Number_of_days_overdue',
+`Contract_expiration_date`='$Contract_expiration_date'
+ WHERE external_id='$customer_id' ");
+
+
+
 	if($sql){
 		
 		
