@@ -199,7 +199,7 @@ height:20px;
     <td ><input type="text" class="form-control"  name="customer_id" id="customer_id" value="<?PHP echo $suppliers_id;?>"></td>
     <input type="hidden" name="id" id="id" >
     
-   
+   <input type="hidden" class="form-control"  name="customer_id2" id="customer_id2" value="<?PHP echo $suppliers_id;?>">
     
   </tr>
   <tr>
@@ -599,6 +599,7 @@ var bill = $('#e_bill'+customer_id+'').val();
 
     // นำข้อมูลทั่วไปแสดงผลใน Modal 
     $('#customer_id').val(customer_id);
+    $('#customer_id2').val(customer_id);
     $("#customer_name").val(customer_name);
     $("#outlet_name_la").val(e_outlet_name_la);
     $("#phone").val(e_phone_number);

@@ -10,7 +10,9 @@ include("init.php");
 
 
 
-	$customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
+$customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
+$customer_id2 = mysqli_real_escape_string($con,$_POST['customer_id2']);
+
 	$customer_name = mysqli_real_escape_string($con,$_POST['customer_name']);
 $outlet_name_la = mysqli_real_escape_string($con,$_POST['outlet_name_la']);
 
@@ -114,8 +116,13 @@ values('$customer_id', '$customer_name',  '$address', '$phone', '$fax', '$email'
 }
 else if($action=="Update"){
 	
+
+
 	  if($customer_id==""){ $gp_id="customer_id=''";}
 else{$gp_id="customer_id='$customer_id'";}	
+
+
+
 
 if($customer_name==""){ $g_n=",customer_name=''";}
 else{$g_n=",customer_name='$customer_name'";}	
@@ -154,10 +161,11 @@ $sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $ri
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
 ,bill='$bill'
- WHERE customer_id='$customer_id' ");		
+ WHERE customer_id='$customer_id2' ");		
 
 
 $sql=mysqli_query($con,"UPDATE customer_import SET 
+external_id='$customer_id',
 outlet_name='$customer_name',
 outlet_name_la='$outlet_name_la',
 phone_number='$phone',
@@ -176,7 +184,7 @@ Sale_full_name='$Sale_full_name',
 `Debt_collection`='$Debt_collection',
 `Number_of_days_overdue`='$Number_of_days_overdue',
 `Contract_expiration_date`='$Contract_expiration_date'
- WHERE external_id='$customer_id' ");
+ WHERE external_id='$customer_id2' ");
 
 	
 }
@@ -194,6 +202,7 @@ else{
 
 
 $sql=mysqli_query($con,"UPDATE customer_import SET 
+external_id='$customer_id',
 outlet_name='$customer_name',
 outlet_name_la='$outlet_name_la',
 phone_number='$phone',
@@ -212,7 +221,7 @@ Sale_full_name='$Sale_full_name',
 `Debt_collection`='$Debt_collection',
 `Number_of_days_overdue`='$Number_of_days_overdue',
 `Contract_expiration_date`='$Contract_expiration_date'
- WHERE external_id='$customer_id' ");
+ WHERE external_id='$customer_id2' ");
 
 
 

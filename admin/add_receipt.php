@@ -3,6 +3,26 @@ include("init.php");
 //unset($_SESSION['cart_trnasfer_mini_stock']);
 
 //unset($_SESSION['cart_receipt']);
+
+
+
+
+$sql_sync_update_2 = "UPDATE product_sale p
+JOIN (
+    SELECT sale_id, SUM(total) AS total_sum,
+	payment AS total_payment
+    FROM product_sale
+    GROUP BY sale_id
+) AS grouped ON p.sale_id = grouped.sale_id
+SET p.remain = grouped.total_sum-p.payment
+WHERE (p.status IS NULL OR p.status = '' OR p.status = '0')
+and p.payment=0";
+
+$sync_update_ok_2 = mysqli_query($con, $sql_sync_update_2);
+//$update_sale_count_2 = $sync_update_ok_2 ? mysqli_affected_rows($con) : 0;
+
+
+
 ?>
 <style>
 td{ padding:5px;
