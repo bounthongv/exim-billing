@@ -4,12 +4,13 @@ include("init.php");
 
 
 $Id=mysqli_real_escape_string($con,$_GET['Id']);
-
+$customer_id=mysqli_real_escape_string($con,$_GET['customer_id']);
 
 
 if(isset($_GET['Id'])){
 	
 	$sql=mysqli_query($con,"delete from customers where id='$Id'");
+	$sql=mysqli_query($con,"delete from customer_import where external_id='$customer_id'");
 	
 	if($sql){
 		

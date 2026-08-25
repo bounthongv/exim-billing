@@ -114,7 +114,8 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 		  "
 */
 
-		  @$sp=mysqli_query($con,"SELECT customer_import.*,customer_import.external_id as customer_id,
+/*
+SELECT customer_import.*,customer_import.external_id as customer_id,
 		  customer_import.outlet_name as customer_name,
 		  customers.bill
 			FROM  customers 
@@ -126,6 +127,22 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 
 		  WHERE 1=1
 		  $p_id $s_name $cv $cd order by external_id $lmr
+*/
+
+
+
+		  @$sp=mysqli_query($con,"SELECT customer_import.*
+			,customer_import.external_id as customer_id,
+		  customer_import.outlet_name as customer_name,
+		  customers.bill
+			FROM   customer_import
+           left join customers on customers.customer_id=customer_import.external_id  
+		   left join customer_type on customer_type.ct_id=customers.customer_type  
+           left join sr_list on customers.sr=sr_list.sr_id
+		   WHERE 1=1
+		  $p_id $s_name $cv $cd
+ORDER BY `customer_import`.`external_id` $lmr
+
 		  ");
             while($f=mysqli_fetch_array($sp)){
             $row_list++;
@@ -204,7 +221,7 @@ $c_id= mysqli_real_escape_string($con,$_POST['c_id']);
 				
          <td ><button class="btn btn-success btn-sm edit_supplier" id="<?php echo $f['customer_id']; ?>"  data-toggle="modal" data-target="#add_stock">
                 ແກ້ໄຂ</button></td>
-		 <td ><button class="btn btn-danger btn-sm delete_Id"  id="<?php echo  $f["id"]; ?>">ລົບ</button></td>
+		 <td ><button class="btn btn-danger btn-sm delete_Id"  id="<?php echo  $f["id"]; ?>" data-customer_id='<?php echo $f['customer_id']; ?>'>ລົບ</button></td>
 				</tr>
              <?php
             	

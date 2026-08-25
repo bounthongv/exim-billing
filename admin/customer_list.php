@@ -782,10 +782,12 @@ $(document).on('click', '.edit_supplier', function(){
 	$(document).on('click', '.delete_Id', function(){
 	
 		var Id = $(this).attr("id");
+    var customer_id = $(this).attr("data-customer_id");
+
 
   var r = confirm("ທ່ານ ຕ້ອງການລົບແທ້ບໍ່?");
   if (r == true) {
-     window.location = 'delete_customer.php?Id='+Id;
+     window.location = 'delete_customer.php?Id='+Id+'&customer_id='+customer_id;
   } 
  
 
