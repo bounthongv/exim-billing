@@ -117,7 +117,25 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 	$sql_up_order=mysqli_query($con,"update product_sale set status='2'    where sale_id='$sale_id'");
 */
    $sql_up_debit=mysqli_query($con,"update customers set total_debit_amt=ifnull(total_debit_amt,0)-$total_xx_pay where customer_id='$customer_id'  ");
-				 }
+				
+   
+ 
+ echo "INSERT INTO customer_payment (payment_id,payment_date,customer_id,sale_id,sale_date,amount,
+     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date) 
+		
+		values('$auto_id','$payment_date','$customer_id','$sale_id','$sale_date','$total_xx_pay'
+		,'$total_all','$payment_type','$pay_lak','$pay_thb','$pay_usd','$rate_lak','$rate_thb','$rate_usd','$total_xx_pay','$payment_name'
+		,'$receipt_name','$user_id','$user_date') ";
+
+
+echo "update product_sale set payment=payment+$total_xx_pay,remain=remain-$total_xx_pay   where sale_id='$sale_id'  ".'<br>';
+ 
+echo "update product_sale set status='2'    where sale_id='$sale_id' and remain<1  ".'<br>';
+
+
+echo "update customers set total_debit_amt=ifnull(total_debit_amt,0)-$total_xx_pay where customer_id='$customer_id'  ".'<br>';
+ 
+   }
 			
 			
 			
@@ -133,14 +151,17 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 
 
 
+
 		unset($_SESSION["cart_receipt"]);
 		unset($_SESSION["payment_date"]);
 		unset($_SESSION["customer_id"]);
 		unset($_SESSION["customer_name"]);
 		unset($_SESSION["payment_name"]);
 		unset($_SESSION["receipt_name"]);
+
+		unset($_SESSION["cart_edit_receipt_crate"]);
 		
-		
+
 			
    if($sql_in){
 		

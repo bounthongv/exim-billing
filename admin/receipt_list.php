@@ -113,7 +113,7 @@ th {
                     $sql_c=mysqli_query($con,"select * from customers ");
                     while($f=mysqli_fetch_array($sql_c)){
                     ?>    
-                    <option value="<?php echo $f['customer_id'];?>"><?php echo $f['customer_name'];?></option>
+                    <option value="<?php echo $f['customer_id'];?>"><?php echo $f['customer_id'].' '.$f['customer_name'];?></option>
                     <?php } ?>    
                 </select>   
             </td> 
