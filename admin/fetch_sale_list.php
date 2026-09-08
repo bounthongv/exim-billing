@@ -17,9 +17,9 @@
 
 if($customer_id==''){$c_id="";} 
 elseif($customer_id=='New_customer'){
-    $c_id="and product_sale.customer_id NOT IN (SELECT customer_id FROM customers)";}
+ $c_id="and product_sale.customer_id NOT IN (SELECT customer_id FROM customers)";}
 		   else{ 
-            $c_id="and 
+ $c_id="and 
          (product_sale.customer_id like '$customer_id%' or product_sale.customer_id like '%$customer_id%')
          ";}
 			

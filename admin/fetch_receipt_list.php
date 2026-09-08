@@ -17,8 +17,12 @@
 		  
  
   @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
- if($sale_id==''){$r_id="";}  else{ $r_id="and ( customer_payment.payment_id like '$sale_id%' or customer_payment.payment_id like '%$sale_id%') ";}
+ if($sale_id==''){$r_id="";}  else{ $r_id="and ( customer_payment.sale_id like '$sale_id%' or customer_payment.sale_id like '%$sale_id%') ";}
 		 
+
+  @$payment_id= mysqli_real_escape_string($con,$_POST['payment_id']);		   
+ if($payment_id==''){$p_id="";}  else{ $p_id="and ( customer_payment.payment_id like '$payment_id%' or customer_payment.payment_id like '%$payment_id%') ";}
+
 	 @$payment_type= mysqli_real_escape_string($con,$_POST['payment_type']);		   
     if($payment_type==''){$pt="";}  else{ $pt="and  customer_payment.payment_type='$payment_type'  ";}
 		
@@ -38,7 +42,7 @@ if($select_mode=='1'){
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 
-		 where 1=1 $btw $r_id $c_id order by payment_date asc");
+		 where 1=1 $btw $r_id $p_id $c_id order by payment_date asc");
 		  if($sp){
           ?>
           

@@ -20,13 +20,18 @@ include("init.php");
 </head>
 <?php 
 $sale_id=mysqli_real_escape_string($con,$_GET['sale_id']);
-$sql_h = mysqli_query($con," select product_sale.*,sum(product_sale.qty) as qty
+$sql_h = mysqli_query($con,"SELECT product_sale.*,sum(product_sale.qty) as qty
                                ,sum(product_sale.amount) as amount
 				 ,products.Product_Name,customers.customer_name ,stocks.stock_name,customers.address,customers.phone
 				 ,users.User_Name
+         ,customer_import.Province
+         ,customer_import.district
+         ,customer_import.village
+
 				 from product_sale 
          LEFT JOIN products ON products.Product_ID = product_sale.product_id 
          LEFT JOIN customers ON customers.customer_id = product_sale.customer_id
+         LEFT JOIN customer_import ON customers.customer_id = customer_import.external_id
 		 LEFT JOIN stocks ON product_sale.stock_id = stocks.stock_id 
 		 LEFT JOIN users ON product_sale.user_id = users.User_ID 
          
@@ -93,10 +98,15 @@ Phone: +856-21-264 087 <br />
 Email: sale@exim.la,  www.exim.la</td>
   </tr>
   <tr>
-  <td  >ຊື່ລູກຄ້າ: <?php echo $ff['customer_name']; ?> <br>ລະຫັດ: <?php echo $ff['customer_id']; ?>  ທີ່ຢູ່ລູກຄ້າ: <?php echo $ff['address']; ?><br> ເບີໂທ: <?php echo $ff['phone']; ?></td>
+  <td  >ຊື່ລູກຄ້າ: <?php echo $ff['customer_name']; ?> <br>ລະຫັດ: <?php echo $ff['customer_id']; ?>  ທີ່ຢູ່ລູກຄ້າ: <?php echo $ff['address']; ?><br> ເບີໂທ: <?php echo $ff['phone']; ?>
+<br> ແຂວງ: <?php echo $ff['Province']; ?>
+<br> ເມືອງ: <?php echo $ff['district']; ?>
+<br> ບ້ານ: <?php echo $ff['village']; ?>
+
+</td>
   <td colspan="2" align="right" valign="top"><strong>Acc Name: EXIM SOLE CO., LTD. &nbsp; Acct: 162.12.00.00335568.001</strong>
   <br> <br>
- <strong> ສາງ: <?php echo $ff['stock_name']; ?> &nbsp;</strong>  </td>
+ <strong> ສາງ: <?php echo $stock_name; ?> &nbsp;</strong>  </td>
   </tr>
 </table>
 

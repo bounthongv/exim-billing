@@ -13,7 +13,7 @@ include("init.php");
 $customer_id = mysqli_real_escape_string($con,$_POST['customer_id']);
 $customer_id2 = mysqli_real_escape_string($con,$_POST['customer_id2']);
 
-	$customer_name = mysqli_real_escape_string($con,$_POST['customer_name']);
+$customer_name = mysqli_real_escape_string($con,$_POST['customer_name']);
 $outlet_name_la = mysqli_real_escape_string($con,$_POST['outlet_name_la']);
 
 

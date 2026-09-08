@@ -106,7 +106,7 @@ th {
        <tr>
             <td>ວັນທີ<br><input type="date" class="form-control" name="from_date" id="from_date" value="<?php echo date("Y-m-d"); ?>"></td> 
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
-            <td>ຊື່ລູກຄ້າ<br>
+            <td>ຊື່ ແລະ ລະຫັດ ລູກຄ້າ<br>
                 <select name="customer_id" id="customer_id" class="form-control select2" style="width:210px;">
                     <option value="">ທັງຫມົດ</option>
                     <?php 
@@ -117,7 +117,10 @@ th {
                     <?php } ?>    
                 </select>   
             </td> 
-            <td>ເລກທີຮັບ<br><input type="text" name="sale_id" id="sale_id" class="form-control"></td> 
+            <td>ເລກທີຮັບ<br><input type="text" name="payment_id" id="payment_id" class="form-control"></td> 
+            <td>ເລກທີຂາຍ<br><input type="text" name="sale_id" id="sale_id" class="form-control"></td> 
+
+
             <td>ປະເພດຊຳລະ<br>
                 <select name="payment_type" id="payment_type" class="form-control">
                     <option value="1">ເງີນສົດ</option>
@@ -177,13 +180,14 @@ function load_list(){
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
    var sale_id = $('#sale_id').val();   
+   var payment_id = $('#payment_id').val();   
    var customer_id = $('#customer_id').val();  
    var select_mode = $('#select_mode').val();
 
    $.ajax({
         url:"fetch_receipt_list.php",
         method:"POST",
-        data:{ from_date:from_date,to_date:to_date,sale_id:sale_id,customer_id:customer_id,select_mode:select_mode },
+        data:{ from_date:from_date,to_date:to_date,sale_id:sale_id,payment_id:payment_id,customer_id:customer_id,select_mode:select_mode },
         success:function(data) {
             $('#head_list').html(data);
         }
@@ -195,6 +199,7 @@ $(function(){
        var from_date = $('#from_date').val();
        var to_date = $('#to_date').val();
        var sale_id = $('#sale_id').val();   
+       var payment_id = $('#payment_id').val(); 
        var customer_id = $('#customer_id').val();  
        var select_mode = $('#select_mode').val();
        var payment_type = $('#payment_type').val();
@@ -202,7 +207,7 @@ $(function(){
        $.ajax({
             url:"fetch_receipt_list.php",
             method:"POST",
-            data:{ from_date:from_date,to_date:to_date,sale_id:sale_id,customer_id:customer_id,select_mode:select_mode,payment_type:payment_type },
+            data:{ from_date:from_date,to_date:to_date,sale_id:sale_id,payment_id:payment_id,customer_id:customer_id,select_mode:select_mode,payment_type:payment_type },
             success:function(data) {
                 $('#head_list').html(data);
             }
@@ -214,22 +219,24 @@ $(document).on('click', '#print', function(){
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
    var sale_id = $('#sale_id').val();   
+   var payment_id = $('#payment_id').val(); 
    var customer_id = $('#customer_id').val();  
    var select_mode = $('#select_mode').val();
    var payment_type = $('#payment_type').val();
 
-   window.open('print_fetch_receipt_list.php?from_date='+from_date+'&to_date='+to_date+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+' ','_blank'); 
+   window.open('print_fetch_receipt_list.php?from_date='+from_date+'&to_date='+to_date+'&payment_id='+payment_id+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+' ','_blank'); 
 });
 
 $(document).on('click', '#print_excel', function(){
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
    var sale_id = $('#sale_id').val();   
+   var payment_id = $('#payment_id').val(); 
    var customer_id = $('#customer_id').val();  
    var select_mode = $('#select_mode').val();
    var payment_type = $('#payment_type').val();
 
-   window.open('print_fetch_receipt_list_excel.php?from_date='+from_date+'&to_date='+to_date+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+' ','_blank'); 
+   window.open('print_fetch_receipt_list_excel.php?from_date='+from_date+'&to_date='+to_date+'&payment_id='+payment_id+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+' ','_blank'); 
 });
 </script>
 
