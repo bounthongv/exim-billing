@@ -88,8 +88,7 @@ for ($i = 0; $i < count($_POST['item_list']); $i++) {
 			  
        
 
-           $sql_d=mysqli_query($con,"
-		 select product_sale.* from (    
+           $sql_d=mysqli_query($con,"SELECT product_sale.* from (    
       SELECT product_sale.sale_id,product_sale.sale_date,sum(product_sale.amount) as total_amt,sum(product_sale.qty) as total_qty
    ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
 	  ,customers.customer_name

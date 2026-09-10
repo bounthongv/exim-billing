@@ -470,7 +470,7 @@ if(isset($_GET["action"]) && $_GET["action"] == 'close_and_clear')
     unset($_SESSION["customer_id"]);
     unset($_SESSION["customer_name"]);
     
-    header("location:index.php");
+    header("location:receipt_list.php");
     exit;
 }
 

@@ -86,15 +86,41 @@ th{ text-align:center;}
 
     <!-- /.container -->
  <div class="container">   
-    	<form action="insert_receipt.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
+    	<form action="update_receipt.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
 
 	<div class="form-group row">
     <div class="col-sm-10">
+<?php /*
       <a href="index.php"><button type="button" name="close"  class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
+*/ ?>
+
+<a href="cart_receipt.php?action=close_and_clear">
+    <button type="button" name="close" class="btn btn-danger">
+        <i class="fa fa-times"></i>&nbsp;ປິດ
+    </button>
+</a>
+
+
       <a href="add_receipt.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
-      <button type="submit" name="save" class="btn btn-primary" value="save"  ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
+      <button type="submit" name="save_edit" class="btn btn-primary" value="save_edit"  ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
+
+
+<?php 
+/*
       <a href="cart_receipt_edit.php?action=empty" ><button type="button" name="reset" value="reset" class="btn btn-warning"><i class="fa fa-trash"></i>&nbsp;ລືບ</button></a>
-     
+*/ 
+
+$sale_id=$_SESSION['sale_id'];
+$payment_id=$_SESSION['payment_id'];
+?>
+
+<a href="delete_receipt.php?sale_id=<?php echo $sale_id; ?>&payment_id=<?php echo $payment_id; ?>" 
+   onclick="return confirm('ທ່ານຕ້ອງການລືບຂໍ້ມູນນີ້ແທ້ບໍ?');">
+    <button type="button" class="btn btn-danger">
+        <i class="fa fa-trash"></i>&nbsp;ລືບ
+    </button>
+</a>
+
   
     </div>
     <?php  if(isset($_SESSION['smg'])){ echo $_SESSION['smg']; unset($_SESSION['smg']); } ?> 
@@ -127,13 +153,13 @@ th{ text-align:center;}
   <tr>
     <td align="right">ຜູ້ຈ່າຍເງີນ:</td>
     <td>
-   <input type="text" name="payment_name" id="payment_name" class="form-control" value="<?php if($_SESSION['payment_name']!==''){ echo $_SESSION['payment_name'];}else{} ?>" required>    	
+   <input type="text" name="payment_name" id="payment_name" class="form-control" value="<?php if($_SESSION['payment_name']!==''){ echo $_SESSION['payment_name'];}else{} ?>" readonly>    	
     
     </td>
     <td align="right" colspan="1">ຜູ້ຮັບເງີນ</td>
     <td colspan="1">  
     
-   <input type="text" name="receipt_name" id="receipt_name" class="form-control" value="<?php if($_SESSION['receipt_name']!==''){ echo $_SESSION['receipt_name'];}else{} ?>" required>
+   <input type="text" name="receipt_name" id="receipt_name" class="form-control" value="<?php if($_SESSION['receipt_name']!==''){ echo $_SESSION['receipt_name'];}else{} ?>" readonly>
     </td>
   </tr>
 
@@ -174,6 +200,7 @@ th{ text-align:center;}
      <td align="right"> ປະເພດຊຳລະ:</td>
     <td>
    <select  name="payment_type" id="payment_type" class="form-control" required>  
+	<option value="<?php echo $_SESSION['payment_type']; ?>"><?php  if($_SESSION['payment_type']=='1'){ echo 'ເງີນສົດ';}else{ echo 'ເງີນໂອນ'; } ?></option>
    <option value="1">ເງີນສົດ</option>
     <option value="2">ເງີນໂອນ</option>
    </select>  	
@@ -203,10 +230,10 @@ th{ text-align:center;}
 
   </tr>
   <tr>
-  <td> <input type="text" name="pay_lak" id="pay_lak"  class="form-control number payments" style="text-align:right;"  ></td>
-  <td> <input type="text" name="pay_thb" id="pay_thb"  class="form-control number payments" style="text-align:right;"></td>
-  <td> <input type="text" name="pay_usd" id="pay_usd"  class="form-control number payments"  style="text-align:right;"></td>
-  <td> <input type="text" name="total_lak" id="total_lak"  class="form-control" style="text-align:right;" readonly ></td>
+  <td> <input type="text" name="pay_lak" id="pay_lak"  class="form-control number payments" style="text-align:right;" value="<?php echo $_SESSION['pay_lak']; ?>" readonly ></td>
+  <td> <input type="text" name="pay_thb" id="pay_thb"  class="form-control number payments" style="text-align:right;" value="<?php echo $_SESSION['pay_thb']; ?>" readonly></td>
+  <td> <input type="text" name="pay_usd" id="pay_usd"  class="form-control number payments"  style="text-align:right;" value="<?php echo $_SESSION['pay_usd']; ?>" readonly></td>
+  <td> <input type="text" name="total_lak" id="total_lak"  class="form-control" style="text-align:right;" value="<?php echo $_SESSION['total_lak']; ?>" readonly ></td>
   </tr>
 
 </table>
@@ -401,15 +428,21 @@ th{ text-align:center;}
 		});
 	}
 	
+	
 	  function load_total_payment()
 	{
 		
-	  var total_all = $('#total_r').val();
-	  
+	  var total_all = $('#total_all').val();
+	  //var total_r = $('#total_r').val();
+
+
+
 	  $('#pay_lak').val(total_all);
 	  $('#total_lak').val(total_all);
 
 	}
+
+
 </script>
 <script>
 $(document).ready(function(){

@@ -238,6 +238,40 @@ $(document).on('click', '#print_excel', function(){
 
    window.open('print_fetch_receipt_list_excel.php?from_date='+from_date+'&to_date='+to_date+'&payment_id='+payment_id+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+' ','_blank'); 
 });
+
+
+
+
+
+
+
+/*
+$(document).on('click', '.edit_Id', function(){
+	
+		var sale_id = $(this).attr("id");
+    //    var action = 'add';
+
+data-payment_id
+
+
+
+
+     window.location = 'cart_edit_receipt_2.php?sale_id='+sale_id+'' ;
+   //window.location = 'cart_receipt_edit.php?sale_id='+sale_id+'&action='+action;
+ 
+
+	});
+*/
+
+
+$(document).on('click', '.edit_Id', function(){
+    
+    var sale_id = $(this).attr("id");
+    var payment_id = $(this).attr("data-payment_id");
+    
+    window.location = 'cart_edit_receipt_2.php?sale_id=' + sale_id + '&payment_id=' + payment_id;
+});
+
 </script>
 
 </body>

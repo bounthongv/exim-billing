@@ -59,7 +59,7 @@ if($select_mode=='1'){
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
                  
-                    
+                    <th align="center" >ແກ້ໄຂ</th>
                 </tr>
            <?php
 		   
@@ -92,7 +92,11 @@ if($select_mode=='1'){
             	<td align="right"><?=@number_format($s["amount"],0);?></td>
                 
             	
-				
+
+				<td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["sale_id"];?>" data-payment_id="<?=$s["payment_id"];?>" >ແກ້ໄຂ</button></td>     
+
+
+
 				</tr>
               <?php
           

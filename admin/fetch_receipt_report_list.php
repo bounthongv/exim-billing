@@ -36,18 +36,20 @@
 
 if($select_mode=='1'){
 		  
+
+
   @$sp=mysqli_query($con,"SELECT product_sale.* 
 		 ,customers.customer_name
 		 ,customer_payment.payment_id,customer_payment.payment_date,customer_payment.amount as total_payment
+        ,product_sale_2.total
 		 from  product_sale
 		 left join customers on product_sale.customer_id=customers.customer_id
 		 left join customer_payment on product_sale.sale_id=customer_payment.sale_id
 		 
+         left join (SELECT sale_id,customer_id,SUM(total) as total from product_sale group by sale_id) as product_sale_2 on product_sale.sale_id=product_sale_2.sale_id
+
 		 where 1=1 $btw $r_id $c_id $st
-		 group by product_sale.sale_id
-		 
-	   
-	          ");
+		 group by product_sale.sale_id");
 		  if($sp){
           ?>
           
@@ -149,14 +151,15 @@ if($select_mode=='1'){
                customers.customer_name,
                customer_payment.payment_id,
                customer_payment.payment_date,
-               customer_payment.amount as total_payment
+               customer_payment.amount as total_payment,
+               product_sale_2.total
         FROM product_sale
         LEFT JOIN customers ON product_sale.customer_id = customers.customer_id
         LEFT JOIN customer_payment ON product_sale.sale_id = customer_payment.sale_id
+        LEFT JOIN (SELECT sale_id,customer_id,SUM(total) as total from product_sale group by sale_id) as product_sale_2 on product_sale.sale_id=product_sale_2.sale_id
         WHERE 1=1 $btw $r_id $c_id $st
         GROUP BY product_sale.sale_id
-        ORDER BY product_sale.customer_id
-    ");
+        ORDER BY product_sale.customer_id");
 
     // จัดกลุ่มข้อมูลตาม customer_id ด้วย PHP
     $customers_data = [];
