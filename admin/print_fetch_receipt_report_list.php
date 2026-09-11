@@ -114,15 +114,18 @@ font-size:10px;
 
 if($select_mode=='1'){
 		  
-  @$sp=mysqli_query($con,"
-       
-         select product_sale.* 
+  @$sp=mysqli_query($con,"SELECT product_sale.* 
 		 ,customers.customer_name
 		 ,customer_payment.payment_id,customer_payment.payment_date,customer_payment.amount as total_payment
+		 ,product_sale_2.total
+
 		 from  product_sale
 		 left join customers on product_sale.customer_id=customers.customer_id
 		 left join customer_payment on product_sale.sale_id=customer_payment.sale_id
 		 
+		 left join (SELECT sale_id,customer_id,SUM(total) as total from product_sale group by sale_id) as product_sale_2 on product_sale.sale_id=product_sale_2.sale_id
+
+
 		 where 1=1 $btw $r_id $c_id $st
 		 group by product_sale.sale_id
 		 
@@ -224,11 +227,11 @@ if($select_mode=='1'){
       }
 		elseif($select_mode=='2'){ 
 		
-		  @$sp=mysqli_query($con,"
-       select *
-	     ,sum(total)  as t_total 
+		  @$sp=mysqli_query($con,"SELECT *
+	    /* ,sum(total)  as t_total */
 		 ,sum(total_payment) as t_total_payment
 		 ,sum(remain) as t_remain
+		 ,sum(product_sale_2.total) as t_total 
   
   	 from (
         select product_sale.* 
@@ -237,6 +240,9 @@ if($select_mode=='1'){
 		 from  product_sale
 		 left join customers on product_sale.customer_id=customers.customer_id
 		 left join customer_payment on product_sale.sale_id=customer_payment.sale_id
+
+		 left join (SELECT sale_id,customer_id,SUM(total) as total from product_sale group by sale_id) as product_sale_2 on product_sale.sale_id=product_sale_2.sale_id
+
 		 
 		 where 1=1 $btw $r_id $c_id $st
 		 group by product_sale.sale_id
@@ -312,15 +318,17 @@ if($select_mode=='1'){
                    <th align="center" >ຍອດເຫຼືອ</th>
                    </tr>
                    <?php
-		      @$ssp=mysqli_query($con,"
-       
-         select product_sale.* 
+		      @$ssp=mysqli_query($con,"SELECT product_sale.* 
 		 ,customers.customer_name
 		 ,customer_payment.payment_id,customer_payment.payment_date,customer_payment.amount as total_payment
+		 ,product_sale_2.total
 		 from  product_sale
 		 left join customers on product_sale.customer_id=customers.customer_id
 		 left join customer_payment on product_sale.sale_id=customer_payment.sale_id
 		 
+         left join (SELECT sale_id,customer_id,SUM(total) as total from product_sale group by sale_id) as product_sale_2 on product_sale.sale_id=product_sale_2.sale_id
+
+
 		 where 1=1 $btw $r_id $c_id $st and product_sale.customer_id='".$s["customer_id"]."'
 		 group by product_sale.sale_id
 		 

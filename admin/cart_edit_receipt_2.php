@@ -64,7 +64,9 @@ product_sale.remain
 		 where customer_payment.sale_id='$sale_id' and customer_payment.payment_id='$payment_id'");	
 */
 
-          $sql_d=mysqli_query($con,"SELECT * from product_sale where product_sale.sale_id='$sale_id' group by sale_id");		 
+          $sql_d=mysqli_query($con,"SELECT sale_id,sale_date,
+		  sum(total) as total,
+		  payment,remain from product_sale where product_sale.sale_id='$sale_id' group by sale_id");		 
 
 
 $list_id=0;

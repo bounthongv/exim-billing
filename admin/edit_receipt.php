@@ -114,12 +114,24 @@ $sale_id=$_SESSION['sale_id'];
 $payment_id=$_SESSION['payment_id'];
 ?>
 
+
+<?php if($_SESSION['username']=='admin'){ ?>
+
 <a href="delete_receipt.php?sale_id=<?php echo $sale_id; ?>&payment_id=<?php echo $payment_id; ?>" 
    onclick="return confirm('ທ່ານຕ້ອງການລືບຂໍ້ມູນນີ້ແທ້ບໍ?');">
     <button type="button" class="btn btn-danger">
         <i class="fa fa-trash"></i>&nbsp;ລືບ
     </button>
 </a>
+
+<?php }else{ ?>
+
+
+
+<?php } ?>
+
+
+
 
   
     </div>

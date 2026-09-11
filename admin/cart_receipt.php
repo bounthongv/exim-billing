@@ -164,7 +164,7 @@ sum(product_sale.price*product_sale.qty) as total,
 
 ,sum(product_sale.qty*price) as total_amt
 ,sum(product_sale.qty) as qty_p 
-,sum(product_sale.total) as total_2 
+,product_sale.total_2 
 /* ,product_sale.qty_p */
 		from 	  
    (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
@@ -172,6 +172,7 @@ sum(product_sale.price*product_sale.qty) as total,
 			,tb_groups.Group_Name,products.version,customers.customer_name
 			,sr_list.sr_fname,sr_list.sr_lname
 	,custoemr_sale_order.qty_p
+	,custoemr_sale_order.total_2
 		   FROM  product_sale 
 		   left join products on products.Product_ID=product_sale.product_id
        left join stocks on stocks.stock_id=product_sale.stock_id
@@ -179,7 +180,7 @@ sum(product_sale.price*product_sale.qty) as total,
        left join tb_groups on tb_groups.Group_ID=products.group_id
        left join sr_list on product_sale.sr=sr_list.sr_id
 	   
-	  LEFT JOIN (select sum(product_sale.qty) as qty_p ,product_sale.sale_id,product_sale.sale_date
+	  LEFT JOIN (select sum(product_sale.qty) as qty_p , sum(product_sale.total) as total_2,product_sale.sale_id,product_sale.sale_date
            from  product_sale 
      	          left join products on products.Product_ID=product_sale.product_id
 		          left join tb_groups on tb_groups.Group_ID=products.group_id
@@ -347,7 +348,7 @@ SELECT product_sale.sale_id, product_sale.sale_date,
 
 ,sum(product_sale.qty*price) as total_amt
 ,sum(product_sale.qty) as qty_p 
-,sum(product_sale.total) as total_2 
+,product_sale.total_2 
 /* ,product_sale.qty_p */
 		from 	  
    (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
@@ -355,6 +356,7 @@ SELECT product_sale.sale_id, product_sale.sale_date,
 			,tb_groups.Group_Name,products.version,customers.customer_name
 			,sr_list.sr_fname,sr_list.sr_lname
 	,custoemr_sale_order.qty_p
+	,custoemr_sale_order.total_2
 		   FROM  product_sale 
 		   left join products on products.Product_ID=product_sale.product_id
        left join stocks on stocks.stock_id=product_sale.stock_id
@@ -362,7 +364,7 @@ SELECT product_sale.sale_id, product_sale.sale_date,
        left join tb_groups on tb_groups.Group_ID=products.group_id
        left join sr_list on product_sale.sr=sr_list.sr_id
 	   
-	  LEFT JOIN (select sum(product_sale.qty) as qty_p ,product_sale.sale_id,product_sale.sale_date
+	  LEFT JOIN (select sum(product_sale.qty) as qty_p , sum(product_sale.total) as total_2,product_sale.sale_id,product_sale.sale_date
            from  product_sale 
      	          left join products on products.Product_ID=product_sale.product_id
 		          left join tb_groups on tb_groups.Group_ID=products.group_id
