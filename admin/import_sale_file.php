@@ -118,7 +118,7 @@ if (isset($_POST['import'])) {
 
                 $Extended_Status = isset($data[$colU]) ? trim((string)$data[$colU]) : '';
 
-                if (strtolower($Extended_Status) !== 'delivered' && strtolower($Extended_Status) !== 'shipped') {
+                if (strtolower($Extended_Status) !== 'delivered' && strtolower($Extended_Status) !== 'shipped'  && strtolower($Extended_Status) !== 'ready_for_delivery'  && strtolower($Extended_Status) !== 'processing' ) {
                     $skippedCount++;
                     continue;
                 }

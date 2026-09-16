@@ -4,3 +4,5 @@ dblink.php
 
 # Local screenshots
 *.png
+*.sql
+*.sql.gz

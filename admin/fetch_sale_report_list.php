@@ -86,6 +86,7 @@ if($select_mode=='1'){
 			,sum(product_sale.qty) as t_qty
             ,sum(product_sale.amount) as t_amount
 			,sum(product_sale.total) as total_2 
+			,SUM(product_sale.qty * product_sale.price) as amt
 		   FROM  product_sale 
 	
 	left join products on products.Product_ID=product_sale.product_id
@@ -194,6 +195,7 @@ if($select_mode=='1'){
 	   ,sum(product_sale.qty) as t_qty
 	   ,sum(product_sale.amount) as t_amount
 	   ,sum(product_sale.total) as total_2 
+	   ,SUM(product_sale.qty * product_sale.price) as amt
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
 		   FROM  product_sale 
@@ -241,14 +243,14 @@ if($select_mode=='1'){
                 
 				<td align="right"><?=@number_format($s["price"],0);?> </td>
                
-                <td align="right"><?php if($s["total_2"]==0){ echo "Free";}else{ echo @number_format(($s["total_2"]),0); } ?> </td>
+                <td align="right"><?php if($s["amt"]==0){ echo "Free";}else{ echo @number_format(($s["amt"]),0); } ?> </td>
              
 				
 				</tr>
               <?php
            @$t_qty+=$s["t_qty"]; 
 		   
-		   @$t_amt +=$s["total_2"];
+		   @$t_amt +=$s["amt"];
 		
 		  
              } 
@@ -297,6 +299,7 @@ SELECT sale_import.*
 	   ,sum(product_sale.qty) as t_qty
 	   ,sum(product_sale.amount) as t_amount
 	   ,sum(product_sale.total) as total_2 
+	   ,SUM(product_sale.qty * product_sale.price) as amt
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 	   ,tb_groups.Group_Name,products.version
 	   ,sr_list.sr_fname,sr_list.sr_lname
