@@ -117,8 +117,8 @@ th {
                     <?php } ?>    
                 </select>   
             </td> 
-            <td>ເລກທີຮັບ<br><input type="text" name="payment_id" id="payment_id" class="form-control"></td> 
-            <td>ເລກທີຂາຍ<br><input type="text" name="sale_id" id="sale_id" class="form-control"></td> 
+            <td>ເລກທີໃບມອບ<br><input type="text" name="payment_id" id="payment_id" class="form-control"></td> 
+            <td>ເລກທີອິນວອຍ<br><input type="text" name="sale_id" id="sale_id" class="form-control"></td> 
 
 
             <td>ປະເພດຊຳລະ<br>
@@ -127,7 +127,7 @@ th {
                     <option value="2">ເງີນໂອນ</option>
                 </select>
             </td>
-            <td>ຮູບແບບ<br>
+            <td>ສະຖານະການມອບ<br>
                 <select name="select_mode" id="select_mode" class="form-control">
                     <option value="1">ລະອຽດ</option>
                     <option value="2">ສັງລວມ</option>

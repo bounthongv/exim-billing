@@ -296,6 +296,10 @@ height:20px;
 <tr>
   <td align="right">ຈຳນວນໃບບິນ:</td>
     <td><input type="text" class="form-control" name="bill" id="bill" value="0" ></td>
+
+
+    <td align="right">TIN:</td>
+    <td><input type="text" class="form-control" name="TIN" id="TIN" value="0" ></td>
 </tr>
 
 </table>
@@ -435,6 +439,8 @@ height:20px;
 <tr>
   <td align="right">ຈຳນວນໃບບິນ:</td>
     <td><input type="text" class="form-control" name="bill" id="bill" value="0" ></td>
+
+   
 </tr>
 
 
@@ -591,7 +597,7 @@ $(document).on('click', '.edit_supplier', function(){
     var Number_of_days_overdue = $('#e_Number_of_days_overdue'+customer_id+'').val();
     var Contract_expiration_date = $('#e_Contract_expiration_date'+customer_id+'').val();
 var bill = $('#e_bill'+customer_id+'').val();
-
+var e_TIN = $('#e_TIN'+customer_id+'').val();
 
 
     var id = $('#id'+customer_id+'').val();
@@ -619,7 +625,7 @@ var bill = $('#e_bill'+customer_id+'').val();
     $("#Sale_full_name").val(e_Sale_full_name);
 
 $("#bill").val(bill);
-
+$("#TIN").val(e_TIN);
 
     // [แก้ไขจุดบกพร่อง] ตรวจสอบสถานะเครดิตเก่าของลูกค้าเพื่อทำงานแยกขาดจากกัน
     if (credit === 'YES') {

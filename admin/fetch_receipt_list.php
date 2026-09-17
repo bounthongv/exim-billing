@@ -38,11 +38,12 @@
 if($select_mode=='1'){
 
 
-  @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
+  @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
+  customers.TIN
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 
-		 where 1=1 $btw $r_id $p_id $c_id order by payment_date asc");
+		 where 1=1 $btw $r_id $p_id $c_id $pt order by payment_date asc");
 		  if($sp){
           ?>
           
@@ -54,7 +55,9 @@ if($select_mode=='1'){
                     <th align="center">ເລກທີຂາຍ</th>
 					<th align="center">ວັນທີຂາຍ</th>
                   
-					<th align="center">ຊື່ລູກຄ້າ</th> 
+					<th align="center">ຊື່ລູກຄ້າ</th>
+					<th align="center">ເລກບິນອາກອນ</th>
+					
                     <th align="center">ປະເພດຊຳລະ</th>              
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
@@ -82,10 +85,12 @@ if($select_mode=='1'){
 				echo date_format($date2,"d/m/Y");
 					}?></td>
                 <td align="center"><?=$s["sale_id"];?></td>
+				
 				<td align="center"><?php if($s["sale_date"]==''){}else{
 				echo date_format($date1,"d/m/Y");
 					}?></td>               
 				<td><?=$s["customer_name"];?></td>
+				<td align="center"><?=$s["TIN"];?></td>
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
 				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
@@ -105,7 +110,7 @@ if($select_mode=='1'){
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="7">ລວມ</td>
+			<td align="right" colspan="8">ລວມ</td>
             <td align="right"><?= @number_format($t_amt,0);?></td>
            
            

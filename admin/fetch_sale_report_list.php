@@ -28,8 +28,19 @@
 
 		  @$group_id= mysqli_real_escape_string($con,$_POST['group_id']);	
          if($group_id==''){$g_id="";}  
-		 elseif($group_id=='004'){$g_id="and product_sale.free!=''  ";} 
-		 else{ $g_id="and products.Group_ID='$group_id'  ";}
+		 elseif($group_id=='004'){$g_id="and product_sale.free!=''  ";
+		 
+		$gt_qty=",SUM(CASE WHEN product_sale.free <> '' AND product_sale.free IS NOT NULL THEN product_sale.qty ELSE 0 END) AS t_qty,
+		SUM(CASE WHEN product_sale.free <> '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt";
+
+		 } 
+		 else{ $g_id="and products.Group_ID='$group_id'  ";
+
+		$gt_qty=",SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) as t_qty
+		,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt";
+		 
+
+		 }
 		 
 		 
 		  @$product_id= mysqli_real_escape_string($con,$_POST['product_id']);
@@ -83,10 +94,11 @@ if($select_mode=='1'){
   @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
-			,sum(product_sale.qty) as t_qty
+			/*,sum(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) as t_qty*/
+			$gt_qty
             ,sum(product_sale.amount) as t_amount
 			,sum(product_sale.total) as total_2 
-			,SUM(product_sale.qty * product_sale.price) as amt
+		/*	,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt*/
 		   FROM  product_sale 
 	
 	left join products on products.Product_ID=product_sale.product_id
@@ -191,11 +203,20 @@ if($select_mode=='1'){
 	 order by sale_import.Product_SKU asc"
 */
 		
+
+
 		      @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
-	   ,sum(product_sale.qty) as t_qty
+	  /* ,sum(product_sale.qty) as t_qty*/
+/*
+  	,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) AS t_qty
+    
+  
+    ,SUM(CASE WHEN product_sale.free <> '' AND product_sale.free IS NOT NULL THEN product_sale.qty ELSE 0 END) AS free_qty
+*/
+	   $gt_qty
 	   ,sum(product_sale.amount) as t_amount
 	   ,sum(product_sale.total) as total_2 
-	   ,SUM(product_sale.qty * product_sale.price) as amt
+	  /* ,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt*/
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
 		   FROM  product_sale 
@@ -256,7 +277,7 @@ if($select_mode=='1'){
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="3">ລວມ</td>
+			<td align="right" colspan="4">ລວມ</td>
             <td align="center"><?=@number_format($t_qty,0);?></td>
              <td align="right"></td>
             <td align="right"><?=@number_format($t_amt,0);?></td>
@@ -295,11 +316,15 @@ SELECT sale_import.*
 
 
 		
-		      @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
-	   ,sum(product_sale.qty) as t_qty
+	@$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
+	   /*,sum(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) as t_qty*/
+
+		$gt_qty
 	   ,sum(product_sale.amount) as t_amount
 	   ,sum(product_sale.total) as total_2 
-	   ,SUM(product_sale.qty * product_sale.price) as amt
+	   /*
+	   ,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt
+*/
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 	   ,tb_groups.Group_Name,products.version
 	   ,sr_list.sr_fname,sr_list.sr_lname

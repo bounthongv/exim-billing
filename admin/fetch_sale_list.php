@@ -50,7 +50,7 @@ elseif($customer_id=='New_customer'){
 
            @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);	
       
-		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id like '%$sale_id%' "; $btw=""; }
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id like '%$sale_id%' "; /*$btw="";*/ }
 		 
       /*
 		 if($sale_id==''){$r_id="";}  else{ $r_id="and Invoice_Number='$sale_id' ";  }
@@ -59,13 +59,13 @@ elseif($customer_id=='New_customer'){
 
 
 		  @$sale_order_id= mysqli_real_escape_string($con,$_POST['sale_order_id']);		   
-		 if($sale_order_id==''){$sr_id="";}  else{ $sr_id="and product_sale.order_id='$sale_order_id'";$btw="";  }
+		 if($sale_order_id==''){$sr_id="";}  else{ $sr_id="and product_sale.order_id='$sale_order_id'";/*$btw="";*/  }
 		 
 
 
 
         @$sr= mysqli_real_escape_string($con,$_POST['sr']);		   
-		if($sr==''){$sr_name="";}  else{ $sr_name="and product_sale.sr='$sr'";$btw="";  }
+		if($sr==''){$sr_name="";}  else{ $sr_name="and product_sale.sr='$sr'";/*$btw="";*/  }
 
 
 
@@ -95,7 +95,7 @@ elseif($customer_id=='New_customer'){
 
 ,sum(product_sale.qty*price) as total_amt
 ,sum(product_sale.qty) as qty_p 
-,sum(product_sale.total) as total_2 
+,sum(product_sale.total) as total_2
 /* ,product_sale.qty_p */
 		from 	  
    (SELECT product_sale.*,(product_sale.amount) as total_amt,(product_sale.qty) as total_qty
@@ -390,11 +390,9 @@ elseif($customer_id=='New_customer'){
                
 			<?php	
 
- if($s["free"]==''){
+
 @$t_amt+=$s["total_2"];
-            }else{
-@$t_amt+=0;
-            }
+
 				
 
 
@@ -403,9 +401,14 @@ elseif($customer_id=='New_customer'){
 				@$total_dis +=$s["bill_discount"];
 				@$totals +=$s["total"];
 				@$t_qty_p +=$s["qty_p"];
-				
-				
+					
+
+
              } ?>
+
+
+
+<?php /*
              <td colspan="8" align="right">ລວມ</td>
              <td colspan="1" align="center"><?=@number_format($t_qty_p,0);?></td>
              <td colspan="1" align="right"><?=@number_format($t_amt,0);?></td>
@@ -414,10 +417,125 @@ elseif($customer_id=='New_customer'){
              <td colspan="1" align="right"><?=@number_format($t_payment,0);?></td>-->
              <td colspan="6"></td>
              
+*/ ?>
+
+
+
+
+
+<?php 
+
+
+ @$sp1=mysqli_query($con,"SELECT
+    -- ใส่คอลัมน์จัดกลุ่มตรงนี้ (เช่น product_sale.customer_id) หากต้องการ GROUP BY
+
+    SUM(product_sale.qty) AS qty,
+  /*SUM(product_sale.qty * product_sale.price) AS all_price,*/
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) THEN product_sale.qty * product_sale.price ELSE 0 END) AS all_price,
+
+    -- กลุ่มสินค้า 001 (ขายปกติ)
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) AND tb_groups.Group_ID = '001' THEN product_sale.qty ELSE 0 END) AS t_qty_1,
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) AND tb_groups.Group_ID = '001' THEN product_sale.qty * product_sale.price ELSE 0 END) AS amt_1,
+    SUM(CASE WHEN product_sale.free <> '' AND product_sale.free IS NOT NULL AND tb_groups.Group_ID = '001' THEN product_sale.qty ELSE 0 END) AS free_qty,
+
+    -- กลุ่มสินค้า 002 (ขายปกติ)
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) AND tb_groups.Group_ID = '002' THEN product_sale.qty ELSE 0 END) AS t_qty_2,
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) AND tb_groups.Group_ID = '002' THEN product_sale.qty * product_sale.price ELSE 0 END) AS amt_2,
+
+    -- กลุ่มสินค้า 003 (ขายปกติ)
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) AND tb_groups.Group_ID = '003' THEN product_sale.qty ELSE 0 END) AS t_qty_3,
+    SUM(CASE WHEN (product_sale.free = '' OR product_sale.free IS NULL) AND tb_groups.Group_ID = '003' THEN product_sale.qty * product_sale.price ELSE 0 END) AS amt_3
+
+FROM product_sale
+LEFT JOIN products ON products.Product_ID = product_sale.product_id
+LEFT JOIN stocks ON stocks.stock_id = product_sale.stock_id
+LEFT JOIN customers ON customers.customer_id = product_sale.customer_id
+LEFT JOIN tb_groups ON tb_groups.Group_ID = products.group_id
+LEFT JOIN sr_list ON product_sale.sr = sr_list.sr_id
+
+WHERE 1=1  $sr_id $btw $r_id $st_id $sta $s_id $sr_name $c_id
+  ");
+$s1=mysqli_fetch_array($sp1);
+
+
+
+/*
+
+ @$sp2=mysqli_query($con,"SELECT
+    product_sale.*,
+    stocks.stock_name,
+    products.Product_ID,
+    SUM(
+        CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0
+    END
+) AS t_qty,
+SUM(
+    CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty * product_sale.price ELSE 0
+END
+) AS amt,
+SUM(product_sale.amount) AS t_amount,
+SUM(product_sale.total) AS total_2,
+products.Product_Name,
+products.size,
+products.Unit,
+customers.customer_name,
+tb_groups.Group_Name,
+products.version
+FROM
+    product_sale
+LEFT JOIN products ON products.Product_ID = product_sale.product_id
+LEFT JOIN stocks ON stocks.stock_id = product_sale.stock_id
+LEFT JOIN customers ON product_sale.customer_id = customers.customer_id
+LEFT JOIN tb_groups ON tb_groups.Group_ID = products.group_id
+WHERE
+    1 = 1 AND tb_groups.Group_ID = '003' $sr_id $btw $r_id $st_id $sta $s_id $sr_name $c_id
+ORDER BY
+    product_sale.product_id ASC
+  
+  ");
+$s2=mysqli_fetch_array($sp2);
+*/
+?>
+
+
+<tr>
+    <td align="right" colspan="8"  style="font-size: 16px;"><b>ລວມຍອດຂາຍ</b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['t_qty_1'],0);?></b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['amt_1'],0);?></b></td>
+</tr>
+<tr>
+    <td align="right" colspan="8" style="font-size: 16px;"><b>ລວມຍອດມັດຈຳລັງ</b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['t_qty_2'],0);?></b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['amt_2'],0);?></b></td>
+
+</tr>
+<tr>
+    <td align="right" colspan="8" style="font-size: 16px;"><b>ລວມເບຍແຖມ</b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['free_qty'],0);?></b></td>
+    <td align="center" style="font-size: 16px;"><b>-</b></td>
+</tr>
+<tr>
+    <td align="right" colspan="8" style="font-size: 16px;"><b>ລວມຊື້ຄືນລັງເປົ່າ</b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['t_qty_3'],0);?></b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['amt_3'],0);?></b></td>
+</tr>
+
+
+<tr>
+    <td align="right" colspan="8" style="font-size: 16px;"><b>Grand Total</b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['qty'],0);?></b></td>
+    <td align="center" style="font-size: 16px;"><b><?=@number_format($s1['all_price'],0);?></b></td>
+</tr>
+
+
+
+
        </table>
        
 		  
         <?php  } ?>
+
+
 
 
 

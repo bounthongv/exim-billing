@@ -93,6 +93,8 @@ if (isset($_POST['import'])) {
             // -----------------------------------------------------------------
             $colA  = excelColumnToIndex('A');
             $colC  = excelColumnToIndex('C');
+            $colE  = excelColumnToIndex('E');
+            $colG  = excelColumnToIndex('G');
             $colI  = excelColumnToIndex('I');
             $colM  = excelColumnToIndex('M');
             $colZ  = excelColumnToIndex('Z');
@@ -125,6 +127,8 @@ if (isset($_POST['import'])) {
 
                 $Item_ID             = isset($data[$colA])  ? trim((string)$data[$colA])  : '';
                 $Display_ID          = isset($data[$colC])  ? trim((string)$data[$colC])  : '';
+                $Created_Date        = isset($data[$colE])  ? trim((string)$data[$colE])  : '';
+                $Delivery_Date       = isset($data[$colG])  ? trim((string)$data[$colG])  : '';
                 $Invoiced_Date       = isset($data[$colI])  ? trim((string)$data[$colI])  : '';
                 $Invoice_Number      = isset($data[$colM])  ? trim((string)$data[$colM])  : '';
                 $Item_Promotion_Code = isset($data[$colZ])  ? trim((string)$data[$colZ])  : '';
@@ -147,7 +151,7 @@ if (isset($_POST['import'])) {
 
                 // ✅ แก้ไข: เก็บครบ 13 คอลัมน์ (เพิ่ม Item_Promotion_Code เป็น Index ที่ 12)
                 $rows_to_insert[] = [
-                    $Item_ID, $Display_ID, $Invoiced_Date, $Invoice_Number,
+                    $Item_ID, $Display_ID,$Created_Date,$Delivery_Date, $Invoiced_Date, $Invoice_Number,
                     $Outlet_External_ID, $Outlet_Name, $Sales_Rep_Code, $Extended_Status,
                     $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
                     $Item_Promotion_Code
@@ -204,7 +208,7 @@ if (isset($_POST['import'])) {
             // ---- Batch INSERT สำหรับแถวใหม่ ----
             if (!empty($rows_for_insert)) {
                 $sql_insert_base = "INSERT INTO sale_import (
-                                    Item_ID, Display_ID, Invoiced_Date, Invoice_Number,
+                                    Item_ID, Display_ID,Created_Date,Delivery_Date, Invoiced_Date, Invoice_Number,
                                     Outlet_External_ID, Outlet_Name, Sales_Rep_Code, Extended_Status,
                                     Product_SKU, Product_Name, Quantity, Price, Total,
                                     Item_Promotion_Code
@@ -255,6 +259,7 @@ if (isset($_POST['import'])) {
             if (!empty($rows_for_update)) {
                 $sql_update = "UPDATE sale_import SET
                                 Display_ID = ?, Invoice_Number = ?,
+                                Created_Date= ?,Delivery_Date= ?,
                                 Outlet_External_ID = ?, Outlet_Name = ?, Sales_Rep_Code = ?, Extended_Status = ?,
                                 Product_SKU = ?, Product_Name = ?, Quantity = ?, Price = ?, Total = ?,
                                 Item_Promotion_Code = ?
@@ -270,21 +275,24 @@ if (isset($_POST['import'])) {
                     $Item_ID             = $row[0];
                     $Display_ID          = $row[1];
                     $Invoiced_Date       = $row[2];
-                    $Invoice_Number      = $row[3];
-                    $Outlet_External_ID  = $row[4];
-                    $Outlet_Name         = $row[5];
-                    $Sales_Rep_Code      = $row[6];
-                    $Extended_Status     = $row[7];
-                    $Product_SKU         = $row[8];
-                    $Product_Name        = $row[9];
-                    $Quantity            = $row[10];
-                    $Price               = $row[11];
-                    $Total               = $row[12];
-                    $Item_Promotion_Code = $row[13];
+                    $Created_Date        = $row[3];
+                    $Delivery_Date       = $row[4];
+                    $Invoice_Number      = $row[5];
+                    $Outlet_External_ID  = $row[6];
+                    $Outlet_Name         = $row[7];
+                    $Sales_Rep_Code      = $row[8];
+                    $Extended_Status     = $row[9];
+                    $Product_SKU         = $row[10];
+                    $Product_Name        = $row[11];
+                    $Quantity            = $row[12];
+                    $Price               = $row[13];
+                    $Total               = $row[14];
+                    $Item_Promotion_Code = $row[15];
 
                     // ✅ แก้ไข: วางลำดับ Parameter ให้ตรงตาม SQL UPDATE (มี 13 ตัวพอดี)
-                    mysqli_stmt_bind_param($stmt_update, "ssssssssssssss",
+                    mysqli_stmt_bind_param($stmt_update, "ssssssssssssssss",
                         $Display_ID, $Invoice_Number,
+                        $Created_Date= ?,$Delivery_Date= ?,
                         $Outlet_External_ID, $Outlet_Name, $Sales_Rep_Code, $Extended_Status,
                         $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
                         $Item_Promotion_Code,
@@ -357,6 +365,8 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.price       = si.Price,
         ps.qty         = si.Quantity,
         ps.Total       = si.total,
+        ps.Created_Date   = DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        ps.Delivery_Date   = DATE_FORMAT(STR_TO_DATE(si.Delivery_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         ps.sale_date   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         ps.order_id    = si.Display_ID,
@@ -372,7 +382,7 @@ $update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
 
 // ---- 4.2 INSERT แถวใหม่ที่ยังไม่มีใน product_sale ----
 $sql_sync_insert = "INSERT INTO product_sale
-        (sr,customer_id, product_id, price, qty, Total, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID,`status`)
+        (sr,customer_id, product_id, price, qty, Total, Created_Date, Delivery_Date, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID,`status`)
     SELECT
         si.Sales_Rep_Code,
         si.Outlet_External_ID,
@@ -380,6 +390,8 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Price,
         si.Quantity,
         si.total,
+        DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        DATE_FORMAT(STR_TO_DATE(si.Delivery_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         si.Display_ID,

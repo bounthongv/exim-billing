@@ -134,7 +134,8 @@ SELECT customer_import.*,customer_import.external_id as customer_id,
 		  @$sp=mysqli_query($con,"SELECT customer_import.*
 			,customer_import.external_id as customer_id,
 		  customer_import.outlet_name as customer_name,
-		  customers.bill
+		  customers.bill,
+		  customers.TIN
 			FROM   customer_import
            left join customers on customers.customer_id=customer_import.external_id  
 		   left join customer_type on customer_type.ct_id=customers.customer_type  
@@ -213,6 +214,7 @@ ORDER BY `customer_import`.`external_id` $lmr
 
 
 	<input type="hidden" name="e_bill" id="e_bill<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["bill"]; ?>" />
+	<input type="hidden" name="e_TIN" id="e_TIN<?php echo $f["customer_id"]; ?>"  value="<?php echo $f["TIN"]; ?>" />
 
 
 			 

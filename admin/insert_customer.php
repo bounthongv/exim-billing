@@ -92,6 +92,8 @@ $Contract_expiration_date = filter_var($Contract_expiration_date,  FILTER_SANITI
 $bill = mysqli_real_escape_string($con,$_POST['bill']);
 $bill = filter_var($bill,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
+$TIN = mysqli_real_escape_string($con,$_POST['TIN']);
+$TIN = filter_var($TIN,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
 
 if($action=="Add"){
@@ -186,11 +188,16 @@ else{$cll=",customer_level='$customer_level'";}
 if($route_id==""){ $rid=",route_id=''";}
 else{$rid=",route_id='$route_id'";}
 
+
+if($TIN==""){ $TIN=",TIN=''";}
+else{$TIN_id=",TIN='$TIN'";}
+
+
 if($id=="")
 {
 
 
-$sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll
+$sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll $TIN_id
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
 ,bill='$bill'
@@ -225,7 +232,7 @@ else{
 
 
 
-	$sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll
+	$sql=mysqli_query($con,"UPDATE customers SET $gp_id $g_n  $v $d $p $t $tn $r $rid $cll $TIN_id
 
 ,village='$village',district='$district',sr='$sr',segment='$segment',grade='$grade',up='$up',brand='$brand',class='$class',debit_amt='$debit_amt'
 ,bill='$bill'
