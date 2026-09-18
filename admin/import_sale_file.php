@@ -23,17 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ⚙️ ZONE 2: โหลดไฟล์เชื่อมต่อ และฟังก์ชันคำนวณ
 // ==========================================
 include("init.php");
-mysqli_query($con, "SET lc_time_names = \"en_US\";");
-// DEBUG: check lc_time_names and date parsing
-$lc_test = mysqli_query($con, "SELECT @@lc_time_names as lc");
-$lc_row = mysqli_fetch_assoc($lc_test);
-$lc_val = $lc_row['lc'] ?? 'unknown';
-$test_date = 'Thu, 17 Sep 2026 10:01:12 GMT';
-$str_to_date = mysqli_query($con, "SELECT STR_TO_DATE('$test_date', '%a, %d %b %Y %H:%i:%s GMT') as std");
-$std_row = mysqli_fetch_assoc($str_to_date);
-$std_val = $std_row['std'] ?? 'null';
-echo "<div style='background:#ffe; padding:10px; margin:5px; font-family:monospace;'>DEBUG: lc_time_names=$lc_val; STR_TO_DATE('$test_date') = $std_val</div>";
-
 
 if (!isset($con) || !$con) {
     die("❌ <b>ข้อผิดพลาด:</b> ไม่พบตัวแปรเชื่อมต่อฐานข้อมูล \$con");
