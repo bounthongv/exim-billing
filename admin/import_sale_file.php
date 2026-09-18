@@ -159,17 +159,6 @@ if (isset($_POST['import'])) {
             }
             fclose($handle);
 
-            // 🔍 DEBUG
-            echo "<div style='background:#eef; padding:10px; margin:5px; font-family:monospace;'>";
-            echo "DEBUG: separator ที่ตรวจพบ = [" . htmlspecialchars($separator) . "]<br>";
-            echo "DEBUG: อ่านทั้งหมด " . ($rowIndex - 1) . " แถว (ไม่รวม header)<br>";
-            echo "DEBUG: ข้าม (ไม่ใช่ delivered) = $skippedCount แถว<br>";
-            echo "DEBUG: ผ่านเงื่อนไข delivered และมีค่าครบ = " . count($rows_to_insert) . " แถว<br>";
-            if (count($rows_to_insert) > 0) {
-                echo "DEBUG: ตัวอย่างแถวแรกที่จะบันทึก (ต้องมี 13 คอลัมน์): <pre>" . htmlspecialchars(print_r($rows_to_insert[0], true)) . "</pre>";
-            }
-            echo "</div>";
-
             // -----------------------------------------------------------------
             // 🔄 ขั้นตอนที่ 2: หาว่าแถวไหน "มีอยู่แล้ว" (update) แถวไหน "ใหม่" (insert)
             // -----------------------------------------------------------------
@@ -306,19 +295,6 @@ $Item_Promotion_Code = $row[15];
 
             mysqli_commit($con);
 
-            // 🔍 DEBUG
-            echo "<div style='background:#efe; padding:10px; margin:5px; font-family:monospace;'>";
-            echo "DEBUG: existing_keys ที่พบในตารางอยู่แล้ว = " . count($existing_keys) . " รายการ<br>";
-            echo "DEBUG: แถวที่จะ INSERT ใหม่ = " . count($rows_for_insert) . " แถว, insert_count จริง = $insert_count<br>";
-            echo "DEBUG: แถวที่จะ UPDATE = " . count($rows_for_update) . " แถว, update_count จริง = $update_count<br>";
-            echo "DEBUG: mysqli_error ล่าสุด = " . mysqli_error($con) . "<br>";
-            $check_count = mysqli_query($con, "SELECT COUNT(*) AS c FROM sale_import");
-            if ($check_count) {
-                $row_check = mysqli_fetch_assoc($check_count);
-                echo "DEBUG: จำนวนแถวในตาราง sale_import ตอนนี้ = " . $row_check['c'] . "<br>";
-            }
-            echo "</div>";
-
             // -----------------------------------------------------------------
             // 🔄 ขั้นตอนที่ 3: ลบข้อมูลเก่าที่ไม่อยู่ใน CSV
             // -----------------------------------------------------------------
@@ -365,10 +341,10 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.price       = si.Price,
         ps.qty         = si.Quantity,
         ps.Total       = si.total,
-        ps.Created_Date   = DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        ps.Delivery_Date   = DATE_FORMAT(STR_TO_DATE(si.Delivery_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        ps.sale_date   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+        ps.Created_Date   = DATE_FORMAT(STR_TO_DATE(NULLIF(si.Created_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        ps.Delivery_Date   = DATE_FORMAT(STR_TO_DATE(NULLIF(si.Delivery_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        ps.sale_date   = DATE_FORMAT(STR_TO_DATE(NULLIF(si.Invoiced_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        ps.sale_time   = DATE_FORMAT(STR_TO_DATE(NULLIF(si.Invoiced_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
         ps.free        = si.Item_Promotion_Code,
@@ -390,10 +366,10 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Price,
         si.Quantity,
         si.total,
-        DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        DATE_FORMAT(STR_TO_DATE(si.Delivery_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
-        DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+        DATE_FORMAT(STR_TO_DATE(NULLIF(si.Created_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        DATE_FORMAT(STR_TO_DATE(NULLIF(si.Delivery_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        DATE_FORMAT(STR_TO_DATE(NULLIF(si.Invoiced_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
+        DATE_FORMAT(STR_TO_DATE(NULLIF(si.Invoiced_Date,''), '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
         si.Display_ID,
         si.Invoice_Number,
         sale_import_2.remain,
@@ -414,17 +390,6 @@ $sql_sync_insert = "INSERT INTO product_sale
 ";
 $sync_insert_ok = mysqli_query($con, $sql_sync_insert);
 $insert_sale_count = $sync_insert_ok ? mysqli_affected_rows($con) : 0;
-
-
-
-
-
-
-// 🔍 DEBUG
-echo "<div style='background:#ffe; padding:10px; margin:5px; font-family:monospace;'>";
-echo "DEBUG: UPDATE product_sale " . ($sync_update_ok ? "สำเร็จ" : "ล้มเหลว: " . mysqli_error($con)) . " (แถวที่อัปเดต = $update_sale_count)<br>";
-echo "DEBUG: INSERT product_sale " . ($sync_insert_ok ? "สำเร็จ" : "ล้มเหลว: " . mysqli_error($con)) . " (แถวที่เพิ่มใหม่ = $insert_sale_count)<br>";
-echo "</div>";
 
         } else {
             echo "ไม่สามารถเปิดไฟล์ CSV ได้";
