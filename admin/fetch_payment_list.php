@@ -179,12 +179,12 @@ ORDER BY customer_payment.payment_date ASC");
 if($s["pay_id"]==''){
 ?>
 
-<button type="button" class="btn btn-danger">ຍັງ</button>
+<button type="button" class="btn btn-danger" style="width: 100px">ຍັງ</button>
 
 <?php
 }else{
 ?>
-<button type="button" class="btn btn-success">ມອບແລ້ວ</button>
+<button type="button" class="btn btn-success" style="width: 100px">ມອບແລ້ວ</button>
 <?php
 }
 ?>

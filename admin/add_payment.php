@@ -229,7 +229,11 @@ th{ text-align:center;}
        <div align="left"><button type="submit" class="btn btn-success btn-sm" name="save">ຕົກລົງ</button></div>
        
 
-
+<table>
+  <tr>
+<td>ເລກທີ</td><td><input type="text" name="sale_id" id="sale_id" class="form-control" ></td>
+</tr>
+</table>
 
 
        
@@ -360,20 +364,38 @@ function syncToSecondForm(selectElement) {
 	});
 
 
-
-
- function load_product(){
-		var customer_id = $('#customer_id').val();
+$(document).on('keyup', '#sale_id', function(){
+var sale_id = $('#sale_id').val();
 			$.ajax({
 			url:"fetch_payment_sale_list.php",
 			method:"POST",
-			data:{  customer_id:customer_id },
+			data:{  sale_id:sale_id },
 			//dataType:"json",
 			success:function(data)
 			{
 				$('#display_product').html(data);
 				
-				member_data();
+				//member_data();
+				
+			}
+		});
+});
+
+
+
+
+ function load_product(){
+		var sale_id = $('#sale_id').val();
+			$.ajax({
+			url:"fetch_payment_sale_list.php",
+			method:"POST",
+			data:{  sale_id:sale_id },
+			//dataType:"json",
+			success:function(data)
+			{
+				$('#display_product').html(data);
+				
+				//member_data();
 				
 			}
 		});

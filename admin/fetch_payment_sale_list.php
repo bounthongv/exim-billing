@@ -1,7 +1,7 @@
 <?php 
   include("init.php");
     
-   
+   /*
            @$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);	
            if($customer_id==''){$s_id="";}  else{ $s_id="and product_sale.customer_id='$customer_id'  ";}
 		 
@@ -13,10 +13,10 @@
 		   
            if($from_date=='' or $to_date==''){$btw="";} 
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
-		  
+		  */
  
            @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
-		 if($sale_id==''){$r_id="";}  else{ $r_id="and  product_sale.sale_id='$sale_id' "; $btw=""; }
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and  customer_payment.sale_id like '%$sale_id%' "; }
 		 
 		 
          if($_SESSION['status']=='1'){  
@@ -41,6 +41,7 @@
 		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 where 1=1 and customer_payment.payment_type='1' 
          and customer_payment.sale_id NOT IN (SELECT sale_id FROM payment_2)
+         $r_id
          order by payment_date asc
        ");
 		  if($sp){

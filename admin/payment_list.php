@@ -260,7 +260,7 @@ window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+
 
 <div class="container">
     <br>
-    <h3 align="center">ລາຍການຮັບເງິນສົດ</h3><br>
+    <h3 align="center">ລາຍການມອບເງິນສົດ</h3><br>
    
 <table>
        <tr>
