@@ -35,6 +35,8 @@ include("init.php");
 	 $receipt_name=mysqli_real_escape_string($con,$_POST['receipt_name']);     
      $payment_type=mysqli_real_escape_string($con,$_POST['payment_type']);
 	 
+ $Bank_account=mysqli_real_escape_string($con,$_POST['Bank_account']);
+
 	  $rate_lak=mysqli_real_escape_string($con,$_POST['rate_lak']);
 	  $rate_lak=filter_var($rate_lak,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 	  $rate_thb=mysqli_real_escape_string($con,$_POST['rate_thb']);
@@ -55,7 +57,11 @@ include("init.php");
 	   
 	   $total_all=mysqli_real_escape_string($con,$_POST['total_all']);
 	   $total_all=filter_var($total_all,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-	
+
+	   
+
+
+
 //exit();
 if(isset($_POST['save'])){
 for ($i = 0; $i < count($_POST['sale_id']); $i++) {
@@ -80,11 +86,11 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 			   $total_x_pay=$remain;
 				
 		$sql_in=mysqli_query($con,"INSERT INTO customer_payment (payment_id,payment_date,customer_id,sale_id,sale_date,amount,
-     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date) 
+     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date,Bank_account) 
 		
 		values('$auto_id','$payment_date','$customer_id','$sale_id','$sale_date','$total_x_pay'
 		,'$total_all','$payment_type','$pay_lak','$pay_thb','$pay_usd','$rate_lak','$rate_thb','$rate_usd','$total_x_pay','$payment_name'
-		,'$receipt_name','$user_id','$user_date') ");
+		,'$receipt_name','$user_id','$user_date','$Bank_account') ");
 		
 		
     $sql_up_order=mysqli_query($con,"update product_sale set payment=payment+$total_x_pay,remain=remain-$total_x_pay   where sale_id='$sale_id'  ");
@@ -102,11 +108,11 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 			   $total_xx_pay=$total_lak; 
 			
 				$sql_in=mysqli_query($con,"INSERT INTO customer_payment (payment_id,payment_date,customer_id,sale_id,sale_date,amount,
-     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date) 
+     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date,Bank_account) 
 		
 		values('$auto_id','$payment_date','$customer_id','$sale_id','$sale_date','$total_xx_pay'
 		,'$total_all','$payment_type','$pay_lak','$pay_thb','$pay_usd','$rate_lak','$rate_thb','$rate_usd','$total_xx_pay','$payment_name'
-		,'$receipt_name','$user_id','$user_date') ");
+		,'$receipt_name','$user_id','$user_date','$Bank_account') ");
 		
 		
     $sql_up_order=mysqli_query($con,"update product_sale set payment=payment+$total_xx_pay,remain=remain-$total_xx_pay   where sale_id='$sale_id'  ");
@@ -121,11 +127,11 @@ for ($i = 0; $i < count($_POST['sale_id']); $i++) {
    
  
  echo "INSERT INTO customer_payment (payment_id,payment_date,customer_id,sale_id,sale_date,amount,
-     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date) 
+     total_amount,payment_type,cur_lak,cur_thb,cur_usd,rate_lak,rate_thb,rate_usd,total_lak,payment_name,receipt_name,user_id,user_date,Bank_account) 
 		
 		values('$auto_id','$payment_date','$customer_id','$sale_id','$sale_date','$total_xx_pay'
 		,'$total_all','$payment_type','$pay_lak','$pay_thb','$pay_usd','$rate_lak','$rate_thb','$rate_usd','$total_xx_pay','$payment_name'
-		,'$receipt_name','$user_id','$user_date') ";
+		,'$receipt_name','$user_id','$user_date','$Bank_account') ";
 
 
 echo "update product_sale set payment=payment+$total_xx_pay,remain=remain-$total_xx_pay   where sale_id='$sale_id'  ".'<br>';

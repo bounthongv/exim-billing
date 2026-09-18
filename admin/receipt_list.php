@@ -123,6 +123,7 @@ th {
 
             <td>ປະເພດຊຳລະ<br>
                 <select name="payment_type" id="payment_type" class="form-control">
+                    <option value="">ທັງໝົດ</option>
                     <option value="1">ເງີນສົດ</option>
                     <option value="2">ເງີນໂອນ</option>
                 </select>

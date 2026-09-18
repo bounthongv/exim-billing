@@ -39,10 +39,11 @@ if($select_mode=='1'){
 
 
   @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
-  customers.TIN
+  customers.TIN,
+  tb_bank.Bank_Name
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
-		 
+		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 where 1=1 $btw $r_id $p_id $c_id $pt order by payment_date asc");
 		  if($sp){
           ?>
@@ -89,7 +90,7 @@ if($select_mode=='1'){
 				<td align="center"><?php if($s["sale_date"]==''){}else{
 				echo date_format($date1,"d/m/Y");
 					}?></td>               
-				<td><?=$s["customer_name"];?></td>
+				<td><?=$s["customer_name"].' '.$s["Bank_Name"].' '.$s["Bank_account"];?></td>
 				<td align="center"><?=$s["TIN"];?></td>
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}

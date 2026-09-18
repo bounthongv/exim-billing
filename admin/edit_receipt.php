@@ -219,6 +219,47 @@ $payment_id=$_SESSION['payment_id'];
     
     </td>
 
+<td align="right"> ບັນຊີທະນາຄານ:</td>
+    <td>
+   <select  name="Bank_account" id="Bank_account" class="form-control">  
+	<option value="<?php echo $_SESSION['Bank_account']; ?>"><?php echo $_SESSION['Bank_account'].' '.$_SESSION['Bank_Name']; ?></option>
+    <?php 
+	 $sql=mysqli_query($con,"SELECT * from tb_bank");	
+	while($f = mysqli_fetch_array($sql)){?>
+		<option value="<?php echo $f['Bank_account']?>"><?php echo $f['Bank_account']?> &nbsp; <?php echo $f['Bank_Name']?></option>
+	<?php } ?>
+   </select>  	
+    
+    </td>
+
+
+
+
+<script>
+  const paymentType = document.getElementById('payment_type');
+  const bankAccount = document.getElementById('Bank_account');
+
+  function toggleBankAccount() {
+    if (paymentType.value === "1") {
+      bankAccount.disabled = true; // ปิดการใช้งาน
+      // bankAccount.style.display = "none"; // หากต้องการให้ซ่อนไปเลย ให้ยกเลิกคอมเมนต์บรรทัดนี้
+    } else {
+      bankAccount.disabled = false; // เปิดการใช้งาน
+      // bankAccount.style.display = "block"; // หากใช้ซ่อน ให้ยกเลิกคอมเมนต์บรรทัดนี้
+    }
+  }
+
+  // ทำงานเมื่อผู้ใช้เปลี่ยนค่าใน select
+  paymentType.addEventListener('change', toggleBankAccount);
+
+  // เรียกใช้งาน 1 ครั้งทันทีที่โหลดหน้าเว็บ เพื่อให้สถานะถูกต้องตามค่าเริ่มต้น
+  toggleBankAccount();
+</script>
+
+
+
+
+
     <td align="right">THB:</td>
     <td>
    <input type="text" name="rate_thb" id="rate_thb"  class="form-control" style="text-align:right;"  value="300" readonly required>    	

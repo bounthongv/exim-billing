@@ -77,14 +77,18 @@ height:20px;
 	
 	$(document).on('click', '.edit_bank', function(){
 	
+	var Id = $(this).attr("Id");
+		var Bank_Name_EN = $('#g_Bank_Name_EN'+Id+'').val();
+		var Bank_Name = $('#g_Bank_Name'+Id+'').val();
+		var Bank_account = $('#g_Bank_account'+Id+'').val();
+	var Note = $('#g_note'+Id+'').val();
 	
-		var Bank_Name_EN = $('#g_name_en'+Id+'').val();
-		var Bank_Name = $('#g_name'+Id+'').val();
-		
-	
-	
-	   $("#Bank_Name_en").val( Bank_Name_EN );
-	   $("#Bank_Name").val( Bank_Name ); 
+	   $("#bank_name_en").val( Bank_Name_EN );
+	   $("#bank_name").val( Bank_Name ); 
+       $("#bank_account").val( Bank_account ); 
+
+       $("#note").val( Note ); 
+
 			$("#action").val('update');
 			
 			});
@@ -97,7 +101,7 @@ height:20px;
 
   var r = confirm("ທ່ານ ຕ້ອງການລົບແທ້ບໍ່?");
   if (r == true) {
-     window.location = 'delete_group.php?Id='+Id;
+     window.location = 'delete_bank.php?Id='+Id;
   } 
  
 
@@ -138,9 +142,10 @@ height:20px;
                 <td ><?php echo $p['Bank_account'];?></td>
               	<td ><?php echo $p['Bank_Name'];?></td>
                 <td ><?php echo $p['Bank_Name_EN'];?></td>
-                <input type="hidden" name="g_name" id="g_name<?php echo $p['Id'];?>" value="<?php echo $p['Bank_Name'];?>">
-                <input type="hidden" name="g_name_en" id="g_name_en<?php echo $p['Id'];?>" value="<?php echo $p['Bank_Name_EN'];?>">
-                <input type="hidden" name="g_name_en" id="g_name_en<?php echo $p['Id'];?>" value="<?php echo $p['Bank_Name_EN'];?>">
+                <input type="hidden" name="g_Bank_Name" id="g_Bank_Name<?php echo $p['Id'];?>" value="<?php echo $p['Bank_Name'];?>">
+                <input type="hidden" name="g_Bank_Name_EN" id="g_Bank_Name_EN<?php echo $p['Id'];?>" value="<?php echo $p['Bank_Name_EN'];?>">
+                <input type="hidden" name="g_Bank_account" id="g_Bank_account<?php echo $p['Id'];?>" value="<?php echo $p['Bank_account'];?>">
+                <input type="hidden" name="g_note" id="g_note<?php echo $p['Id'];?>" value="<?php echo $p['note'];?>">
               	<td ><button class="btn btn-success btn-sm edit_bank"  data-toggle="modal" data-target="#add_pro"
                 id="<?php echo $p['Id'];?>" value="<?php echo $p['Id'];?>">ແກ້ໄຂ</button></td>
                 

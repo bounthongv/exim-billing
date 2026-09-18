@@ -266,7 +266,7 @@ window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+
        <tr>
      <td> <br>  <a href="product_qty_list.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
        
-            
+            <td><br><a href="add_payment.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ໃບມອບເງິນສົດ</button></a></td>
             
             <td>ວັນທີ<br><input type="date" class="form-control" name="from_date" id="from_date" value="<?php echo date("Y-m-d"); ?>"></td> 
             

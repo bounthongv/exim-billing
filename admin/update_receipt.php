@@ -8,9 +8,11 @@ include("init.php");
 
  $payment_date=mysqli_real_escape_string($con,$_POST['payment_date']);
  $payment_type=mysqli_real_escape_string($con,$_POST['payment_type']);
+ $Bank_account=mysqli_real_escape_string($con,$_POST['Bank_account']);
 
 
- $sql_up=mysqli_query($con,"UPDATE customer_payment set payment_date='$payment_date',payment_type='$payment_type' where payment_id='$payment_id' ");
+ $sql_up=mysqli_query($con,"UPDATE customer_payment set payment_date='$payment_date',payment_type='$payment_type',Bank_account='$Bank_account' 
+ where payment_id='$payment_id' ");
 
 
 

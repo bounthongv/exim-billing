@@ -23,10 +23,11 @@ if(isset($_SESSION["cart_receipt_edit"]))
 
 
 
- $sql_d2=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
+ $sql_d2=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
+ 		tb_bank.Bank_Name
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
-		 
+		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 where customer_payment.sale_id='$sale_id' and customer_payment.payment_id='$payment_id'");		 
 $f2=mysqli_fetch_array($sql_d2);
 
@@ -49,6 +50,9 @@ $f2=mysqli_fetch_array($sql_d2);
 	$_SESSION['total_lak'] =$f2["total_lak"];
 
     $_SESSION['payment_type'] =$f2["payment_type"];
+
+ 	$_SESSION['Bank_account'] =$f2["Bank_account"];
+	$_SESSION['Bank_Name'] =$f2["Bank_Name"];
 
 /*
           $sql_d=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,

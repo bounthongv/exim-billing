@@ -192,13 +192,13 @@ if (isset($_POST['import'])) {
             $rows_for_insert = [];
             $rows_for_update = [];
             foreach ($rows_to_insert as $row) {
-                $key = $row[0] . '_' . $row[2];
-                if (isset($existing_keys[$key])) {
-                    $rows_for_update[] = $row;
-                } else {
-                    $rows_for_insert[] = $row;
-                }
-            }
+    $key = $row[0] . '_' . $row[4]; // ใช้ Invoiced_Date (Index 4)
+    if (isset($existing_keys[$key])) {
+        $rows_for_update[] = $row;
+    } else {
+        $rows_for_insert[] = $row;
+    }
+}
 
             $insert_count = 0;
             $update_count = 0;
@@ -221,7 +221,7 @@ if (isset($_POST['import'])) {
                     $values_flat  = [];
 
                     foreach ($chunk as $row) {
-                        $placeholders[] = "(" . implode(',', array_fill(0, 14, '?')) . ")";
+                        $placeholders[] = "(" . implode(',', array_fill(0, 16, '?')) . ")";
                         foreach ($row as $v) {
                             $values_flat[] = $v;
                         }
@@ -259,7 +259,7 @@ if (isset($_POST['import'])) {
             if (!empty($rows_for_update)) {
                 $sql_update = "UPDATE sale_import SET
                                 Display_ID = ?, Invoice_Number = ?,
-                                Created_Date= ?,Delivery_Date= ?,
+                                Created_Date = ?, Delivery_Date = ?,
                                 Outlet_External_ID = ?, Outlet_Name = ?, Sales_Rep_Code = ?, Extended_Status = ?,
                                 Product_SKU = ?, Product_Name = ?, Quantity = ?, Price = ?, Total = ?,
                                 Item_Promotion_Code = ?
@@ -273,31 +273,31 @@ if (isset($_POST['import'])) {
 
                 foreach ($rows_for_update as $row) {
                     $Item_ID             = $row[0];
-                    $Display_ID          = $row[1];
-                    $Invoiced_Date       = $row[2];
-                    $Created_Date        = $row[3];
-                    $Delivery_Date       = $row[4];
-                    $Invoice_Number      = $row[5];
-                    $Outlet_External_ID  = $row[6];
-                    $Outlet_Name         = $row[7];
-                    $Sales_Rep_Code      = $row[8];
-                    $Extended_Status     = $row[9];
-                    $Product_SKU         = $row[10];
-                    $Product_Name        = $row[11];
-                    $Quantity            = $row[12];
-                    $Price               = $row[13];
-                    $Total               = $row[14];
-                    $Item_Promotion_Code = $row[15];
+$Display_ID          = $row[1];
+$Created_Date        = $row[2];
+$Delivery_Date       = $row[3];
+$Invoiced_Date       = $row[4];
+$Invoice_Number      = $row[5];
+$Outlet_External_ID  = $row[6];
+$Outlet_Name         = $row[7];
+$Sales_Rep_Code      = $row[8];
+$Extended_Status     = $row[9];
+$Product_SKU         = $row[10];
+$Product_Name        = $row[11];
+$Quantity            = $row[12];
+$Price               = $row[13];
+$Total               = $row[14];
+$Item_Promotion_Code = $row[15];
 
                     // ✅ แก้ไข: วางลำดับ Parameter ให้ตรงตาม SQL UPDATE (มี 13 ตัวพอดี)
                     mysqli_stmt_bind_param($stmt_update, "ssssssssssssssss",
-                        $Display_ID, $Invoice_Number,
-                        $Created_Date= ?,$Delivery_Date= ?,
-                        $Outlet_External_ID, $Outlet_Name, $Sales_Rep_Code, $Extended_Status,
-                        $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
-                        $Item_Promotion_Code,
-                        $Item_ID, $Invoiced_Date
-                    );
+    $Display_ID, $Invoice_Number,
+    $Created_Date, $Delivery_Date,
+    $Outlet_External_ID, $Outlet_Name, $Sales_Rep_Code, $Extended_Status,
+    $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
+    $Item_Promotion_Code,
+    $Item_ID, $Invoiced_Date
+);
                     mysqli_stmt_execute($stmt_update);
                     $update_count++;
                 }

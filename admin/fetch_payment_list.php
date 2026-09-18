@@ -19,18 +19,13 @@
 		 
 		 
 
-		  
-		  @$sp=mysqli_query($con,"
-      
-    
-       select payment.*,customers.customer_name ,customers.customer_id,product_sale.stock_id
+/*
+
+		  @$sp=mysqli_query($con,"SELECT payment.*,customers.customer_name ,customers.customer_id,product_sale.stock_id
            from payment
 	  left join product_sale on payment.sale_id=product_sale.sale_id
 	        left join customers on product_sale.customer_id=customers.customer_id
-	   where 1=1 $btw   $r_id $s_id  group by payment.pay_id
-	  
-	   
-	          ");
+	   where 1=1 $btw   $r_id $s_id  group by payment.pay_id");
 		  if($sp){
           ?>
         
@@ -96,6 +91,116 @@
         <?php  } 
 
 
- 
+ */
  
  ?>
+
+ <?php
+  @$sp=mysqli_query($con,"SELECT 
+    customer_payment.*,
+    customers.customer_name,
+    customers.TIN,
+    tb_bank.Bank_Name,
+    payment_2.pay_date,
+    payment_2.pay_id
+/*
+    CASE 
+        WHEN customer_payment.sale_id IN (SELECT sale_id FROM payment_2) THEN 1 
+        ELSE 0 
+    END AS is_in_payment2
+*/
+
+FROM customer_payment
+LEFT JOIN customers ON customer_payment.customer_id = customers.customer_id
+LEFT JOIN tb_bank ON customer_payment.Bank_account = tb_bank.Bank_account
+LEFT JOIN payment_2  ON payment_2.sale_id = customer_payment.sale_id
+WHERE customer_payment.payment_type = '1' 
+ORDER BY customer_payment.payment_date ASC");
+          ?>
+          
+ 			<table id="myTable" border="1"  class="table-bordered" align="left">
+            	<tr>
+                    <th align="center">ລ/ດ</th>
+                	<th align="center">ເລກທີ</th>
+					<th align="center">ວັນທີ</th>
+                    <th align="center">ເລກທີຂາຍ</th>
+					<th align="center">ວັນທີຂາຍ</th>
+                  
+					<th align="center">ຊື່ລູກຄ້າ</th>
+					<th align="center">ເລກບິນອາກອນ</th>
+					
+                    <th align="center">ປະເພດຊຳລະ</th>              
+					 
+                    <th align="center" >ຈຳນວນເງີນ</th>
+                 <th align="center">ວັນທີມອບ</th>
+                <th align="center">ເລກທີມອບ</th>
+             
+                </tr>
+           <?php
+		   
+		   $e_list=0;
+            while($s=mysqli_fetch_array($sp)){
+				
+				$e_list++;
+				
+				$date1=$s["sale_date"];
+				$date1=date_create($date1);
+				
+				$date2=$s["payment_date"];
+				$date2=date_create($date2);
+            
+                $pay_date=$s["pay_date"];
+				$pay_date=date_create($pay_date);
+             
+
+			?>
+            	<tr>
+                <td align="center"><?=$e_list;?></td>
+			    <td align="center"><?=$s["payment_id"];?></td>
+				<td align="center"><?php if($s["payment_date"]==''){}else{
+				echo date_format($date2,"d/m/Y");
+					}?></td>
+                <td align="center"><?=$s["sale_id"];?></td>
+				
+				<td align="center"><?php if($s["sale_date"]==''){}else{
+				echo date_format($date1,"d/m/Y");
+					}?></td>               
+				<td><?=$s["customer_name"].' '.$s["Bank_Name"].' '.$s["Bank_account"];?></td>
+				<td align="center"><?=$s["TIN"];?></td>
+                 <td align="center"><?php 
+				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
+				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
+            	<td align="right"><?=@number_format($s["amount"],0);?></td>
+ <td align="center"><?php if($s["pay_date"]==''){echo '';}else{echo date_format($pay_date,"d/m/Y");} ?></td>
+        <td align="right"><?=$s["pay_id"];?></td>
+
+<td align="right">
+<?php 
+if($s["pay_id"]==''){
+?>
+
+<button type="button" class="btn btn-danger">ຍັງ</button>
+
+<?php
+}else{
+?>
+<button type="button" class="btn btn-success">ມອບແລ້ວ</button>
+<?php
+}
+?>
+
+
+
+</td>
+
+				</tr>
+              <?php
+          
+		   @$t_amt +=$s["amount"];
+		 
+             } 
+			 ?>
+			<tr>
+			<td align="right" colspan="8">ລວມ</td>
+            <td align="right"><?= @number_format($t_amt,0);?></td>
+           

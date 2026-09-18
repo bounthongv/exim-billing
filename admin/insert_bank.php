@@ -9,8 +9,8 @@ include("init.php");
 
 
 	$Id = mysqli_real_escape_string($con,$_POST['Id']);
-	$Bank_Name = mysqli_real_escape_string($con,$_POST['Bank_Name']);
-	$Bank_Name_en = mysqli_real_escape_string($con,$_POST['Bank_Name_en']);
+	$Bank_Name = mysqli_real_escape_string($con,$_POST['bank_name']);
+	$Bank_Name_en = mysqli_real_escape_string($con,$_POST['bank_name_en']);
 $bank_account = mysqli_real_escape_string($con,$_POST['bank_account']);
 $note = mysqli_real_escape_string($con,$_POST['note']);
 
@@ -38,7 +38,7 @@ $sad=mysqli_query($con,"INSERT INTO tb_bank (Id, Bank_Name,Bank_Name_EN,Bank_acc
 		if($Id==""){ $a="";}else{$a="Id='$Id'";}	
 
 
-$sad=mysqli_query($con,"update tb_bank set $a ,Bank_Name='$Bank_Name',Bank_Name_EN='$Bank_Name_en',bank_account='$bank_account',note='$note' WHERE Id='$Id' ");
+$sad=mysqli_query($con,"update tb_bank set Bank_Name='$Bank_Name',Bank_Name_EN='$Bank_Name_en',bank_account='$bank_account',note='$note' WHERE Id='$Id' ");
 	if($sad){
 		        
 				$_SESSION['smg']="<div class='alert alert-success'><strong>ແກ້ໄຂສຳເລັດ!</strong></div>";
