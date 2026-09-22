@@ -173,13 +173,13 @@ $(function(){
    var to_date = $('#to_date').val();
 
    
-   
+   var customer_id = $('#customer_id').val();
  //  alert(stock_id);
    
          $.ajax({
 				url:"fetch_cta_list.php",
 				method:"POST",
-data:{  from_date:from_date,to_date:to_date },
+data:{  from_date:from_date,to_date:to_date,customer_id:customer_id },
 				success:function(data)
 				{
 					$('#head_list').html(data);
@@ -216,6 +216,33 @@ data:{  from_date:from_date,to_date:to_date },
             
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
       
+
+       <td>ຂໍ້ມູນລູກຄ້າ<br>
+              
+                <select  name="customer_id" id="customer_id" class="form-control select2" style="width:210px;"  >
+              <option value="">ທັງຫມົດ</option>
+
+              <option value="New_customer">ລູກຄ້າໃໝ່</option>
+         <?php 
+		 $sql_c=mysqli_query($con,"SELECT * FROM
+		  (
+		  SELECT 
+		  external_id as customer_id,
+		  outlet_name as customer_name,
+		  phone_number as phone,
+		  village as village,
+		  district as district
+		  FROM customer_import
+		  ) as customer_import ");
+		 while($f=mysqli_fetch_array($sql_c)){
+		  ?>     
+              <option value="<?php echo $f['customer_id'];?>"><?php echo $f['customer_id'].' '.$f['customer_name'];?></option>
+          <?php } ?>   
+             </select> 
+              </td> 
+
+
+
 
  <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
 

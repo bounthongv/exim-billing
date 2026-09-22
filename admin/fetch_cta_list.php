@@ -4,6 +4,9 @@
   include("init.php");
 
 
+@$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);
+
+
    @$from_date= mysqli_real_escape_string($con,$_POST['from_date']);	
 		   @$to_date= mysqli_real_escape_string($con,$_POST['to_date']);	
 		   $today=date("Y-m-d");
@@ -11,6 +14,16 @@
        if($from_date=='' or $to_date==''){$btw="and tb_cta.Date='$today'";} 
 		  else{ $btw="and tb_cta.Date between '$from_date' and '$to_date' ";}
 
+
+
+      
+if($customer_id==''){$c_id="";} 
+elseif($customer_id=='New_customer'){
+ $c_id="and tb_cta.customer_id NOT IN (SELECT customer_id FROM customers)";}
+		   else{ 
+ $c_id="and 
+         (tb_cta.customer_id like '$customer_id%' or tb_cta.customer_id like '%$customer_id%')
+         ";}
 
   ?>
 
@@ -46,7 +59,7 @@
 <?php 
  $list_id=1;
 
- @$sp=mysqli_query($con,"SELECT * FROM tb_cta WHERE 1=1 $btw");
+ @$sp=mysqli_query($con,"SELECT * FROM tb_cta WHERE 1=1 $btw $c_id");
  while($s=mysqli_fetch_array($sp)){
 
  $channels = [];
