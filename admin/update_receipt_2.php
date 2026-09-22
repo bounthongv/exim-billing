@@ -25,7 +25,7 @@ include("init.php");
 		        }
 				
 
-		       header("location:receipt_list.php");
+		       header("location:receipt_list_2.php");
 			
 
 

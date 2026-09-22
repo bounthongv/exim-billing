@@ -86,7 +86,7 @@ th{ text-align:center;}
 
     <!-- /.container -->
  <div class="container">   
-    	<form action="update_receipt.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
+    	<form action="update_receipt_2.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
 
 	<div class="form-group row">
     <div class="col-sm-10">
@@ -94,14 +94,14 @@ th{ text-align:center;}
       <a href="index.php"><button type="button" name="close"  class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
 */ ?>
 
-<a href="cart_receipt.php?action=close_and_clear">
+<a href="cart_receipt_2.php?action=close_and_clear">
     <button type="button" name="close" class="btn btn-danger">
         <i class="fa fa-times"></i>&nbsp;ປິດ
     </button>
 </a>
 
 
-      <a href="add_receipt.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
+      <a href="add_receipt_2.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
       <button type="submit" name="save_edit" class="btn btn-primary" value="save_edit"  ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
 
 

@@ -10,17 +10,13 @@
 		   @$from_date= mysqli_real_escape_string($con,$_POST['from_date']);	
 		   @$to_date= mysqli_real_escape_string($con,$_POST['to_date']);	
 		   $today=date("Y-m-d");
-         if($from_date=='' or $to_date==''){$btw="and payment_2.pay_date='$today'";} 
-		  else{ $btw="and payment_2.pay_date between '$from_date' and '$to_date' ";}
+         if($from_date=='' or $to_date==''){$btw="and payment.pay_date='$today'";} 
+		  else{ $btw="and payment.pay_date between '$from_date' and '$to_date' ";}
 		  
  
-           @$pay_id= mysqli_real_escape_string($con,$_POST['pay_id']);		   
-		 if($pay_id==''){$p_id="";}  else{ $p_id="and  payment_2.pay_id='$pay_id' ";}
+           @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
+		 if($sale_id==''){$r_id="";}  else{ $r_id="and  payment.sale_id='$sale_id' ";}
 		 
-
-        @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
-		 if($sale_id==''){$s_id="";}  else{ $s_id="and  payment_2.sale_id='$sale_id' ";}
-
 		 @$list_id= mysqli_real_escape_string($con,$_POST['list_id']);
 
 /*
@@ -108,8 +104,7 @@ if($list_id=='02.009'){
  ?>
 
  <?php
-
-"SELECT 
+  @$sp=mysqli_query($con,"SELECT 
     customer_payment.*,
     customers.customer_name,
     customers.TIN,
@@ -127,36 +122,26 @@ FROM customer_payment
 LEFT JOIN customers ON customer_payment.customer_id = customers.customer_id
 LEFT JOIN tb_bank ON customer_payment.Bank_account = tb_bank.Bank_account
 LEFT JOIN payment_2  ON payment_2.sale_id = customer_payment.sale_id
-WHERE 1=1 and customer_payment.payment_type = '1'
-ORDER BY customer_payment.payment_date ASC";
-
-
-
-
-  @$sp=mysqli_query($con,"SELECT *,sum(amount)as amount,count(sale_id) as sale_id,tb_bank.Bank_Name FROM payment_2
-LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
-  WHERE 1=1 $btw $p_id $s_id
-  group by payment_2.pay_id
-  ");
-
-
-
-
+WHERE 1=1 and customer_payment.payment_type = '2'
+ORDER BY customer_payment.payment_date ASC");
           ?>
           
- 			<table id="myTable" border="1"  class="table-bordered" align="left" style="width:80%">
+ 			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
                     <th align="center">ລ/ດ</th>
-                	 <th align="center">ເລກທີມອບ</th>
-                     <th align="center">ວັນທີມອບ</th>
-                    <th align="center">ຈຳນວນ</th>
+                	<th align="center">ເລກທີ</th>
+					<th align="center">ວັນທີ</th>
+                    <th align="center">ເລກທີຂາຍ</th>
+					<th align="center">ວັນທີຂາຍ</th>
                   
-					<th align="center">ທະນາຄານ</th>
-			       
+					<th align="center">ຊື່ລູກຄ້າ</th>
+					<th align="center">ເລກບິນອາກອນ</th>
+					
+                    <th align="center">ປະເພດຊຳລະ</th>              
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
-                 
-               
+                 <th align="center">ວັນທີມອບ</th>
+                <th align="center">ເລກທີມອບ</th>
              
                 </tr>
            <?php
@@ -179,28 +164,26 @@ LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
 			?>
             	<tr>
                 <td align="center"><?=$e_list;?></td>
-
-<td align="center"><input type="button" name="show" id="<?=$s["pay_id"];?>" value="<?=$s["pay_id"];?>" class="btn btn-success show_detail btn-sm" 
-			   data-toggle="modal" data-target="#pro_detail" >
-</td>
-
-				 <td align="center"><?php if($s["pay_date"]==''){echo '';}else{echo date_format($pay_date,"d/m/Y");} ?></td>
+			    <td align="center"><?=$s["payment_id"];?></td>
+				<td align="center"><?php if($s["payment_date"]==''){}else{
+				echo date_format($date2,"d/m/Y");
+					}?></td>
                 <td align="center"><?=$s["sale_id"];?></td>
 				
-			            
-				<td align="center"><?=$s["customer_name"].' '.$s["Bank_Name"];?></td>
-	
+				<td align="center"><?php if($s["sale_date"]==''){}else{
+				echo date_format($date1,"d/m/Y");
+					}?></td>               
+				<td><?=$s["customer_name"].' '.$s["Bank_Name"].' '.$s["Bank_account"];?></td>
+				<td align="center"><?=$s["TIN"];?></td>
+                 <td align="center"><?php 
+				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
+				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
             	<td align="right"><?=@number_format($s["amount"],0);?></td>
+ <td align="center"><?php if($s["pay_date"]==''){echo '';}else{echo date_format($pay_date,"d/m/Y");} ?></td>
+        <td align="right"><?=$s["pay_id"];?></td>
 
-       
-<td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["pay_id"];?>" data-pay_id="<?=$s["pay_id"];?>" >ແກ້ໄຂ</button></td>     
-
-
-
-
+<td align="right">
 <?php 
-/*
-
 if($s["pay_id"]==''){
 ?>
 
@@ -212,14 +195,11 @@ if($s["pay_id"]==''){
 <button type="button" class="btn btn-success" style="width: 100px">ມອບແລ້ວ</button>
 <?php
 }
-
-
-*/
 ?>
 
 
 
-
+</td>
 
 				</tr>
               <?php
@@ -229,6 +209,6 @@ if($s["pay_id"]==''){
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="5">ລວມ</td>
+			<td align="right" colspan="8">ລວມ</td>
             <td align="right"><?= @number_format($t_amt,0);?></td>
            

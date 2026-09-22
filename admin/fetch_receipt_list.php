@@ -1,9 +1,11 @@
 <?php 
   include("init.php");
-    
+    /*
+   echo $_SESSION['list_id']['07.003'];
+   echo $_SESSION['list_id']['02.009'];
+	*/
    
-     
-		 
+
        @$select_mode= mysqli_real_escape_string($con,$_POST['select_mode']);
 	   
 	    
@@ -22,10 +24,10 @@
 
   @$payment_id= mysqli_real_escape_string($con,$_POST['payment_id']);		   
  if($payment_id==''){$p_id="";}  else{ $p_id="and ( customer_payment.payment_id like '$payment_id%' or customer_payment.payment_id like '%$payment_id%') ";}
-
+/*
 	 @$payment_type= mysqli_real_escape_string($con,$_POST['payment_type']);		   
     if($payment_type==''){$pt="";}  else{ $pt="and  customer_payment.payment_type='$payment_type'  ";}
-		
+		*/
 		 
 	
 		 
@@ -35,16 +37,42 @@
 		 or customers.customer_name like '%$customer_id%')  ";}
 
 
+  $list_id=$_SESSION['list_id'];
+
+	 //@$list_id= mysqli_real_escape_string($con,$_POST['list_id']);
+
+/*
+if($_SESSION['list_id']['02.009']=='02.009'){
+    $payment_type="and customer_payment.payment_type = '1'"; 
+   }elseif($_SESSION['list_id']['07.003']=='07.003'){
+    $payment_type="and customer_payment.payment_type = '2'";
+   }
+*/
+
+
+/*
+if($_SESSION['list_id_e']=='07.001'){
+    $payment_type="and customer_payment.payment_type = '1'"; 
+   }elseif($_SESSION['list_id_e']=='07.003'){
+    $payment_type="and customer_payment.payment_type = '2'";
+   }
+*/
+
 if($select_mode=='1'){
 
 
   @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
   customers.TIN,
-  tb_bank.Bank_Name
+  payment_2.pay_id,
+  payment_2.pay_date,
+  tb_bank.Bank_Name,
+  tb_bank.Bank_account
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
-		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
-		 where 1=1 $btw $r_id $p_id $c_id $pt order by payment_date asc");
+		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
+		 left join tb_bank on payment_2.Bank_account=tb_bank.Bank_account
+		 
+		 where 1=1 $btw $r_id $p_id $c_id and customer_payment.payment_type = '1' order by payment_date asc");
 		  if($sp){
           ?>
           
@@ -62,8 +90,11 @@ if($select_mode=='1'){
                     <th align="center">ປະເພດຊຳລະ</th>              
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
-                 
-                    <th align="center" >ແກ້ໄຂ</th>
+					<th align="center" >ວັນທີມອບ</th>
+					<th align="center" >ເລກທີມອບ</th>
+					<th align="center" >ທະນາຄານ</th>
+					<th align="center" >ເລກບັນຊີ</th>
+                
                 </tr>
            <?php
 		   
@@ -77,6 +108,10 @@ if($select_mode=='1'){
 				
 				$date2=$s["payment_date"];
 				$date2=date_create($date2);
+
+				$date3=$s["pay_date"];
+				$date3=date_create($date3);
+				
             
 			?>
             	<tr>
@@ -90,17 +125,26 @@ if($select_mode=='1'){
 				<td align="center"><?php if($s["sale_date"]==''){}else{
 				echo date_format($date1,"d/m/Y");
 					}?></td>               
-				<td><?=$s["customer_name"].' '.$s["Bank_Name"].' '.$s["Bank_account"];?></td>
+				<td><?=$s["customer_name"];?></td>
 				<td align="center"><?=$s["TIN"];?></td>
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
 				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
             	<td align="right"><?=@number_format($s["amount"],0);?></td>
-                
-            	
 
+
+                <td align="right"><?php echo @$s["pay_id"];?></td>
+            	<td align="right"><?php 
+				
+				if($s["pay_date"]==''){echo '';}else{echo date_format($date3,"d/m/Y");}
+				?></td>
+				<td align="right"><?php echo @$s["Bank_Name"];?></td>
+				<td align="right"><?php echo @$s["Bank_account"];?></td>
+
+
+<?php /*
 				<td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["sale_id"];?>" data-payment_id="<?=$s["payment_id"];?>" >ແກ້ໄຂ</button></td>     
-
+*/ ?>
 
 
 				</tr>
@@ -124,15 +168,13 @@ if($select_mode=='1'){
 		
 		  @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
 		 from  customer_payment
+
 		 left join customers on customer_payment.customer_id=customers.customer_id
+		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
+		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
+		 where 1=1 $btw $r_id $c_id and customer_payment.payment_type = '1'
 		 
-		 where 1=1 $btw $r_id $c_id $pt
-		 
-		 group by customer_payment.payment_id
-		 
-		 
-	   
-	          ");
+		 group by customer_payment.payment_id");
 		  if($sp){
           ?>
           

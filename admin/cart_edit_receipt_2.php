@@ -93,12 +93,12 @@ $list_id++;
     
 	               }
 	 
-	 header("location:edit_receipt.php");
+	 header("location:edit_receipt_2.php");
   
 	
 	}else{
 		
-	 header("location:receipt_list.php");
+	 header("location:receipt_list_2.php");
 		}
 		
 	

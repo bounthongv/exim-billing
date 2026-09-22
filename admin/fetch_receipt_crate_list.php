@@ -20,9 +20,7 @@
 		 
 
 		  
-		  @$sp=mysqli_query($con,"
-		  
-		SELECT product_receipt_crate.*,sum(product_receipt_crate.amount) as total_amt,sum(product_receipt_crate.qty) as total_qty
+		  @$sp=mysqli_query($con,"SELECT product_receipt_crate.*,sum(product_receipt_crate.amount) as total_amt,sum(product_receipt_crate.qty) as total_qty
         ,stocks.stock_name,products.Product_Name,products.size,products.Unit 
 			,customers.customer_name
 		   FROM  product_receipt_crate 

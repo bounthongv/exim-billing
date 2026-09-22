@@ -128,14 +128,15 @@ if(isset($_POST["action"]))
 		  elseif($price_type=='002'){ $pp=",products.s2_price  as sale_price";}
 		  elseif($price_type=='003'){ $pp=",products.s3_price  as sale_price";}
 	 
-       
 
            $sql_d=mysqli_query($con,"SELECT products.* $pp,ifnull(tb_stock_product.stock_qty,0) as stock_qty
 		             
 		     FROM  products
         left join (select sum(qty) as stock_qty,product_id from stock_product where stock_id='$stock_id' group by product_id ) as tb_stock_product
   on products.Product_ID=tb_stock_product.product_id
-              where    1=1 and products.Group_ID!='001'  order by products.Group_ID,products.Product_ID   ");
+              where    1=1 /*and products.Group_ID!='001' */
+			   and products.Product_ID like '%R%'
+			   order by products.Group_ID,products.Product_ID   ");
 		   $ch=mysqli_num_rows($sql_d);
 		if($ch>0){
 		   while($f=mysqli_fetch_array($sql_d)){

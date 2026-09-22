@@ -72,27 +72,54 @@ if($header_id=='00'){
 		<div class="dropdown-menu" aria-labelledby="navbarDropdown"> 
        <?php
 							
+	// 1. ดึงข้อมูลจากฐานข้อมูล
+$spd = mysqli_query($con, "SELECT menu_user.user_id, menu_list.header_id, menu_user.list_id, menu_list.list_name, menu_list.link, menu_header.header_name
+     FROM menu_user
+     LEFT JOIN menu_list ON menu_user.list_id = menu_list.list_id
+     LEFT JOIN menu_header ON menu_list.header_id = menu_header.header_id            
+     WHERE menu_user.user_id = '$user_id' 
+       AND menu_header.header_id = '$s[header_id]' 
+       AND menu_user.status = 'on' 
+       AND menu_header.header_id NOT IN ('03', '04', '05', '06')");     
+
+// 2. ล้าง/เตรียมค่า $_SESSION['list_id'] ให้เป็น Array ว่างก่อนวน Loop
+$_SESSION['list_id'] = array();
+
+// 3. วน Loop ดึงข้อมูลและเก็บใส่ Array
+while ($sd = mysqli_fetch_array($spd)) {    
 	
-		   
-    $spd=mysqli_query($con,"SELECT menu_user.user_id,menu_list.header_id, menu_user.list_id,menu_list.list_name,menu_list.link,menu_header.header_name
-     
-     from menu_user
-     
-     left join menu_list on menu_user.list_id=menu_list.list_id
-     left join menu_header on menu_list.header_id=menu_header.header_id   
-           
-      where menu_user.user_id='$user_id'   and  menu_header.header_id='$s[header_id]' and menu_user.status='on' 
-	  and menu_header.header_id!='06'
-	  and menu_header.header_id!='05'
-	  and menu_header.header_id!='03'
-	  and menu_header.header_id!='04'
-	  ");	  
-	while($sd=mysqli_fetch_array($spd)){		
-	     ?>                              
-								<a class="dropdown-item" href="<?php echo $sd['link']; ?>"><?php echo $sd['list_name']; ?></a>
-                                <div class="dropdown-divider"></div>                		                             
-							<?php } ?> 	
-                                                       
+$_SESSION['list_id'][$sd['list_id']] = $sd['list_id'];
+
+
+    // เพิ่มค่า list_id ต่อท้ายใน Array
+    $_SESSION['list_id'][] = $sd['list_id'];
+
+    if (in_array($sd['list_id'], ['02.009', '07.001', '07.003'])) { ?>
+
+
+<?php /*
+        <a class="dropdown-item" href="<?php echo $sd['link'] . '?list_id=' . $sd['list_id']; ?>"><?php echo $sd['list_name']; ?></a>
+   
+	
+
+
+		<form action="<?php echo $sd['link']; ?>" method="POST" style="display: inline;">
+    <input type="hidden" name="list_id" value="<?php echo $sd['list_id']; ?>">
+    <button type="submit" class="dropdown-item btn-link" style="border: none; background: none; text-align: left; width: 100%;">
+        <?php echo $sd['list_name']; ?>
+    </button>
+</form>
+*/ ?>
+        <a class="dropdown-item" href="<?php echo $sd['link']; ?>"><?php echo $sd['list_name']; ?></a>
+
+
+<div class="dropdown-divider"></div>
+
+    <?php } else { ?>
+        <a class="dropdown-item" href="<?php echo $sd['link']; ?>"><?php echo $sd['list_name']; ?></a>
+        <div class="dropdown-divider"></div>    
+    <?php } 
+} ?>                  
                 		    </div>
                             
                             

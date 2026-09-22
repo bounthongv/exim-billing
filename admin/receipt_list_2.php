@@ -16,7 +16,7 @@ if (isset($_GET['list_id'])) {
 */
 
 //echo $_SESSION['list_id_e']=$_SESSION['list_id']['07.001'];
-echo $_SESSION['list_id_e']=$list_id;
+ $_SESSION['list_id_e']=$list_id;
 
 ?>
 
@@ -112,7 +112,7 @@ th {
         
     
 <?php 
-echo 'ລາຍການຮັບເງີນສົດ';
+echo 'ລາຍການຮັບເງີນໂອນ';
 ?>
 
 
@@ -121,7 +121,7 @@ echo 'ລາຍການຮັບເງີນສົດ';
 
     <table style="margin-left: 0; margin-right: auto;">
       <tr>
-        <td><a href="add_receipt.php"><button type="button" name="add" value="add" class="btn btn-success" style="width: 100px;"><i class="fa fa-plus-square"></i> ເພີ່ມ</button></a></td>
+        <td><a href="add_receipt_2.php"><button type="button" name="add" value="add" class="btn btn-success" style="width: 100px;"><i class="fa fa-plus-square"></i> ເພີ່ມ</button></a></td>
         <td><button type="button" class="btn btn-info" style="width: 100px;" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
         <td><button type="button" class="btn btn-warning" style="width: 100px;" id="print">ພິມ</button></td> 
         <td><button type="button" class="btn btn-success" style="width: 100px;" id="print_excel">ພິມ EXCEL</button></td> 
@@ -215,7 +215,7 @@ function load_list(){
    var select_mode = $('#select_mode').val();
 
    $.ajax({
-        url:"fetch_receipt_list.php",
+        url:"fetch_receipt_list_2.php",
         method:"POST",
         data:{ from_date:from_date,to_date:to_date,sale_id:sale_id,payment_id:payment_id,customer_id:customer_id,select_mode:select_mode },
         success:function(data) {
@@ -235,7 +235,7 @@ $(function(){
       // var payment_type = $('#payment_type').val();
 
        $.ajax({
-            url:"fetch_receipt_list.php",
+            url:"fetch_receipt_list_2.php",
             method:"POST",
             data:{ from_date:from_date,to_date:to_date,sale_id:sale_id,payment_id:payment_id,customer_id:customer_id,select_mode:select_mode },
             success:function(data) {

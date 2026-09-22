@@ -1,124 +1,66 @@
 <?php 
-include("init.php");
-
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<title>SPD</title>
-<head>
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
-	<link rel="stylesheet" href="css/flexslider.css" type="text/css" media="screen" property="" />
-	<link href="css/style.css" rel='stylesheet' type='text/css' />
-	<link href="css/fontawesome-all.css" rel="stylesheet">
-
-    <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-
-<style type="text/css">
-    @import url("LAOS/stylesheet.css");
-body,td,th ,h1,h2,h3,h4,h5,h6,h7,small,input[type='button'],input[type='text'],input[type='submit'], a{
-	font-family: LAOS;
-
-
-}
-.ui-autocomplete { font-family:"Phetsarath OT";}
-	
-</style>
-
-
-
-
-<style>
-#search{border:1px solid #008000; border-radius:4px; background-color:#008000; padding:5px; color:#FFF; font-family:"Phetsarath OT";}
-
-input{padding:4px; border:1px solid #D8D8D8; border-radius:4px;}
-
-
-</style>
-<style>
-td{ padding:10px;
-font-weight:!important;
-height:20px;
-font-size:10px;
- }
-</style>
-
-    <!-- Navigation -->
-<style>
-.save1{
-	    color:#000;
-	    border:1px solid #E4E4E4;
-		border-radius:3px;
-		padding:5px;
-}
-.bgtd{background-color: #EBEBEB;
-		
-}
-
-
-
-td{ padding:10px;
-font-weight:!important;
-height:40px;
- }
- th{ background-color:#E0E0E0; text-align:center;
- padding:10px;
-font-weight:!important;
-height:40px;
-font-size:10px;
- }
-</style>
-<body onLoad="print()">
-<?php 
-
-    
+  include("init.php");
+    /*
+   echo $_SESSION['list_id']['07.003'];
+   echo $_SESSION['list_id']['02.009'];
+	*/
    
-     
-		 
-       @$select_mode= mysqli_real_escape_string($con,$_GET['select_mode']);
+
+       @$select_mode= mysqli_real_escape_string($con,$_POST['select_mode']);
 	   
-	   
+	    
 		  
-		   @$from_date= mysqli_real_escape_string($con,$_GET['from_date']);	
-		     @$to_date= mysqli_real_escape_string($con,$_GET['to_date']);	
+		   @$from_date= mysqli_real_escape_string($con,$_POST['from_date']);	
+		     @$to_date= mysqli_real_escape_string($con,$_POST['to_date']);	
 		   $today=date("Y-m-d");
 		   
          if($from_date=='' or $to_date==''){$btw="and customer_payment.payment_date='$today'";} 
 		  else{ $btw="and customer_payment.payment_date between '$from_date' and '$to_date' ";}
 		  
  
- 
-  @$sale_id= mysqli_real_escape_string($con,$_GET['sale_id']);		   
+  @$sale_id= mysqli_real_escape_string($con,$_POST['sale_id']);		   
  if($sale_id==''){$r_id="";}  else{ $r_id="and ( customer_payment.sale_id like '$sale_id%' or customer_payment.sale_id like '%$sale_id%') ";}
 		 
 
-  @$payment_id= mysqli_real_escape_string($con,$_GET['payment_id']);		   
+  @$payment_id= mysqli_real_escape_string($con,$_POST['payment_id']);		   
  if($payment_id==''){$p_id="";}  else{ $p_id="and ( customer_payment.payment_id like '$payment_id%' or customer_payment.payment_id like '%$payment_id%') ";}
-
-
-
-
-	 @$payment_type= mysqli_real_escape_string($con,$_GET['payment_type']);		   
+/*
+	 @$payment_type= mysqli_real_escape_string($con,$_POST['payment_type']);		   
     if($payment_type==''){$pt="";}  else{ $pt="and  customer_payment.payment_type='$payment_type'  ";}
-		
+		*/
 		 
 	
 		 
-		   @$customer_id= mysqli_real_escape_string($con,$_GET['customer_id']);	
+		   @$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);	
          if($customer_id==''){$c_id="";}  else{ $c_id="and ( customer_payment.customer_id like '$customer_id%' 
 		 or customer_payment.customer_id like '%$customer_id%' or customers.customer_name like '$customer_id%'
 		 or customers.customer_name like '%$customer_id%')  ";}
 
 
+  $list_id=$_SESSION['list_id'];
+
+	 //@$list_id= mysqli_real_escape_string($con,$_POST['list_id']);
+
+/*
+if($_SESSION['list_id']['02.009']=='02.009'){
+    $payment_type="and customer_payment.payment_type = '1'"; 
+   }elseif($_SESSION['list_id']['07.003']=='07.003'){
+    $payment_type="and customer_payment.payment_type = '2'";
+   }
+*/
+
+
+/*
+if($_SESSION['list_id_e']=='07.001'){
+    $payment_type="and customer_payment.payment_type = '1'"; 
+   }elseif($_SESSION['list_id_e']=='07.003'){
+    $payment_type="and customer_payment.payment_type = '2'";
+   }
+*/
+
 if($select_mode=='1'){
-		  
+
+
   @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
   customers.TIN,
   payment_2.pay_id,
@@ -127,10 +69,9 @@ if($select_mode=='1'){
   tb_bank.Bank_account
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
+		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
-		 left join tb_bank on payment_2.Bank_account=tb_bank.Bank_account
-		 
-		 where 1=1 $btw $r_id $p_id $c_id and customer_payment.payment_type = '1' order by payment_date asc");
+		 where 1=1 $btw $r_id $p_id $c_id and customer_payment.payment_type = '2' order by payment_date asc");
 		  if($sp){
           ?>
           
@@ -152,7 +93,8 @@ if($select_mode=='1'){
 					<th align="center" >ເລກທີມອບ</th>
 					<th align="center" >ທະນາຄານ</th>
 					<th align="center" >ເລກບັນຊີ</th>
-                
+                 
+                    <th align="center" >ແກ້ໄຂ</th>
                 </tr>
            <?php
 		   
@@ -183,7 +125,7 @@ if($select_mode=='1'){
 				<td align="center"><?php if($s["sale_date"]==''){}else{
 				echo date_format($date1,"d/m/Y");
 					}?></td>               
-				<td><?=$s["customer_name"];?></td>
+				<td><?=$s["customer_name"].' '.$s["Bank_Name"].' '.$s["Bank_account"];?></td>
 				<td align="center"><?=$s["TIN"];?></td>
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
@@ -192,17 +134,14 @@ if($select_mode=='1'){
 
 
                 <td align="right"><?php echo @$s["pay_id"];?></td>
-            	<td align="right"><?php 
-				
-				if($s["pay_date"]==''){echo '';}else{echo date_format($date3,"d/m/Y");}
-				?></td>
+            	<td align="right"><?php echo date_format($date3,"d/m/Y");?></td>
 				<td align="right"><?php echo @$s["Bank_Name"];?></td>
 				<td align="right"><?php echo @$s["Bank_account"];?></td>
 
 
-<?php /*
+
 				<td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["sale_id"];?>" data-payment_id="<?=$s["payment_id"];?>" >ແກ້ໄຂ</button></td>     
-*/ ?>
+
 
 
 				</tr>
@@ -230,7 +169,7 @@ if($select_mode=='1'){
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
-		 where 1=1 $btw $r_id $c_id and customer_payment.payment_type = '1'
+		 where 1=1 $btw $r_id $c_id and customer_payment.payment_type = '2'
 		 
 		 group by customer_payment.payment_id");
 		  if($sp){

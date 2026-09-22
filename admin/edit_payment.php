@@ -35,11 +35,6 @@ if($max_id<1){    $sale_id=$id1;     }
    
    */
    
-     $sql_id_auto= mysqli_query($con,"SELECT MAX(pay_id) AS id_max FROM  payment_2 ");
-                  $ff = mysqli_fetch_array($sql_id_auto);
-   $id_number = $ff['id_max']+1;
-   $width = 6;
- $auto_id = str_pad((string)$id_number, $width, "0", STR_PAD_LEFT); 
 
 
 ?>
@@ -103,12 +98,12 @@ th{ text-align:center;}
 
     <!-- /.container -->
  <div class="container">   
-    	<form action="insert_payment_2.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
+    	<form action="update_payment_2.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
 
 	<div class="form-group row">
     <div class="col-sm-10">
 
-<a href="cart_payment.php?action=close_and_clear">
+<a href="cart_edit_payment.php?action=close_and_clear">
     <button type="button" name="close" class="btn btn-danger">
         <i class="fa fa-times"></i>&nbsp;ປິດ
     </button>
@@ -130,10 +125,9 @@ th{ text-align:center;}
 <table border="0">
   <tr>
     <td align="right">ເລກທີ:</td>
-    <td ><input type="text" class="form-control" name="pay_id" id="pay_id" value="<?php echo $auto_id; ?>" readonly ></td>
+    <td ><input type="text" class="form-control" name="pay_id" id="pay_id" value="<?php echo $_SESSION['pay_id']; ?>" readonly ></td>
     <td align="right">ວັນທີ:</td>
-    <td ><input type="date" class="form-control" name="pay_date" id="pay_date" onchange="get_currency()" 
-   value="<?php /*if($_SESSION['payment_date']!==''){ echo $_SESSION['payment_date'];}else{ echo @date('Y-m-d'); }*/ echo @date('Y-m-d'); ?>"  required> </td>
+    <td ><input type="date" class="form-control" name="pay_date" id="pay_date" onchange="get_currency()" value="<?php echo $_SESSION['pay_date']; ?>"  required> </td>
   </tr>
   
 
@@ -224,7 +218,7 @@ th{ text-align:center;}
         <!-- Modal body -->
         <div class="modal-body">
         
-         <form action="cart_payment.php" method="post" id="paymentForm" enctype="multipart/form-data">
+         <form action="cart_payment_edit.php" method="post" id="paymentForm" enctype="multipart/form-data">
        <input type="hidden" name="action" value="select_item">
 
 <input type="hidden" name="Bank_info_2" id="Bank_info_2" value="<?php echo $_SESSION['Bank_account'].'|'.$_SESSION['Bank_Name']?>" >
@@ -409,7 +403,7 @@ var sale_id = $('#sale_id').val();
 
  function load_order_receipt(){
 			$.ajax({
-			url:"fetch_cart_payment.php",
+			url:"fetch_cart_payment_edit.php",
 			method:"POST",
 			//dataType:"json",
 			success:function(data)
@@ -428,7 +422,7 @@ var sale_id = $('#sale_id').val();
 		var action = "remove";
 	
 			$.ajax({
-				url:"cart_payment.php",
+				url:"cart_edit_payment.php",
 				method:"POST",
 				data:{   Product_ID:Product_ID,action:action },
 				success:function(data)

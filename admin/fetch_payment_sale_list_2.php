@@ -57,7 +57,7 @@ if($_SESSION['list_id_e']=='02.009'){
 		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 where 1=1
          and customer_payment.sale_id NOT IN (SELECT sale_id FROM payment_2)
-         $r_id and customer_payment.payment_type = '1'
+         $r_id and customer_payment.payment_type = '2'
          order by payment_date asc
        ");
 		  if($sp){

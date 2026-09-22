@@ -4,8 +4,8 @@ include("init.php");
 
 //unset($_SESSION['cart_receipt']);
 
-
-
+ //$_SESSION['list_id']['07.001'];
+ $_SESSION['list_id_e'];
 
 $sql_sync_update_2 = "UPDATE product_sale p
 JOIN (
@@ -218,7 +218,7 @@ th{ text-align:center;}
     <td>
    <select  name="payment_type" id="payment_type" class="form-control" required>  
    <option value="1">ເງີນສົດ</option>
-    <option value="2">ເງີນໂອນ</option>
+   <!-- <option value="2">ເງີນໂອນ</option> -->
    </select>  	
     
     </td>

@@ -83,6 +83,8 @@ height:20px;
 		var Bank_account = $('#g_Bank_account'+Id+'').val();
 	var Note = $('#g_note'+Id+'').val();
 	
+ $("#Id").val( Id );
+
 	   $("#bank_name_en").val( Bank_Name_EN );
 	   $("#bank_name").val( Bank_Name ); 
        $("#bank_account").val( Bank_account ); 
@@ -174,6 +176,8 @@ height:20px;
         
       <form action="insert_bank.php" method="post" enctype="multipart/form-data">
       
+<input type="hidden" class="form-control nn" name="Id" id="Id" >
+
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>ປິດ</button>
           <button type="reset" class="btn btn-success"  >ເພີມໃຫມ່</button>
           <button type="submit" class="btn btn-primary" name="action" id="action" value="add"  >ບັນທືກ</button>

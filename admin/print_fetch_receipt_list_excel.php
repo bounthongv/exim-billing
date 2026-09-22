@@ -121,21 +121,22 @@ font-size:10px;
 
 if($select_mode=='1'){
 		  
-  @$sp=mysqli_query($con,"
-       
-         select customer_payment.* ,customers.customer_name
+@$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
+  customers.TIN,
+  payment_2.pay_id,
+  payment_2.pay_date,
+  tb_bank.Bank_Name,
+  tb_bank.Bank_account
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
+		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
+		 left join tb_bank on payment_2.Bank_account=tb_bank.Bank_account
 		 
-		 where 1=1 $btw $r_id $p_id $c_id $pt
-		 
-		 
-	   
-	          ");
+		 where 1=1 $btw $r_id $p_id $c_id and customer_payment.payment_type = '1' order by payment_date asc");
 		  if($sp){
           ?>
           
- 			<table id="myTable" border="1"  class="table-bordered" align="left">
+ 		<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
                     <th align="center">ລ/ດ</th>
                 	<th align="center">ເລກທີ</th>
@@ -143,12 +144,17 @@ if($select_mode=='1'){
                     <th align="center">ເລກທີຂາຍ</th>
 					<th align="center">ວັນທີຂາຍ</th>
                   
-					<th align="center">ຊື່ລູກຄ້າ</th> 
+					<th align="center">ຊື່ລູກຄ້າ</th>
+					<th align="center">ເລກບິນອາກອນ</th>
+					
                     <th align="center">ປະເພດຊຳລະ</th>              
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
-                 
-                    
+					<th align="center" >ວັນທີມອບ</th>
+					<th align="center" >ເລກທີມອບ</th>
+					<th align="center" >ທະນາຄານ</th>
+					<th align="center" >ເລກບັນຊີ</th>
+                
                 </tr>
            <?php
 		   
@@ -162,26 +168,45 @@ if($select_mode=='1'){
 				
 				$date2=$s["payment_date"];
 				$date2=date_create($date2);
+
+				$date3=$s["pay_date"];
+				$date3=date_create($date3);
+				
             
 			?>
             	<tr>
                 <td align="center"><?=$e_list;?></td>
 			    <td align="center"><?=$s["payment_id"];?></td>
 				<td align="center"><?php if($s["payment_date"]==''){}else{
-				echo	date_format($date2,"d/m/Y");
+				echo date_format($date2,"d/m/Y");
 					}?></td>
                 <td align="center"><?=$s["sale_id"];?></td>
+				
 				<td align="center"><?php if($s["sale_date"]==''){}else{
-				echo	date_format($date1,"d/m/Y");
+				echo date_format($date1,"d/m/Y");
 					}?></td>               
 				<td><?=$s["customer_name"];?></td>
+				<td align="center"><?=$s["TIN"];?></td>
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
 				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
             	<td align="right"><?=@number_format($s["amount"],0);?></td>
-                
-            	
+
+
+                <td align="right"><?php echo @$s["pay_id"];?></td>
+            	<td align="right"><?php 
 				
+				if($s["pay_date"]==''){echo '';}else{echo date_format($date3,"d/m/Y");}
+				?></td>
+				<td align="right"><?php echo @$s["Bank_Name"];?></td>
+				<td align="right"><?php echo @$s["Bank_account"];?></td>
+
+
+<?php /*
+				<td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["sale_id"];?>" data-payment_id="<?=$s["payment_id"];?>" >ແກ້ໄຂ</button></td>     
+*/ ?>
+
+
 				</tr>
               <?php
           
@@ -190,30 +215,27 @@ if($select_mode=='1'){
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="7">ລວມ</td>
+			<td align="right" colspan="8">ລວມ</td>
             <td align="right"><?= @number_format($t_amt,0);?></td>
            
            
 			
         </table>
 		  
+		  
         <?php }
       }
 		elseif($select_mode=='2'){ 
 		
-		  @$sp=mysqli_query($con,"
-       
-         select customer_payment.* ,customers.customer_name
+		  @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name
 		 from  customer_payment
+
 		 left join customers on customer_payment.customer_id=customers.customer_id
+		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
+		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
+		 where 1=1 $btw $r_id $c_id and customer_payment.payment_type = '1'
 		 
-		 where 1=1 $btw $r_id $c_id $pt
-		 
-		 group by customer_payment.payment_id
-		 
-		 
-	   
-	          ");
+		 group by customer_payment.payment_id");
 		  if($sp){
           ?>
           
@@ -260,7 +282,6 @@ if($select_mode=='1'){
            
 			
         </table>
-		
 	<?php	
 		  }
 	     }else{}

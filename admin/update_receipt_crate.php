@@ -174,7 +174,7 @@ for ($i = 0; $i < count($_POST['Product_ID']); $i++) {
     
 
 }
-else{ header('location:add_receipt_crate.php'); mysql_close(); }
+else{ header('location:receipt_crate_list.php'); mysql_close(); }
 
 ?>
 </html>

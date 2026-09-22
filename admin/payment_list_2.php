@@ -1,6 +1,18 @@
 <?php 
 include("init.php");
 
+//$list_id = isset($_GET['list_id']) ? $_GET['list_id'] : '';
+
+//$list_id = isset($_REQUEST['list_id']) ? $_REQUEST['list_id'] : '';
+/*
+session_start();
+
+if (isset($_GET['list_id'])) {
+    $_SESSION['list_id'] = $_GET['list_id'];
+}
+*/
+//echo $_SESSION['list_id_e']=$list_id;
+
 ?>
 
 
@@ -83,10 +95,13 @@ $(document).ready(function(){
  
  function load_list()
 	{
+
+	var list_id = '<?php echo $list_id; ?>';
 			$.ajax({
-			url:"fetch_receipt_crate_list.php",
+			url:"fetch_payment_list_2.php",
 			method:"POST",
 			//dataType:"json",
+			data:{  list_id:list_id },
 			success:function(data)
 			{
 				$('#head_list').html(data);
@@ -94,11 +109,11 @@ $(document).ready(function(){
 			}
 		});
 	}
-
+ 
 function load_product()
 	{
 			$.ajax({
-			url:"fetch_receipt_crate_detail.php",
+			url:"fetch_product_sale_detail.php",
 			method:"POST",
 			//dataType:"json",
 			success:function(data)
@@ -108,6 +123,7 @@ function load_product()
 			}
 		});
 	}
+
 
 $(document).on('keyup', '#Quantity', function(){
 			
@@ -131,15 +147,15 @@ $(document).on('keyup', '#Price', function(){
 	
 });
 
-$(document).on('click', '.show_detail', function(){
+$(document).on('click', '.show', function(){
 	
-		var receipt_id = $(this).attr("id");		
+		var sale_id = $(this).attr("id");		
 		var action = "show";
 
 			$.ajax({
-				url:"fetch_receipt_crate_detail.php",
+				url:"fetch_product_sale_detail.php",
 				method:"POST",
-				data:{   receipt_id:receipt_id,action:action },
+				data:{   sale_id:sale_id,action:action },
 				success:function(data)
 				{
 					$('#display_product').html(data);
@@ -195,16 +211,16 @@ $(function(){
    
  
    var stock_id = $('#stock_id').val(); 
-   var receipt_id = $('#receipt_id').val();   
+   var sale_id = $('#sale_id').val();   
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
-   
+   var list_id = '<?php echo $list_id; ?>';
  //  alert(stock_id);
    
          $.ajax({
-				url:"fetch_receipt_crate_list.php",
+				url:"fetch_payment_list_2.php",
 				method:"POST",
-				data:{  stock_id:stock_id,from_date:from_date,to_date:to_date,receipt_id:receipt_id },
+				data:{  stock_id:stock_id,from_date:from_date,to_date:to_date,sale_id:sale_id,stock_id:stock_id,list_id:list_id },
 				success:function(data)
 				{
 					$('#head_list').html(data);
@@ -217,30 +233,31 @@ $(function(){
  });
 $(document).on('click', '.delete_Id', function(){
 	
-		var receipt_id = $(this).attr("id");
+		var sale_id = $(this).attr("id");
 	//	var action = $(this).attr("value");
 
   var r = confirm("ທ່ານ ຕ້ອງການລົບແທ້ບໍ່?");
   if (r == true) {
-     window.location = 'delete_receipt_crate_list.php?receipt_id='+receipt_id ;
+     window.location = 'delete_product_sale.php?sale_id='+sale_id ;
   } 
  
 
 	});
 
-$(document).on('click', '.edit_Id', function(){
+$(document).on('click', '.payment', function(){
 	
-		var receipt_id = $(this).attr("id");
-		var action = "make_cart_edit";
+		var sale_id = $(this).attr("id");
+	//	var action = $(this).attr("value");
 
 
-     window.location = 'cart_edit_receipt_crate_add.php?receipt_id='+receipt_id+'&action='+action ;
+     window.location = 'payment.php?sale_id='+sale_id ;
    
  
 
 	});
 $(document).on('click', '#print', function(){
 	
+	var sale_id = $('#sale_id').val();
    var stock_id = $('#stock_id').val();    
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
@@ -249,7 +266,7 @@ $(document).on('click', '#print', function(){
 	//	var action = $(this).attr("value");
 
 
-     window.open('print_sale_list.php?stock_id='+stock_id + '&from_date='+from_date  + '&to_date='+to_date+' ','_blank'); 
+window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+'&to_date='+to_date+'&sale_id='+sale_id+'','_blank'); 
    
  
 
@@ -258,47 +275,37 @@ $(document).on('click', '#print', function(){
 
 <div class="container">
     <br>
-    <h3 align="center">ລາຍການຊື້ຄືນລັງເປົ່າ</h3><br>
+    <h3 align="center">
+
+<?php 
+echo 'ລາຍການມອບເງິນໂອນ'; 
+?>
+
+	</h3><br>
    
 <table>
        <tr>
-     <td> <br>  <a href="index.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
-       <td> <br><a href="add_receipt_crate.php"  ><button type="button" class="btn btn-success" >
-            <i class="fa fa-plus-square"></i>&nbsp; ເພີ່ມ</button></a></td>
-            
+     <td> <br>  <a href="product_qty_list.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
+       
+            <td><br><a href="add_payment_2.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ໃບມອບເງິນໂອນ</button></a></td>
             
             <td>ວັນທີ<br><input type="date" class="form-control" name="from_date" id="from_date" value="<?php echo date("Y-m-d"); ?>"></td> 
             
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
-      
-      <td>ສາງ<br>
+         
+     <td>ສາງ<br>
       <select name="stock_id" id="stock_id" class="form-control" required>   
-   <?php
- $user_status=$_SESSION['status'];
- $user_stock_id=$_SESSION['stock_id'];
-  if($user_status=='0'){     ?>
        	<option value="">ທັງຫມົດ</option>
     <?PHP 
 	 $sql=mysqli_query($con,"select * from stocks");	
 	while($f = mysqli_fetch_array($sql)){?>
 		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
 	<?PHP } ?>
-    
-    <?php }else{ 
-	
-	 $sql=mysqli_query($con,"select * from stocks where stock_id='$user_stock_id'");	
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
-	<?PHP }
-	
-		} ?>
-    </select> </td>    
-   
+    </select> </td> 
       
     
-             <td>ເລກທີ<br><input  type="text" name="receipt_id" id="receipt_id" class="form-control"  ></td> 
-               <td><br> <button type="button" class="btn btn-warning" id="print">ພິມ</button></td> 
-               
+             <td>ເລກທີ<br><input  type="text" name="sale_id" id="sale_id" class="form-control"  ></td> 
+              <td><br> <button type="button" class="btn btn-warning" id="print">ພິມ</button></td>
              <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
        </tr>
        </table>
@@ -324,7 +331,7 @@ $(document).on('click', '#print', function(){
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">ລາຍການຊື້ຄືນລັງເປົ່າ</h4>
+          <h4 class="modal-title">ລາຍການໃບຮັບເງີນ</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         

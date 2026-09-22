@@ -23,7 +23,7 @@ if (isset($_POST['Bank_account'])) {
    $Bank_name    = $bank_data[1]; // ได้ชื่อธนาคาร
 }
 
-
+mysqli_query($con,"DELETE FROM payment_2 WHERE pay_id='$pay_id'");
 
 if(isset($_POST['save'])){
 for ($i = 0; $i < count($_POST['sale_id']); $i++) {
@@ -39,24 +39,39 @@ $amount=filter_var($amount,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRA
 
 
 
+/*
+$sql=mysqli_query($con,"INSERT INTO payment_2 (pay_id,pay_date,user_id,Bank_account,sale_id,sale_date,amount)
+values('$pay_id','$pay_date','$user_id','$Bank_account','$sale_id','$sale_date','$amount')
+");
+*/
+/*
+echo "UPDATE payment_2
+SET amount = '$amount'
+WHERE pay_id = $pay_id and sale_id='$sale_id'
+";
+
+$sql=mysqli_query($con,"UPDATE payment_2
+SET amount = '$amount'
+WHERE pay_id = $pay_id and sale_id='$sale_id'
+");
+*/
 
 $sql=mysqli_query($con,"INSERT INTO payment_2 (pay_id,pay_date,user_id,Bank_account,sale_id,sale_date,amount)
 values('$pay_id','$pay_date','$user_id','$Bank_account','$sale_id','$sale_date','$amount')
 ");
 
 
-
 }
 }
 
 
-	    unset($_SESSION["cart_receipt"]);
+	    unset($_SESSION["cart_payment_edit"]);
 		unset($_SESSION["payment_date"]);
 		unset($_SESSION["cart_payment"]);
 		unset($_SESSION["Bank_account"]);
 		unset($_SESSION["Bank_Name"]);
 
-			
+
    if($sql){
 		
 		   if(isset($_SESSION['smg'])){    }

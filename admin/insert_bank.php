@@ -37,9 +37,11 @@ $sad=mysqli_query($con,"INSERT INTO tb_bank (Id, Bank_Name,Bank_Name_EN,Bank_acc
 		
 		if($Id==""){ $a="";}else{$a="Id='$Id'";}	
 
-
+echo "update tb_bank set Bank_Name='$Bank_Name',Bank_Name_EN='$Bank_Name_en',bank_account='$bank_account',note='$note' WHERE Id='$Id' ";
 $sad=mysqli_query($con,"update tb_bank set Bank_Name='$Bank_Name',Bank_Name_EN='$Bank_Name_en',bank_account='$bank_account',note='$note' WHERE Id='$Id' ");
-	if($sad){
+	
+
+if($sad){
 		        
 				$_SESSION['smg']="<div class='alert alert-success'><strong>ແກ້ໄຂສຳເລັດ!</strong></div>";
 		header("location:bank.php");

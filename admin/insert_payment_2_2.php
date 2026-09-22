@@ -15,16 +15,6 @@ include("init.php");
 
  $Bank_account=mysqli_real_escape_string($con,$_POST['Bank_account']);
 
-if (isset($_POST['Bank_account'])) {
-    // แยกค่าด้วยตัวระบุ |
-    $bank_data = explode('|', $_POST['Bank_account']);
-    
-   $Bank_account = $bank_data[0]; // ได้เลขบัญชี
-   $Bank_name    = $bank_data[1]; // ได้ชื่อธนาคาร
-}
-
-
-
 if(isset($_POST['save'])){
 for ($i = 0; $i < count($_POST['sale_id']); $i++) {
 
@@ -50,14 +40,13 @@ values('$pay_id','$pay_date','$user_id','$Bank_account','$sale_id','$sale_date',
 }
 
 
-	    unset($_SESSION["cart_receipt"]);
+	    unset($_SESSION["cart_receipt_2"]);
 		unset($_SESSION["payment_date"]);
 		unset($_SESSION["cart_payment"]);
-		unset($_SESSION["Bank_account"]);
-		unset($_SESSION["Bank_Name"]);
+		
 
 			
-   if($sql){
+   if($sql_in){
 		
 		   if(isset($_SESSION['smg'])){    }
 		   else{

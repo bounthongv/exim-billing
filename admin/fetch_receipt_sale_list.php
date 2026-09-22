@@ -1,7 +1,16 @@
 <?php 
   include("init.php");
-    
+
+/*
+    echo $_SESSION['list_id_e'];
    
+if($_SESSION['list_id_e']=='02.009'){
+    $payment_type="and customer_payment.payment_type = '1'"; 
+   }elseif($_SESSION['list_id_e']=='07.003'){
+    $payment_type="and customer_payment.payment_type = '2'";
+   }
+*/
+
            @$customer_id= mysqli_real_escape_string($con,$_POST['customer_id']);	
            if($customer_id==''){$s_id="";}  else{ $s_id="and product_sale.customer_id='$customer_id'  ";}
 		 

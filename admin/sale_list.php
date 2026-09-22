@@ -347,8 +347,10 @@ $(document).on('click', '#print_ex', function(){
 <table>
        <tr>
 <td><br><a href="index.php" class="btn btn-danger" style="width: 100px;"><i class="fa fa-times"></i>&nbsp;ປິດ</a></td>
-
+<!--
 <td><br><a href="add_sale_customer_order.php" class="btn btn-success" style="width: 100px;"><i class="fa fa-plus-square"></i>&nbsp;ຂາຍ</a></td>
+--> 
+
 
 <td><br><button type="button" class="btn btn-warning" style="width: 100px;" id="print">ພິມ</button></td> 
 

@@ -35,11 +35,15 @@ if($_GET["action"] == 'make_cart_edit')
 		 ) as tb_product_receipt_crate
         on products.Product_ID=tb_product_receipt_crate.product_id
   
-  left join (select sum(qty) as stock_qty,product_id from stock_product where stock_id='$s_stock_id' group by product_id ) as tb_stock_product
+  left join (select sum(qty) as stock_qty,product_id from stock_product where stock_id='$s_stock_id' /*and stockin_id='$receipt_id'*/ group by product_id ) as tb_stock_product
         on products.Product_ID=tb_stock_product.product_id
 		
-              where    1=1 and products.Group_ID='002'  order by products.Product_ID   ");
+              where    1=1 /*and products.Group_ID='002'*/ and products.Product_ID like '%R%'  order by products.Product_ID   ");
 			  
+/*
+$sql_d=mysqli_query($con,"SELECT * FROM product_receipt_crate WHERE receipt_id='$receipt_id'");
+*/
+
 		 
 		   while($f=mysqli_fetch_array($sql_d)){
 	        
@@ -53,6 +57,9 @@ if($_GET["action"] == 'make_cart_edit')
 			  }
 		  
 		   $remark=$f["crate_price"];
+
+if($f["qty"]==''){$qty=0;}else{$qty=$f["qty"];}
+
 	       $item_array = array(
 			    
 				'Product_ID'               =>     $f["Product_ID"],  
@@ -63,7 +70,7 @@ if($_GET["action"] == 'make_cart_edit')
 				'pic'                      =>     $f["pic_url"],  
 				'crate_price'                =>   $f["crate_price"],
 				'remark'                    =>    $remark, 
-				'product_quantity'         =>     $f["qty"]
+				'product_quantity'         =>     $qty
 			);
 			$_SESSION["cart_edit_receipt_crate"][] = $item_array;
     

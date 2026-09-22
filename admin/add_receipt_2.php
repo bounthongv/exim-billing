@@ -1,6 +1,28 @@
 <?php 
 include("init.php");
 //unset($_SESSION['cart_trnasfer_mini_stock']);
+
+//unset($_SESSION['cart_receipt']);
+
+ //$_SESSION['list_id']['07.001'];
+ $_SESSION['list_id_e'];
+
+$sql_sync_update_2 = "UPDATE product_sale p
+JOIN (
+    SELECT sale_id, SUM(total) AS total_sum,
+	payment AS total_payment
+    FROM product_sale
+    GROUP BY sale_id
+) AS grouped ON p.sale_id = grouped.sale_id
+SET p.remain = grouped.total_sum-p.payment
+WHERE (p.status IS NULL OR p.status = '' OR p.status = '0')
+and p.payment=0";
+
+$sync_update_ok_2 = mysqli_query($con, $sql_sync_update_2);
+//$update_sale_count_2 = $sync_update_ok_2 ? mysqli_affected_rows($con) : 0;
+
+
+
 ?>
 <style>
 td{ padding:5px;
@@ -86,53 +108,30 @@ th{ text-align:center;}
 
     <!-- /.container -->
  <div class="container">   
-    	<form action="update_receipt.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
+    	<form action="insert_receipt_2.php" method="post"  onkeydown="return event.key != 'Enter';"  enctype="multipart/form-data" name="me">
 
 	<div class="form-group row">
     <div class="col-sm-10">
+
 <?php /*
       <a href="index.php"><button type="button" name="close"  class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
 */ ?>
 
-<a href="cart_receipt.php?action=close_and_clear">
+
+<a href="cart_receipt_2.php?action=close_and_clear">
     <button type="button" name="close" class="btn btn-danger">
         <i class="fa fa-times"></i>&nbsp;ປິດ
     </button>
 </a>
 
 
-      <a href="add_receipt.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
-      <button type="submit" name="save_edit" class="btn btn-primary" value="save_edit"  ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
-
-
-<?php 
-/*
-      <a href="cart_receipt_edit.php?action=empty" ><button type="button" name="reset" value="reset" class="btn btn-warning"><i class="fa fa-trash"></i>&nbsp;ລືບ</button></a>
-*/ 
-
-$sale_id=$_SESSION['sale_id'];
-$payment_id=$_SESSION['payment_id'];
-?>
-
-
-<?php if($_SESSION['username']=='admin'){ ?>
-
-<a href="delete_receipt.php?sale_id=<?php echo $sale_id; ?>&payment_id=<?php echo $payment_id; ?>" 
-   onclick="return confirm('ທ່ານຕ້ອງການລືບຂໍ້ມູນນີ້ແທ້ບໍ?');">
-    <button type="button" class="btn btn-danger">
-        <i class="fa fa-trash"></i>&nbsp;ລືບ
-    </button>
-</a>
-
-<?php }else{ ?>
 
 
 
-<?php } ?>
-
-
-
-
+      <a href="add_receipt_2.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ເພີ່ມໃໜ່</button></a>
+      <button type="submit" name="save" class="btn btn-primary" value="save"  ><i class="fa fa-file"></i>&nbsp;ບັນທືກ</button>
+      <a href="cart_receipt_2.php?action=empty" ><button type="button" name="reset" value="reset" class="btn btn-warning"><i class="fa fa-trash"></i>&nbsp;ລືບ</button></a>
+     
   
     </div>
     <?php  if(isset($_SESSION['smg'])){ echo $_SESSION['smg']; unset($_SESSION['smg']); } ?> 
@@ -140,10 +139,10 @@ $payment_id=$_SESSION['payment_id'];
 <table border="0">
   <tr>
     <td align="right">ເລກທີ:</td>
-    <td ><input type="text" class="form-control" name="payment_id" id="payment_id" value="<?php if($_SESSION['payment_id']!==''){ echo $_SESSION['payment_id'];}else{} ?>" readonly ></td>
+    <td ><input type="text" class="form-control" name="payment_id" id="payment_id" value="<?php echo $auto_id; ?>" readonly ></td>
     <td align="right">ວັນທີ:</td>
     <td ><input type="date" class="form-control" name="payment_date" id="payment_date" onchange="get_currency()" 
-   value="<?php if($_SESSION['payment_date']!==''){ echo $_SESSION['payment_date'];}else{ echo @date('Y-m-d'); } ?>"  required> </td>
+   value="<?php /*if($_SESSION['payment_date']!==''){ echo $_SESSION['payment_date'];}else{ echo @date('Y-m-d'); }*/ echo @date('Y-m-d'); ?>"  required> </td>
   </tr>
   <tr>
     <td align="right">ລູກຄ້າ:</td>
@@ -157,6 +156,12 @@ $payment_id=$_SESSION['payment_id'];
     <input type="hidden" class="form-control" name="customer_id" id="customer_id" value="<?php if($_SESSION['customer_id']!==''){ echo $_SESSION['customer_id'];}else{} ?>" > 
     </td>
 
+
+<td align="right">ເລກທີ</td>
+<td><input type="text" class="form-control ss" name="sale_id" id="sale_id" value="<?php if($_SESSION['sale_id']!==''){ echo $_SESSION['sale_id'];}else{} ?>" ></td>
+
+
+
   </tr>
  <tr>
 
@@ -165,13 +170,13 @@ $payment_id=$_SESSION['payment_id'];
   <tr>
     <td align="right">ຜູ້ຈ່າຍເງີນ:</td>
     <td>
-   <input type="text" name="payment_name" id="payment_name" class="form-control" value="<?php if($_SESSION['payment_name']!==''){ echo $_SESSION['payment_name'];}else{} ?>" readonly>    	
+   <input type="text" name="payment_name" id="payment_name" class="form-control" value="<?php if($_SESSION['payment_name']!==''){ echo $_SESSION['payment_name'];}else{} ?>" required readonly>    	
     
     </td>
     <td align="right" colspan="1">ຜູ້ຮັບເງີນ</td>
     <td colspan="1">  
     
-   <input type="text" name="receipt_name" id="receipt_name" class="form-control" value="<?php if($_SESSION['receipt_name']!==''){ echo $_SESSION['receipt_name'];}else{} ?>" readonly>
+   <input type="text" name="receipt_name" id="receipt_name" class="form-control" value="<?php if($_SESSION['receipt_name']!==''){ echo $_SESSION['receipt_name'];}else{} ?>" required readonly>
     </td>
   </tr>
 
@@ -212,21 +217,16 @@ $payment_id=$_SESSION['payment_id'];
      <td align="right"> ປະເພດຊຳລະ:</td>
     <td>
    <select  name="payment_type" id="payment_type" class="form-control" required>  
-	<option value="<?php echo $_SESSION['payment_type']; ?>"><?php  if($_SESSION['payment_type']=='1'){ echo 'ເງີນສົດ';}else{ echo 'ເງີນໂອນ'; } ?></option>
-
-<?php /*
-   <option value="1">ເງີນສົດ</option>
+   <!--<option value="1">ເງີນສົດ</option>-->
     <option value="2">ເງີນໂອນ</option>
-*/ ?>
-
    </select>  	
     
     </td>
 
+
 <td align="right"> ບັນຊີທະນາຄານ:</td>
     <td>
    <select  name="Bank_account" id="Bank_account" class="form-control">  
-	<option value="<?php echo $_SESSION['Bank_account']; ?>"><?php echo $_SESSION['Bank_account'].' '.$_SESSION['Bank_Name']; ?></option>
     <?php 
 	 $sql=mysqli_query($con,"SELECT * from tb_bank");	
 	while($f = mysqli_fetch_array($sql)){?>
@@ -235,7 +235,6 @@ $payment_id=$_SESSION['payment_id'];
    </select>  	
     
     </td>
-
 
 
 
@@ -263,7 +262,6 @@ $payment_id=$_SESSION['payment_id'];
 
 
 
-
     <td align="right">THB:</td>
     <td>
    <input type="text" name="rate_thb" id="rate_thb"  class="form-control" style="text-align:right;"  value="300" readonly required>    	
@@ -287,10 +285,10 @@ $payment_id=$_SESSION['payment_id'];
 
   </tr>
   <tr>
-  <td> <input type="text" name="pay_lak" id="pay_lak"  class="form-control number payments" style="text-align:right;" value="<?php echo $_SESSION['pay_lak']; ?>" readonly ></td>
-  <td> <input type="text" name="pay_thb" id="pay_thb"  class="form-control number payments" style="text-align:right;" value="<?php echo $_SESSION['pay_thb']; ?>" readonly></td>
-  <td> <input type="text" name="pay_usd" id="pay_usd"  class="form-control number payments"  style="text-align:right;" value="<?php echo $_SESSION['pay_usd']; ?>" readonly></td>
-  <td> <input type="text" name="total_lak" id="total_lak"  class="form-control" style="text-align:right;" value="<?php echo $_SESSION['total_lak']; ?>" readonly ></td>
+  <td> <input type="text" name="pay_lak" id="pay_lak"  class="form-control number payments" style="text-align:right;"  ></td>
+  <td> <input type="text" name="pay_thb" id="pay_thb"  class="form-control number payments" style="text-align:right;"></td>
+  <td> <input type="text" name="pay_usd" id="pay_usd"  class="form-control number payments"  style="text-align:right;"></td>
+  <td> <input type="text" name="total_lak" id="total_lak"  class="form-control" style="text-align:right;" readonly ></td>
   </tr>
 
 </table>
@@ -315,8 +313,8 @@ $payment_id=$_SESSION['payment_id'];
         <!-- Modal body -->
         <div class="modal-body">
         
-         <form action="cart_receipt_edit.php" method="post" enctype="multipart/form-data">
-       <input type="hidden" name="action" value="add">
+         <form action="cart_receipt_2.php" method="post" enctype="multipart/form-data">
+       <input type="hidden" name="action" value="select_item">
        <div align="left"><button type="submit" class="btn btn-success btn-sm" name="save">ຕົກລົງ</button></div>
        
         <div id="display_product"></div>
@@ -416,6 +414,7 @@ $payment_id=$_SESSION['payment_id'];
 
 	} 
 	
+	
   function load_customer()
 	{
 		
@@ -434,9 +433,10 @@ $payment_id=$_SESSION['payment_id'];
 		});
 	}
 
+
  function load_order_receipt(){
 			$.ajax({
-			url:"fetch_cart_receipt_edit.php",
+			url:"fetch_cart_receipt_2.php",
 			method:"POST",
 			//dataType:"json",
 			success:function(data)
@@ -485,21 +485,15 @@ $payment_id=$_SESSION['payment_id'];
 		});
 	}
 	
-	
 	  function load_total_payment()
 	{
 		
-	  var total_all = $('#total_all').val();
-	  //var total_r = $('#total_r').val();
-
-
-
+	  var total_all = $('#total_r').val();
+	  
 	  $('#pay_lak').val(total_all);
 	  $('#total_lak').val(total_all);
 
 	}
-
-
 </script>
 <script>
 $(document).ready(function(){
@@ -537,9 +531,13 @@ $(document).ready(function(){
 
   $(document).on('keyup', '.s_customer', function(){
 	
+
+
 	    var customer_id = $('#s_customer_id').val();
 	    var customer_name = $('#s_customer_name').val();
 		var action = "show";
+
+
 	//	alert(gr_id);
 			$.ajax({
 				url:"fetch_customer_receipt.php",
@@ -556,35 +554,7 @@ $(document).ready(function(){
 	});
 
 
- $(document).on('click', '.add_pro', function(){
-	
-		var ID = $(this).attr("id");
-		
-		var Product_ID = $(this).attr("value");
-		var product_name = $('#product_name'+ID+'').val();
-		var product_price = $('#price'+ID+'').val();
-		var qty_limit = $('#qty_limit'+ID+'').val();
-		
-		var pic = $('#pic'+ID+'').val();
-		var pic_url = $('#pic_url'+ID+'').val();
-		
-		var product_quantity =1;		
-		var action = "add";
-	
-			$.ajax({
-				url:"cart_receipt_edit.php",
-				method:"POST",
-				data:{   Product_ID:Product_ID,action:action,product_name:product_name,product_quantity:product_quantity,product_price:product_price,qty_limit:qty_limit,pic:pic,pic_url:pic_url },
-				success:function(data)
-				{
-					$('#error').html(data);
-					load_order_receipt();
-					
-				//	alert( data,"Item has been Added into Cart");
-				}
-			});
-		
-	});
+
 	
 	
 	 $(document).on('click', '.delete_or', function(){
@@ -594,7 +564,7 @@ $(document).ready(function(){
 		var action = "remove";
 	
 			$.ajax({
-				url:"cart_receipt_edit.php",
+				url:"cart_receipt_2.php",
 				method:"POST",
 				data:{   Product_ID:Product_ID,action:action },
 				success:function(data)
@@ -617,7 +587,7 @@ $(document).on('keyup', '.qty_enters', function(event){
 		 var action = "update_x1";
         
 			$.ajax({
-				url:"cart_receipt_edit.php",
+				url:"cart_receipt_2.php",
 				method:"POST",
          data:{  Product_ID:Product_ID,total:total,action:action },
 				success:function(data)
@@ -633,6 +603,40 @@ $(document).on('keyup', '.qty_enters', function(event){
 }
 });	
 	
+
+
+$(document).on('keyup', '#sale_id', function(event){
+    if(event.which == 13) {
+        event.preventDefault(); // ป้องกันการ Submit Form ซ้ำซ้อน
+        var sale_id = $(this).val();
+		var customer_id = $('#customer_id').val();
+
+        var action = "select_item_2";
+
+        $.ajax({
+            url: "cart_receipt_2.php",
+            method: "POST",
+            dataType: "json", // *** จำเป็นต้องใส่ เพื่อให้อ่านค่าเป็น Object ได้ ***
+            data: { 'item_list[]': sale_id,customer_id:customer_id, action: action },
+            success: function(data){
+                if(data.status == 'ok'){
+                    // นำค่าไปใส่ใน Input
+                    $('#customer_id').val(data.customer_id);
+                    $('#customer_name').val(data.customer_name);
+					$('#payment_name').val(data.customer_name);
+					$('#sale_id').val(sale_id);
+                }
+                load_order_receipt();
+                load_product(); // โหลดรายการเพิ่มเติม (ถ้ามี)
+            }
+        });
+    }
+});
+
+
+
+
+
 	
 		$(document).on('click', '.add_customer', function(){
 	 
@@ -642,8 +646,8 @@ $(document).on('keyup', '.qty_enters', function(event){
 	  
 		$("#customer_id").val(customer_id);
 		$("#customer_name").val(customer_name);
-		
-      
+		$("#payment_name").val(customer_name);
+      	$("#receipt_name").val('<?php echo $_SESSION['username']; ?>');
 		
 			});
 			

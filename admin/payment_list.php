@@ -1,6 +1,18 @@
 <?php 
 include("init.php");
 
+//$list_id = isset($_GET['list_id']) ? $_GET['list_id'] : '';
+
+//$list_id = isset($_REQUEST['list_id']) ? $_REQUEST['list_id'] : '';
+/*
+session_start();
+
+if (isset($_GET['list_id'])) {
+    $_SESSION['list_id'] = $_GET['list_id'];
+}
+*/
+//echo $_SESSION['list_id_e']=$list_id;
+
 ?>
 
 
@@ -83,10 +95,13 @@ $(document).ready(function(){
  
  function load_list()
 	{
+
+	var list_id = '<?php echo $list_id; ?>';
 			$.ajax({
 			url:"fetch_payment_list.php",
 			method:"POST",
 			//dataType:"json",
+			data:{  list_id:list_id },
 			success:function(data)
 			{
 				$('#head_list').html(data);
@@ -98,7 +113,7 @@ $(document).ready(function(){
 function load_product()
 	{
 			$.ajax({
-			url:"fetch_product_sale_detail.php",
+			url:"fetch_payment_detail.php",
 			method:"POST",
 			//dataType:"json",
 			success:function(data)
@@ -132,15 +147,15 @@ $(document).on('keyup', '#Price', function(){
 	
 });
 
-$(document).on('click', '.show', function(){
+$(document).on('click', '.show_detail', function(){
 	
-		var sale_id = $(this).attr("id");		
+		var pay_id = $(this).attr("id");		
 		var action = "show";
 
 			$.ajax({
-				url:"fetch_product_sale_detail.php",
+				url:"fetch_payment_detail.php",
 				method:"POST",
-				data:{   sale_id:sale_id,action:action },
+				data:{   pay_id:pay_id,action:action },
 				success:function(data)
 				{
 					$('#display_product').html(data);
@@ -149,6 +164,9 @@ $(document).on('click', '.show', function(){
 			});
 		
 	});
+	
+
+
 	
 	
 	$(document).on('click', '.edit_pro', function(){
@@ -191,21 +209,37 @@ $(document).on('click', '.show', function(){
 
 });
 
+
+$(document).on('click', '.edit_Id', function(){
+    
+    var pay_id = $(this).attr("id");
+
+    
+    window.location = 'cart_edit_payment.php?pay_id=' + pay_id;
+});
+
+
+
+
+
+
 $(function(){
   $('#search_product').click(function(){
    
  
    var stock_id = $('#stock_id').val(); 
    var sale_id = $('#sale_id').val();   
+	var pay_id = $('#pay_id').val(); 
+   
    var from_date = $('#from_date').val();
    var to_date = $('#to_date').val();
-   
+   var list_id = '<?php echo $list_id; ?>';
  //  alert(stock_id);
    
          $.ajax({
 				url:"fetch_payment_list.php",
 				method:"POST",
-				data:{  stock_id:stock_id,from_date:from_date,to_date:to_date,sale_id:sale_id,stock_id:stock_id },
+				data:{  stock_id:stock_id,from_date:from_date,to_date:to_date,sale_id:sale_id,pay_id:pay_id,stock_id:stock_id,list_id:list_id },
 				success:function(data)
 				{
 					$('#head_list').html(data);
@@ -260,11 +294,17 @@ window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+
 
 <div class="container">
     <br>
-    <h3 align="center">ລາຍການມອບເງິນສົດ</h3><br>
+    <h3 align="center">
+
+<?php 
+echo 'ລາຍການມອບເງິນສົດ'; 
+?>
+
+	</h3><br>
    
 <table>
        <tr>
-     <td> <br>  <a href="product_qty_list.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
+     <td> <br>  <a href="index.php"> <button type="button" name="reset" value="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a></td>
        
             <td><br><a href="add_payment.php"><button type="button" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;ໃບມອບເງິນສົດ</button></a></td>
             
@@ -272,6 +312,9 @@ window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+
             
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
          
+
+
+<?php /*
      <td>ສາງ<br>
       <select name="stock_id" id="stock_id" class="form-control" required>   
        	<option value="">ທັງຫມົດ</option>
@@ -281,9 +324,15 @@ window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+
 		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
 	<?PHP } ?>
     </select> </td> 
-      
+      */ ?>
+
+
+
+
     
-             <td>ເລກທີ<br><input  type="text" name="sale_id" id="sale_id" class="form-control"  ></td> 
+             <td>ເລກທີມອບ<br><input  type="text" name="pay_id" id="pay_id" class="form-control"  ></td> 
+			<td>ເລກທີບິນຂາຍ<br><input  type="text" name="sale_id" id="sale_id" class="form-control"  ></td> 
+
               <td><br> <button type="button" class="btn btn-warning" id="print">ພິມ</button></td>
              <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
        </tr>
@@ -310,7 +359,7 @@ window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+
       
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">ລາຍການໃບຮັບເງີນ</h4>
+          <h4 class="modal-title"></h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         

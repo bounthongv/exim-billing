@@ -116,7 +116,7 @@ th{ text-align:center;}
    <span class="input-group-addon">
    <button type="button" name="cc" class="btn btn-sm " data-toggle="modal" data-target="#customer_add" value="value="<?php echo $_SESSION["customer_id"]; ?>"" onclick="get_customer()" ><i class="fa fa-search"></i></button> </span>   
     </div>
-    <input type="hidden" class="form-control" name="customer_id"   id="customer_id"   >
+    <input type="hidden" class="form-control" name="customer_id"   id="customer_id"  value="<?php echo $_SESSION["customer_id"]; ?>" >
    <!-- <input type="hidden" class="form-control" name="customer_type"   id="customer_type"  >-->
    
    
