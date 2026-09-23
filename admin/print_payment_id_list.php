@@ -85,7 +85,7 @@ font-size:20px;
          if($pay_id==''){$p_id="";}  else{ $p_id="and payment_2.pay_id='$pay_id'  ";}
 		 
 
-		  @$sp=mysqli_query($con,"SELECT payment_2.*,tb_bank.Bank_account,tb_bank.Bank_Name,users.fname
+		  @$sp1=mysqli_query($con,"SELECT payment_2.pay_id,payment_2.pay_date,tb_bank.Bank_account,tb_bank.Bank_Name,users.fname
           FROM payment_2
 LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
 LEFT JOIN users ON payment_2.user_id = users.user_id 
@@ -111,7 +111,7 @@ LEFT JOIN users ON payment_2.user_id = users.user_id
   </table>
 
 <?php 
-$s1=mysqli_fetch_array($sp);
+$s1=mysqli_fetch_array($sp1);
 $dd1=date_create($s1['pay_date']);
 ?>
 
@@ -149,6 +149,11 @@ $dd1=date_create($s1['pay_date']);
            <?php
 
            $i=0;
+            @$sp=mysqli_query($con,"SELECT payment_2.*,tb_bank.Bank_account,tb_bank.Bank_Name,users.fname
+          FROM payment_2
+LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
+LEFT JOIN users ON payment_2.user_id = users.user_id 
+  WHERE 1=1 $p_id");
             while($s=mysqli_fetch_array($sp)){
             $dd=date_create("$s[sale_date]");
 
