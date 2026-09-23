@@ -77,36 +77,40 @@ font-size:10px;
 </style>
 <?php 
   
-    
+    /*
          @$stock_id= mysqli_real_escape_string($con,$_GET['stock_id']);	
          if($stock_id==''){$s_id="";}  else{ $s_id="and product_sale.stock_id='$stock_id'  ";}
-		 
+		 */
        
 		  
 		   @$from_date= mysqli_real_escape_string($con,$_GET['from_date']);	
 		   @$to_date= mysqli_real_escape_string($con,$_GET['to_date']);	
 		   $today=date("Y-m-d");
-         if($from_date=='' or $to_date==''){$btw="and payment.pay_date='$today'";} 
-		  else{ $btw="and payment.pay_date between '$from_date' and '$to_date' ";}
+         if($from_date=='' or $to_date==''){$btw="and payment_2.pay_date='$today'";} 
+		  else{ $btw="and payment_2.pay_date between '$from_date' and '$to_date' ";}
 		  
  
-           @$sale_id= mysqli_real_escape_string($con,$_GET['sale_id']);		   
-		 if($sale_id==''){$r_id="";}  else{ $r_id="and  payment.sale_id='$sale_id' ";}
-		 
+           @$pay_id= mysqli_real_escape_string($con,$_GET['pay_id']);		   
+		 if($pay_id==''){$p_id="";}  else{ $p_id="and  payment_2.pay_id='$pay_id' ";}
 		 
 
-		  
-		  @$sp=mysqli_query($con,"
-      
-    
-       select payment.*,customers.customer_name ,customers.customer_id
+        @$sale_id= mysqli_real_escape_string($con,$_GET['sale_id']);		   
+		 if($sale_id==''){$s_id="";}  else{ $s_id="and  payment_2.sale_id='$sale_id' ";}
+		 
+		    /*
+       "select payment.*,customers.customer_name ,customers.customer_id
            from payment
 	  left join product_sale on payment.sale_id=product_sale.sale_id
 	        left join customers on product_sale.customer_id=customers.customer_id
-	   where 1=1 $btw $r_id $s_id
-	  
-	   
-	          ");
+	   where 1=1 $btw $r_id $s_id";
+*/
+		  
+
+
+		  @$sp=mysqli_query($con,"SELECT *,sum(amount)as amount,count(sale_id) as sale_id,tb_bank.Bank_Name FROM payment_2
+LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
+  WHERE 1=1 $btw $p_id $s_id
+  group by payment_2.pay_id");
 		  if($sp){
           ?>
         
@@ -119,7 +123,7 @@ font-size:10px;
     <td width="200px"><img src="<?php echo $r['path'] ?>" class="img-rounded" alt="Cinque Terre" width="80" height="50"> 
     <p><?php echo $r['office_name'] ?></p>
     </td>
-    <td width="300px" align="center"><h6>ລາຍການຮັບເງີນ</h6><br><h7>ປະຈຳວັນທີ &nbsp;<?php $date=date_create("$from_date");
+    <td width="300px" align="center"><h6>ລາຍການມອບເງິນສົດ</h6><br><h7>ປະຈຳວັນທີ &nbsp;<?php $date=date_create("$from_date");
 echo date_format($date,"d/m/Y"); ?> &nbsp; - &nbsp; <?php $date=date_create("$to_date");
 echo date_format($date,"d/m/Y"); ?> </h7>
 </td>
@@ -128,52 +132,56 @@ echo date_format($date,"d/m/Y"); ?> </h7>
   </table>
  		<table border="1"  align="center"   class="table-bordered " width="800px" >
               <tr>
-                 <th align="center">ເລກທີບິນ</th>
-                <th align="center">ບິນຂາຍ</th>
-                <th align="center">ວັນທີ</th>
-			
-                <th align="center">ລູກຄ້າ</th>
-               <th align="center">ກີບ</th>
-               <th align="center">ບາດ</th>
-               <th align="center">ໂດລາ</th>
-               
-              <th align="center">ມູນຄ່າລວມ</th>
+                  <th align="center">ລ/ດ</th>
+                	 <th align="center">ເລກທີມອບ</th>
+                     <th align="center">ວັນທີມອບ</th>
+                    <th align="center">ຈຳນວນ</th>
+                  
+					<th align="center">ທະນາຄານ</th>
+			       
+					 
+                    <th align="center" >ຈຳນວນເງີນ</th>
                
           
              
               </tr>
            <?php
+
+$e_list=0;       
             while($s=mysqli_fetch_array($sp)){
-            $dd=date_create("$s[pay_date]");
+
+$e_list++;
+
+		        $date1=$s["sale_date"];
+				$date1=date_create($date1);
+
+                $pay_date=$s["pay_date"];
+				$pay_date=date_create($pay_date);
+
 			?>	<tr>
-            <td><?=$s["pay_id"];?></td>
-			   <td align="center"><?= $s["sale_id"];?></td> 
-                
-				<td align="center"><?=date_format($dd,"d-m-Y");?></td>
-			
-            	<td><?=$s["customer_id"];?>&nbsp;<?=$s["customer_name"];?></td>
-               <td align="right"><?=@number_format($s["pay_lak"],2);?></td>
-               <td align="right"><?=@number_format($s["pay_thb"],2);?></td>
-               <td align="right"><?=@number_format($s["pay_usd"],2);?></td>
-            	
-             
-				<td align="right"><?=@number_format($s["total"],2);?></td>
+                   <td align="center"><?=$e_list;?></td>
+
+<td align="center"><?=$s["pay_id"];?></td>
+
+				 <td align="center"><?php if($s["pay_date"]==''){echo '';}else{echo date_format($pay_date,"d/m/Y");} ?></td>
+                <td align="center"><?=$s["sale_id"];?></td>
+				
+			            
+				<td align="center"><?=$s["customer_name"].' '.$s["Bank_Name"];?></td>
+	
+            	<td align="right"><?=@number_format($s["amount"],0);?></td>
+
              
             
              
 				</tr>
                
 			<?php	
-				@$t_pay_lak +=$s["pay_lak"];
-				@$t_pay_thb +=$s["pay_thb"];
-				@$t_pay_usd +=$s["pay_usd"];
-				@$t_amt +=$s["total"];
+				@$t_amt +=$s["amount"];
              } ?>
-             <td colspan="4" align="right">ລວມ</td>
-             <td colspan="1" align="right"><?=@number_format($t_pay_lak,2);?></td>
-             <td colspan="1" align="right"><?=@number_format($t_pay_thb,2);?></td>
-             <td colspan="1" align="right"><?=@number_format($t_pay_usd,2);?></td>
-             <td colspan="1" align="right"><?=@number_format($t_amt,2);?></td>
+             <td colspan="5" align="right">ລວມ</td>
+   
+             <td colspan="1" align="right"><?=@number_format($t_amt,0);?></td>
          
              
              

@@ -117,6 +117,18 @@ font-size:10px;
 		 or customers.customer_name like '%$customer_id%')  ";}
 
 
+@$yyy= mysqli_real_escape_string($con,$_GET['yyy']);
+
+if($yyy=='ໂອນ'){
+	$cpp="and customer_payment.payment_type = '2'";
+}
+else{
+	$cpp="and customer_payment.payment_type = '1'";
+}
+
+
+
+
 if($select_mode=='1'){
 		  
   @$sp=mysqli_query($con,"SELECT customer_payment.* ,customers.customer_name,
@@ -130,7 +142,7 @@ if($select_mode=='1'){
 		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
 		 left join tb_bank on payment_2.Bank_account=tb_bank.Bank_account
 		 
-		 where 1=1 $btw $r_id $p_id $c_id and customer_payment.payment_type = '1' order by payment_date asc");
+		 where 1=1 $btw $r_id $p_id $c_id $cpp order by payment_date asc");
 		  if($sp){
           ?>
           
@@ -230,7 +242,7 @@ if($select_mode=='1'){
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
-		 where 1=1 $btw $r_id $c_id and customer_payment.payment_type = '1'
+		 where 1=1 $btw $r_id $c_id $cpp
 		 
 		 group by customer_payment.payment_id");
 		  if($sp){

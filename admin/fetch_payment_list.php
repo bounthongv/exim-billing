@@ -155,8 +155,9 @@ LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
 			       
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
-                 
-               
+
+                    <th align="center" >ແກ້ໄຂ</th>
+                    <th align="center" >ພິມ</th>
              
                 </tr>
            <?php
@@ -195,6 +196,7 @@ LEFT JOIN tb_bank ON payment_2.Bank_account = tb_bank.Bank_account
        
 <td align="center"><button type="button" class="btn btn-success btn-sm edit_Id" id="<?=$s["pay_id"];?>" data-pay_id="<?=$s["pay_id"];?>" >ແກ້ໄຂ</button></td>     
 
+<td align="center"><button type="button" class="btn btn-warning btn-sm print_Id" id="<?=$s["pay_id"];?>" data-pay_id="<?=$s["pay_id"];?>" >ພິມ</button></td>     
 
 
 

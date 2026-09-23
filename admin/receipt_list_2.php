@@ -254,7 +254,10 @@ $(document).on('click', '#print', function(){
    var select_mode = $('#select_mode').val();
    var payment_type = $('#payment_type').val();
 
-   window.open('print_fetch_receipt_list.php?from_date='+from_date+'&to_date='+to_date+'&payment_id='+payment_id+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+' ','_blank'); 
+var yyy = 'ໂອນ';
+
+
+   window.open('print_fetch_receipt_list.php?from_date='+from_date+'&to_date='+to_date+'&payment_id='+payment_id+'&customer_id='+customer_id+'&payment_type='+payment_type+'&sale_id='+sale_id+'&select_mode='+select_mode+'&yyy='+yyy+'','_blank'); 
 });
 
 $(document).on('click', '#print_excel', function(){

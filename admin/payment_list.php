@@ -219,6 +219,16 @@ $(document).on('click', '.edit_Id', function(){
 });
 
 
+$(document).on('click', '.print_Id', function(){
+    
+    var pay_id = $(this).attr("id");
+
+    
+window.open('print_payment_id_list.php?pay_id='+pay_id+'','_blank'); 
+
+
+
+});
 
 
 
@@ -284,10 +294,18 @@ $(document).on('click', '#print', function(){
   // var group_id = $('#group_id').val(); 
 	//	var action = $(this).attr("value");
 
-
+/*
 window.open('print_payment_list.php?stock_id='+stock_id+'&from_date='+from_date+'&to_date='+to_date+'&sale_id='+sale_id+'','_blank'); 
+   */
+
+  var sale_id = $('#sale_id').val();   
+	var pay_id = $('#pay_id').val(); 
    
- 
+   var from_date = $('#from_date').val();
+   var to_date = $('#to_date').val();
+
+ window.open('print_payment_list.php?pay_id='+pay_id+'&from_date='+from_date+'&to_date='+to_date+'&sale_id='+sale_id+'','_blank'); 
+
 
 	});
 </script>
