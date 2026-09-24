@@ -47,7 +47,7 @@ function deleteFile(fileId, ctaId, filename) {
 <div class="container">
 <br>
 <h3 align="center">ປະຫວັດການອັບໂຫລດໄຟລ໌ - <?php echo htmlspecialchars($row['Outlet_Name']); ?></h3>
-<p align="center"><b>ເລກທີສັນຍາ:</b> <?php echo htmlspecialchars($row['number_cta']); ?> | <b>File ປົດຈໍາ:</b> <?php echo htmlspecialchars($row['File_CTA'] ?? '-'); ?></p>
+<p align="center"><b>ເລກທີສັນຍາ:</b> <?php echo htmlspecialchars($row['number_cta']); ?></p>
 <br>
 <a href="edit_cta.php?Id=<?=$Id?>" class="btn btn-success"><i class="fa fa-upload"></i> ອັບໂຫລດໄຟລ໌ໃຫມ່</a>
 <a href="Credit_Term_Agreement.php" class="btn btn-danger"><i class="fa fa-times"></i> ປິດ</a>
