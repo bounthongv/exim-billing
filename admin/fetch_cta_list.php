@@ -104,12 +104,14 @@ elseif($customer_id=='New_customer'){
           
           </td>
   <td align="center">
-  <?php if (!empty($s['File_CTA'])): ?>
+  <?php if (!empty($s['File_CTA']) && file_exists(__DIR__ . '/pdf_file/' . $s['File_CTA'])): ?>
   <a href="pdf_file/<?php echo htmlspecialchars($s['File_CTA']); ?>" target="_blank" style="color: black;">
  <button type="button">PDF</button>
  </a>
   <?php else: ?>
-  <span style="color:#999;">-</span>
+  <a href="edit_cta.php?Id=<?=$s["Id"];?>" style="color: #999;" title="No PDF uploaded — click to upload">
+ <button type="button" style="opacity:0.5">PDF</button>
+ </a>
   <?php endif; ?>
  </td>
 
