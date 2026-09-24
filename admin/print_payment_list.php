@@ -177,10 +177,12 @@ $e_list++;
 				</tr>
                
 			<?php	
+            @$t_sale_id +=$s["sale_id"];
 				@$t_amt +=$s["amount"];
              } ?>
-             <td colspan="5" align="right">ລວມ</td>
-   
+             <td colspan="3" align="right">ລວມ</td>
+             <td colspan="1" align="center"><?=@number_format($t_sale_id,0);?></td>
+             <td colspan="1" align="right"></td>
              <td colspan="1" align="right"><?=@number_format($t_amt,0);?></td>
          
              
