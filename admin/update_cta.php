@@ -33,6 +33,7 @@ $Id           = mysqli_real_escape_string($con, $_POST['Id']);
 
     // ==== ສ່ວນທີ່ເພີ່ມ: ຈັດການ upload ໄຟລ໌ສັນຍາທີ່ເຊັນແລ້ວ (ຮູບພາບ/PDF) ====
     $file_sql_part = ""; // ຖ້າບໍ່ມີໄຟລ໌ໃໝ່ ຈະບໍ່ແກ້ column File_CTA ເລີຍ
+    $upload_error = '';
 
     if (isset($_FILES['File_CTA']) && $_FILES['File_CTA']['error'] === 0) {
 
@@ -60,11 +61,10 @@ $Id           = mysqli_real_escape_string($con, $_POST['Id']);
     $fileNameEscaped = mysqli_real_escape_string($con, $newFileName);
     $file_sql_part = ", File_CTA = '$fileNameEscaped'";
 } else {
-    // DEBUG: แสดงสาเหตุจริงชั่วคราว
-    echo "<script>alert('Upload error: " . error_get_last()['message'] . " | targetPath: $targetPath | is_writable: " . (is_writable($targetDir) ? 'yes' : 'no') . "');</script>";
+    $upload_error = 'ເກີດຂໍ້ຜິດພາດໃນການອັບໂຫລດ: ຂະໜາດໄຟລ໌ຕາມຂໍ້ຈຳກັດ (ສູງສຸດ 5MB) ຫຼື ຂໍ້ຜິດອື່ນເດີ.';
 }
         } else {
-            echo "<script>alert('ໄຟລ໌ບໍ່ຖືກຕ້ອງ: ອະນຸຍາດສະເພາະ jpg, jpeg, png, pdf ແລະຂະໜາດບໍ່ເກີນ 5MB');</script>";
+            $upload_error = 'ໄຟລ໌ບໍ່ຖືກຕ້ອງ: ອະນຸຍາດສະເພາະ jpg, jpeg, png, pdf ແລະຂະໜາດບໍ່ເກີນ 5MB';
         }
     }
     // ==== ຈົບສ່ວນທີ່ເພີ່ມ ====
@@ -75,7 +75,7 @@ Outlet_Name = '$outlet_name',
 Contact_Person = '$contact_person',
 Tel = '$tel',
 Customer_ID = '$customer_id',
-`Date` = '$date',
+`Date` = $date_value,
 Outlet_Sales_Channels = '$outlet_sales_channels',
 MONT_SEP = '$mont',
 MOFT_SEP = '$moft',
@@ -92,11 +92,14 @@ $file_sql_part
 
     if (mysqli_query($con, $sql)) {
 
+    if ($upload_error) {
+    echo "<script>alert('$upload_error'); window.location.href='edit_cta.php?Id=$Id';</script>";
+    } else {
     echo "<script>
             alert('ບັນທືກຂໍ້ມູນຜ່ານ');
              window.location.href = 'Credit_Term_Agreement.php?status=success';
           </script>";
-
+    }
 
       //  header("Location: Credit_Term_Agreement.php?status=success");
         exit();

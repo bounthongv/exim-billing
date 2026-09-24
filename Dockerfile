@@ -10,6 +10,9 @@ RUN { \
         echo 'error_log = /var/log/php_errors.log'; \
         echo 'date.timezone = Asia/Vientiane'; \
         echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT'; \
+        echo 'upload_max_filesize = 20M'; \
+        echo 'post_max_size = 21M'; \
+        echo 'memory_limit = 128M'; \
     } > /usr/local/etc/php/conf.d/custom.ini
 WORKDIR /var/www/html
 COPY . /var/www/html/

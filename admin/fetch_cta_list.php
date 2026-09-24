@@ -103,11 +103,15 @@ elseif($customer_id=='New_customer'){
     <a href="print_cta.php?Id=<?=$s["Id"];?>" target="_blank" ><button type="button" class="btn btn-warning btn-sm"><i class="fa fa-print"></i></button></a>
           
           </td>
- <td align="center">
- <a href="pdf_file/<?php echo $s['File_CTA']; ?>" target="_blank" style="color: black;">
-<button type="button">PDF</button>
-</a>
-</td>
+  <td align="center">
+  <?php if (!empty($s['File_CTA'])): ?>
+  <a href="pdf_file/<?php echo htmlspecialchars($s['File_CTA']); ?>" target="_blank" style="color: black;">
+ <button type="button">PDF</button>
+ </a>
+  <?php else: ?>
+  <span style="color:#999;">-</span>
+  <?php endif; ?>
+ </td>
 
 
 </tr> 
