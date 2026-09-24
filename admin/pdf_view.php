@@ -60,7 +60,7 @@ function deleteFile(fileId, ctaId, filename) {
 <th>ຂະຫນາດ</th>
 <th>ປະເພດ</th>
 <th>ອັບໂຫລດເມື່ອ</th>
-<th>ເຄົ້າ</th>
+<th>ເບິ່ງ/ລຶບ</th>
 </tr>
 </thead>
 <tbody>

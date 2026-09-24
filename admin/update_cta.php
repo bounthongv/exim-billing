@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ດຶງ ແລະ escape ຄ່າຈາກ form (ຕົວອັກສອນ)
 
-$Id           = mysqli_real_escape_string($con, $_POST['Id']);
+    $Id = (int)(isset($_POST['Id']) && $_POST['Id'] !== '' ? $_POST['Id'] : $_GET['Id']);
 
 
     $outlet_name           = mysqli_real_escape_string($con, $_POST['Outlet_Name']);
