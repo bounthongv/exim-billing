@@ -56,7 +56,6 @@ function deleteFile(fileId, ctaId, filename) {
 <thead>
 <tr>
 <th>#</th>
-<th>ຊື່ຕົ້ນາຍດັ້ງ</th>
 <th>ຊື່ໄຟລ໌</th>
 <th>ຂະຫນາດ</th>
 <th>ປະເພດ</th>
@@ -68,7 +67,6 @@ function deleteFile(fileId, ctaId, filename) {
 <?php $n=1; while($f=mysqli_fetch_assoc($files)): ?>
 <tr>
 <td><?php echo $n++; ?></td>
-<td><?php echo htmlspecialchars($f['original_name']); ?></td>
 <td><?php echo htmlspecialchars($f['filename']); ?></td>
 <td><?php echo round($f['file_size']/1024,1); ?> KB</td>
 <td><?php echo htmlspecialchars($f['mime_type']); ?></td>
@@ -80,7 +78,7 @@ function deleteFile(fileId, ctaId, filename) {
 </tr>
 <?php endwhile; ?>
 <?php if ($n==1): ?>
-<tr><td colspan="7" align="center">- ຍັງບໍ່ມີໄຟລ໌ແບບການ -</td></tr>
+<tr><td colspan="6" align="center">- ຍັງບໍ່ມີໄຟລ໌ແບບການ -</td></tr>
 <?php endif; ?>
 </tbody>
 </table>
