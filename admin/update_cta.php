@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ດຶງ ແລະ escape ຄ່າຈາກ form (ຕົວອັກສອນ)
 
-    $Id = (int)(isset($_POST['Id']) && $_POST['Id'] !== '' ? $_POST['Id'] : $_GET['Id']);
+$Id = (int)(isset($_POST["Id"]) && $_POST["Id"] !== '' ? $_POST["Id"] : $_GET["Id"]);
 
 
     $outlet_name           = mysqli_real_escape_string($con, $_POST['Outlet_Name']);
@@ -63,9 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mime = $_FILES['File_CTA']['type'] ?? 'application/octet-stream';
     $size = (int)$_FILES['File_CTA']['size'];
     $origEscaped = mysqli_real_escape_string($con, $originalName);
-    if (!mysqli_query($con, "INSERT INTO tb_cta_files (cta_id, filename, original_name, file_size, mime_type) VALUES ($Id, '$fileNameEscaped', '$origEscaped', $size, '$mime')")) {
-    $upload_error = 'ບັນຫາການບັນທຶກປະຫວັດ: ' . mysqli_error($con);
-}
+    mysqli_query($con, "INSERT INTO tb_cta_files (cta_id, filename, original_name, file_size, mime_type) VALUES ($Id, '$fileNameEscaped', '$origEscaped', $size, '$mime')");
 } else {
     $upload_error = 'ເກີດຂໍ້ຜິດພາດໃນການອັບໂຫລດ: ຂະໜາດໄຟລ໌ຕາມຂໍ້ຈຳກັດ (ສູງສຸດ 5MB) ຫຼື ຂໍ້ຜິດອື່ນເດີ.';
 }

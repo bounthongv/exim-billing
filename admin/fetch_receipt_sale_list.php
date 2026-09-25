@@ -68,12 +68,15 @@ if($_SESSION['list_id_e']=='02.009'){
            from  product_sale 
      	          left join products on products.Product_ID=product_sale.product_id
 		          left join tb_groups on tb_groups.Group_ID=products.group_id
-              where 1=1 and tb_groups.Group_ID='001' $s_id $btw $r_id  group by sale_id) as custoemr_sale_order 
+              where 1=1 and tb_groups.Group_ID='001' $s_id $btw $r_id 
+              and product_sale.sale_id NOT IN (SELECT sale_id FROM customer_payment) group by sale_id) as custoemr_sale_order 
       
 		             on product_sale.sale_id=custoemr_sale_order.sale_id
 					 
 	   
        where 1=1   $s_id $btw $r_id  $user_show and (product_sale.status is null or product_sale.status='' or product_sale.status='0')
+and product_sale.sale_id NOT IN (SELECT sale_id FROM customer_payment)
+
          group by product_sale.sale_id,product_sale.product_id ) 
        as product_sale
           
@@ -140,7 +143,6 @@ if($_SESSION['list_id_e']=='02.009'){
               <tr>
                  <th align="center" ><input type="checkbox" name="select-all" id="select-all" /></th>
                 <th align="center">ເລກທີ</th>
-                <th align="center">ເລກທີອ້າງອີງ</th>
                 <th align="center">ເລກທີສັ່ງຊື້</th>
                 <th align="center">ວັນທີ</th>
 				<th align="center">ສາງ</th>
@@ -169,7 +171,6 @@ if($_SESSION['list_id_e']=='02.009'){
                </td> 
                
                
-                <td><?=$s["refer_no"];?></td>
                  <td><?=$s["order_id"];?></td>
 				<td align="center"><?=date_format($dd,"d/m/Y");?></td>
 				<td><?=$s["stock_id"];?>&nbsp;<?=$s["stock_name"];?></td>
@@ -198,7 +199,7 @@ if($_SESSION['list_id_e']=='02.009'){
 				
 				
              } ?>
-             <td colspan="8" align="right">ລວມ</td>
+             <td colspan="7" align="right">ລວມ</td>
              <td colspan="1" align="center"><?=@number_format($t_qty_p,0);?></td>
              <td colspan="1" align="right"><?=@number_format($t_amt,0);?></td>
              <td colspan="1" align="right"><?=@number_format($t_p,0);?></td>
