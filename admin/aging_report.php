@@ -36,7 +36,10 @@ include("init.php");
 
 <?php  include("header.php");?>
 <style>
+/*
 #search{border:1px solid #008000; border-radius:4px; background-color:#008000; padding:5px; color:#FFF; font-family:"Phetsarath OT";}
+*/
+
 
 input{padding:4px; border:1px solid #D8D8D8; border-radius:4px;}
 
@@ -96,13 +99,12 @@ height:40px;
  <script src="js/numeral.min.js"></script>
   <script>
 
- load_product();
  load_list();
  
  function load_list()
 	{
 			$.ajax({
-			url:"fetch_sale_list.php",
+			url:"fetch_aging_report.php",
 			method:"POST",
 			//dataType:"json",
 			success:function(data)
@@ -113,107 +115,10 @@ height:40px;
 		});
 	}
 
-function load_product()
-	{
-			$.ajax({
-			url:"fetch_product_sale_detail.php",
-			method:"POST",
-			//dataType:"json",
-			success:function(data)
-			{
-				$('#display_product').html(data);
-				
-			}
-		});
-	}
-
-
 $(document).ready(function(){
 
  
-
-$(document).on('keyup', '#Quantity', function(){
-			
-   var qty = $('#Quantity').val();
-   var price = $('#Price').val();
-
-   var total=Number(qty.replace(/[^0-9\.-]+/g,""))* Number(price.replace(/[^0-9\.-]+/g,""))
-
-   $('#Amount').val(numeral(total).format('0,0'));
-		
 	
-});
-$(document).on('keyup', '#Price', function(){
-		
-		
-   var qty = $('#Quantity').val();
-   var price = $('#Price').val();
-    var total=Number(qty.replace(/[^0-9\.-]+/g,""))* Number(price.replace(/[^0-9\.-]+/g,""))
-   $('#Amount').val(numeral(total).format('0,0'));
-		
-	
-});
-
-$(document).on('click', '.show_detail', function(){
-	
-		var order_id = $(this).attr("id");		
-		var action = "show";
-
-			$.ajax({
-				url:"fetch_product_sale_detail.php",
-				method:"POST",
-				data:{   order_id:order_id,action:action },
-				success:function(data)
-				{
-					$('#display_product').html(data);
-				
-				}
-			});
-		
-	});
-	
-	
-	$(document).on('click', '.edit_pro', function(){
-	
-		var Product_ID = $(this).attr("id");
-		
-		var Group_ID = $('#Group_ID'+Product_ID+'').val();
-		var Id = $('#Id'+Product_ID+'').val();
-		var Price = $('#price'+Product_ID+'').val();
-		var Product_Name = $('#name'+Product_ID+'').val();		
-		var Bar_Code = $('#Bar_Code'+Product_ID+'').val();	
-		var Quantity = $('#Quantity'+Product_ID+'').val();
-		var Unit = $('#Unit'+Product_ID+'').val();	
-		var Amount = $('#Amount'+Product_ID+'').val();	
-	//	var gr_id = $(this).attr("id");		
-		
-		
-	
-//	document.getElementById('Group_ID').value = Group_ID;
-	
-	   $('#Group_ID').val(Group_ID);
-	   $("#Product_ID").val( Product_ID );
-		 $("#Price").val( Price );
-		  $("#Product_Name").val( Product_Name );
-		  $("#Bar_Code").val( Bar_Code );
-		   $("#Quantity").val( Quantity );
-		   $("#Unit").val( Unit );
-		  $("#Id").val( Id );
-		   $("#Amount").val( Amount );
-			$("#action").val('Update');
-			
-			});
-	
-
-
-
-
-
-
-
-
-});
-
 $(function(){
 
   // 1. แยกฟังก์ชันการค้นหาออกมาไว้ด้านนอก
@@ -221,33 +126,30 @@ $(function(){
     var sale_id = $('#sale_id').val();   
     var from_date = $('#from_date').val();
     var to_date = $('#to_date').val();
-    var status_payment = $('#status_payment').val();
     var customer_id = $('#customer_id').val();
-    var status = $('#status').val();
-    var sale_order_id = $('#sale_order_id').val();
-var stock_id = $('#stock_id').val();  
-var sr = $('#sr').val(); 
+
+    var search = $('#search').val();
 
 
     $.ajax({
-      url: "fetch_sale_list.php",
+      url: "fetch_aging_report.php",
       method: "POST",
       data: {
         from_date: from_date,
         to_date: to_date,
         sale_id: sale_id,
-        status_payment: status_payment,
         customer_id: customer_id,
-        status: status,
-        sale_order_id: sale_order_id,
-        stock_id: stock_id,
-        sr: sr,
+        search: search
       },
       success: function(data) {
         $('#head_list').html(data);
       }
     });
   }
+
+
+
+
 
   // 2. เมื่อคลิกที่ปุ่มให้เรียกใช้งานฟังก์ชัน
   $('#search_product').click(function(){
@@ -264,90 +166,49 @@ var sr = $('#sr').val();
 
 });
 
-$(document).on('click', '.delete_Id', function(){
-	
-		var sale_id = $(this).attr("id");
-		
-	//	var action = $(this).attr("value");
 
-  var r = confirm("ທ່ານ ຕ້ອງການລົບແທ້ບໍ່?");
-  if (r == true) {
-     window.location = 'delete_product_sale.php?sale_id='+sale_id;
-  } 
- 
-
-	});
-
-$(document).on('click', '.edit_Id', function(){
-	
-		var sale_id = $(this).attr("id");
-		var action = "make_cart_edit";
-
-
-     window.location = 'cart_edit_sale_customer_order_add.php?sale_id='+sale_id+'&action='+action;
-   
- 
-
-	});
 
 
 
 
 $(document).on('click', '#print', function(){
 	
-   var stock_id = $('#stock_id').val();    
-   var from_date = $('#from_date').val();
-   var to_date = $('#to_date').val();
-  // var product_id = $('#product_id').val(); 
-  // var group_id = $('#group_id').val(); 
-	//	var action = $(this).attr("value");
-
-
-     window.open('print_sale_list.php?from_date='+from_date  + '&to_date='+to_date+' ','_blank'); 
-   
  
-
-	});
-
-
-
-/*
-$(document).on('click', '#print_2', function(){
-	
-   
     var sale_id = $('#sale_id').val();   
     var from_date = $('#from_date').val();
     var to_date = $('#to_date').val();
     var customer_id = $('#customer_id').val();
 
+var search = $('#search').val();
 
 
-     window.open('print_Sales_Report.php?from_date='+from_date+'&to_date='+to_date+'&sale_id='+sale_id+'&customer_id='+customer_id+'','_blank'); 
+
+     window.open('print_aging_report.php?from_date='+from_date  + '&to_date='+to_date+'&sale_id='+sale_id+'&customer_id='+customer_id+'&search='+search+'','_blank'); 
    
- 
+
 
 	});
-*/
 
 
 
 
 $(document).on('click', '#print_ex', function(){
 	
-   var stock_id = $('#stock_id').val();    
-   var from_date = $('#from_date').val();
-   var to_date = $('#to_date').val();
-  // var product_id = $('#product_id').val(); 
-  // var group_id = $('#group_id').val(); 
-	//	var action = $(this).attr("value");
+    var sale_id = $('#sale_id').val();   
+    var from_date = $('#from_date').val();
+    var to_date = $('#to_date').val();
+    var customer_id = $('#customer_id').val();
 
+    var search = $('#search').val();
 
-     window.open('print_sale_list_ex.php?from_date='+from_date  + '&to_date='+to_date+' ','_blank'); 
-   
- 
+      window.open('print_aging_report_ex.php?from_date='+from_date  + '&to_date='+to_date+'&sale_id='+sale_id+'&customer_id='+customer_id+'&search='+search+'','_blank'); 
+
 
 	});
 
+
+
+});
 
 </script>
 <!--
@@ -359,7 +220,7 @@ $(document).on('click', '#print_ex', function(){
 
 <div style="text-align: left !important;">
   <br>
-    <h3 style="text-align: left !important; margin-left: 0;">ລາຍການຂາຍສິນຄ້າ</h3><br>
+    <h3 style="text-align: left !important; margin-left: 0;">ລາຍງານອາຍຸໜີ້</h3><br>
 </div>
 
 
@@ -378,18 +239,8 @@ $(document).on('click', '#print_ex', function(){
 
 <td><br><button type="button" class="btn btn-info" style="width: 100px;" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button></td>
 
-<!--
-<td><br><button type="button" class="btn btn-warning" style="width: 150px;" id="print_2">ພິມລາຍງານຍອດຂາຍ</button></td> 
---> 
-
-
-
 <td><br>
-<form action="import_sale_file.php" method="post" enctype="multipart/form-data">
-    <input type="file" name="excel_file" accept=".csv" required> 
-    
-    <button type="submit" name="import">IMPORT</button>
-</form>
+
 </td>
 
 </tr>
@@ -403,57 +254,11 @@ $(document).on('click', '#print_ex', function(){
             <td>ຫາ<br><input type="date" class="form-control" name="to_date" id="to_date" value="<?php echo date("Y-m-d"); ?>"></td> 
       
 
-
-
-      <td>ລົດ<br>
-      <select name="stock_id" id="stock_id" class="form-control">   
-   <?php
- $user_status=$_SESSION['status'];
- $user_stock_id=$_SESSION['stock_id'];
-  if($user_status=='0'){     ?>
-       	<option value="">ທັງຫມົດ</option>
-    <?PHP 
-	 $sql=mysqli_query($con,"select * from stocks");	
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
-	<?PHP } ?>
-    
-    <?php }else{ 
-	
-	 $sql=mysqli_query($con,"select * from stocks where stock_id='$user_stock_id'");	
-	while($f = mysqli_fetch_array($sql)){?>
-		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
-	<?PHP }
-	
-		} ?>
-    </select> </td>    
     
 
-
-
-
-<?php /*
-    <td>ສະຖານະ<br>
-      <select name="status_payment" id="status_payment" class="form-control" required>   
-        <option value="">ທັງຫມົດ</option>
-       	<option value="2">ສົດ</option>
-        <option value="3">ເງີນໂອນ</option>
-        <option value="1">ຕິດຫນີ້</option>
-  
-    </select> </td> 
-    
-        <td>ການຈ່າຍ<br>
-      <select name="status" id="status" class="form-control" required>   
-        <option value="">ທັງຫມົດ</option>
-       	<option value="2">ຈ່າຍແລ້ວ</option>      
-        <option value="1">ຕິດຫນີ້</option>
-  
-    </select> </td> 
-   */ ?>
       
     
              <td>ເລກທີ<br><input  type="text" name="sale_id" id="sale_id" class="form-control"  ></td> 
-             <td>ເລກທີສັ່ງຊື້<br><input  type="text" name="sale_order_id" id="sale_order_id" class="form-control"  ></td> 
               <td>ຂໍ້ມູນລູກຄ້າ<br><!--<input  type="text" name="customer_id" id="customer_id" class="form-control"  >-->
               
                 <select  name="customer_id" id="customer_id" class="form-control select2" style="width:210px;"  >
@@ -478,47 +283,16 @@ $(document).on('click', '#print_ex', function(){
              </select> 
               </td> 
 
- <td>ພະນັກງານຂາຍ<br>
-
-<select  name="sr" id="sr" class="form-control select2" style="width:210px;"  >
-<option value="">ທັງຫມົດ</option>
-
-      <?php 
-		 $sql=mysqli_query($con,"SELECT * FROM sr_list ORDER BY `sr_list`.`sr_id` DESC");
-		 while($f=mysqli_fetch_array($sql)){
-		  ?>     
-              <option value="<?php echo $f['sr_id'];?>"><?php echo $f['sr_fname'].' '.$f['sr_lname'];?></option>
-          <?php } ?>  
 
 
-</select>
-</td>
+ <td><br>
 
+  <select name="search" id="search" class="form-control" st>
+<option value="">ລະອຽດ</option>
+<option value="custom">ສັງລວມລູກຄ້າ</option>
+  </select> 
+</td> 
 
-
-
-
-<td>
-<?php /*
-<form action="import_sale_file_2.php" method="POST" enctype="multipart/form-data">
-        <label>เลือกไฟล์ Excel (.xlsx):</label>
-        <input type="file" name="excel_file" accept=".xlsx, .xls" required>
-        <button type="submit" name="import">อัปโหลดและนำเข้าข้อมูล</button>
-    </form>
-*/ ?>
- 
-
-
-
-<?php /*
-<form action="import_check_sale_file.php" method="post" enctype="multipart/form-data">
-    <input type="file" name="excel_file_2" accept=".csv" required> 
-    
-    <button type="submit" name="import2">นำเข้าข้อมูล 2</button>
-</form>
-*/ ?>
-
-</td>
 
 
 
