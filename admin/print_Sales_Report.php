@@ -162,7 +162,7 @@ WHERE 1=1 $btw $c_id $r_id Group by product_sale.customer_id
     ?>
         <tr>
             <td align="center"><?=$list_id;?></td>
-            <td align="left"><?=$s['outlet_name'];?></td>
+            <td align="left"><?=$s['customer_id'].' '.$s['outlet_name'];?></td>
 
             <td align="center"><?=@number_format($s['t_qty_1'],0);?></td>
             <td align="center"><?=@number_format($s['t_qty_2'],0);?></td>
