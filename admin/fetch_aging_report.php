@@ -42,20 +42,21 @@ if($search=='custom')
 
 // คำนวณช่วงวันโดยใช้ DATEDIFF(CURRENT_DATE(), product_sale.sale_date) ใน SQL
     @$sp = mysqli_query($con, "SELECT 
-        customers.customer_id,
-        customer_import.outlet_name,
-        SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 1 AND 7 THEN product_sale.total ELSE 0 END) AS d1_7,
-        SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 8 AND 14 THEN product_sale.total ELSE 0 END) AS d8_14,
-        SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 15 AND 30 THEN product_sale.total ELSE 0 END) AS d15_30,
-        SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 31 AND 45 THEN product_sale.total ELSE 0 END) AS d31_45,
-        SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 46 AND 60 THEN product_sale.total ELSE 0 END) AS d46_60,
-        SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) > 60 THEN product_sale.total ELSE 0 END) AS d_over60
-    FROM product_sale 
-    LEFT JOIN customers ON customers.customer_id = product_sale.customer_id
-    LEFT JOIN customer_import ON customer_import.external_id = customers.customer_id
-    WHERE product_sale.`status` != '2' $btw $c_id$r_id
-    GROUP BY customers.customer_id, customer_import.outlet_name
-    ORDER BY customers.customer_id ASC");
+    customers.customer_id,
+    customer_import.outlet_name,
+    SUM(product_sale.total) AS total_all,
+    SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 1 AND 7 THEN product_sale.total ELSE 0 END) AS d1_7,
+    SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 8 AND 14 THEN product_sale.total ELSE 0 END) AS d8_14,
+    SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 15 AND 30 THEN product_sale.total ELSE 0 END) AS d15_30,
+    SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 31 AND 45 THEN product_sale.total ELSE 0 END) AS d31_45,
+    SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) BETWEEN 46 AND 60 THEN product_sale.total ELSE 0 END) AS d46_60,
+    SUM(CASE WHEN DATEDIFF(CURRENT_DATE(), product_sale.sale_date) > 60 THEN product_sale.total ELSE 0 END) AS d_over60
+FROM product_sale 
+LEFT JOIN customers ON customers.customer_id = product_sale.customer_id
+LEFT JOIN customer_import ON customer_import.external_id = customers.customer_id
+WHERE product_sale.`status` != '2' $btw $c_id$r_id
+GROUP BY customers.customer_id, customer_import.outlet_name
+ORDER BY customers.customer_id ASC");
 
     if ($sp) {
         // ตัวแปรสำหรับเก็บผลรวมท้ายตาราง
@@ -65,6 +66,7 @@ if($search=='custom')
         $sum_31_45 = 0;
         $sum_46_60 = 0;
         $sum_over60 = 0;
+        $sum_total_all = 0;
 ?>
 
 <table border="1" class="table-bordered">
@@ -77,6 +79,7 @@ if($search=='custom')
             <th align="center">31-45 Days</th>
             <th align="center">46-60 Days</th>
             <th align="center">&gt; 60 Days</th>
+            <th align="center">Total</th>
             <th align="center">CusID</th>
             <th align="center">Customer Name</th>
         </tr>
@@ -94,6 +97,7 @@ if($search=='custom')
         $sum_31_45  +=$s['d31_45'];
         $sum_46_60  +=$s['d46_60'];
         $sum_over60 +=$s['d_over60'];
+        $sum_total_all +=$s['total_all'];
     ?>
         <tr>
             <td align="center"><?=$list_id;?></td>
@@ -103,6 +107,7 @@ if($search=='custom')
             <td align="right"><?=$s['d31_45'] > 0 ? @number_format($s['d31_45'], 0) : '0';?></td>
             <td align="right"><?=$s['d46_60'] > 0 ? @number_format($s['d46_60'], 0) : '0';?></td>
             <td align="right"><?=$s['d_over60'] > 0 ? @number_format($s['d_over60'], 0) : '0';?></td>
+            <td align="right"><b><?=@number_format($s['total_all'], 0);?></b></td>
             <td align="center"><?=$s['customer_id'];?></td>
             <td align="left"><?=$s['outlet_name'];?></td>
         </tr>
@@ -117,6 +122,7 @@ if($search=='custom')
             <td align="right"><?=number_format($sum_31_45, 0);?></td>
             <td align="right"><?=number_format($sum_46_60, 0);?></td>
             <td align="right"><?=number_format($sum_over60, 0);?></td>
+            <td align="right"><b><?=number_format($sum_total_all, 0);?></b></td>
             <td colspan="2"></td>
         </tr>
     </tfoot>

@@ -38,6 +38,19 @@ function excelColumnToIndex($column) {
     return $index - 1;
 }
 
+// ดึงค่าจากแถว CSV ด้วยตัวอักษรคอลัมน์ Excel เช่น getCol($data, 'AK')
+function getCol($data, $column) {
+    $i = excelColumnToIndex($column);
+    return isset($data[$i]) ? trim((string)$data[$i]) : '';
+}
+
+// ลำดับคอลัมน์ CSV (ตัวอักษร Excel) ให้ตรงกับลำดับฟิลด์ในตาราง sale_import:
+// Item_ID, Display_ID, Created_Date, Delivery_Date, Invoiced_Date, Invoice_Number,
+// Outlet_External_ID, Outlet_Name, Sales_Rep_Code, Extended_Status,
+// Product_SKU, Product_Name, Quantity, Price, Total, Item_Promotion_Code,
+// Created_Date_LAT, Delivery_Date_LAT, Invoiced_Date_LAT
+$sale_columns = ['A', 'C', 'E', 'G', 'I', 'M', 'AL', 'AK', 'BJ', 'U', 'BL', 'BN', 'BO', 'BP', 'BU', 'Z', 'F', 'H', 'J'];
+
 // ==========================================
 // 🚀 ZONE 3: เริ่มกระบวนการ Sync เข้าตารางพัก (sale_import)
 // ==========================================
@@ -91,23 +104,6 @@ if (isset($_POST['import'])) {
             // -----------------------------------------------------------------
             // 🔄 ขั้นตอนที่ 1: อ่านทุกแถว, กรองเฉพาะ delivered, เก็บเป็น array ในหน่วยความจำ
             // -----------------------------------------------------------------
-            $colA  = excelColumnToIndex('A');
-            $colC  = excelColumnToIndex('C');
-            $colE  = excelColumnToIndex('E');
-            $colG  = excelColumnToIndex('G');
-            $colI  = excelColumnToIndex('I');
-            $colM  = excelColumnToIndex('M');
-            $colZ  = excelColumnToIndex('Z');
-            $colAK = excelColumnToIndex('AK');
-            $colAL = excelColumnToIndex('AL');
-            $colBJ = excelColumnToIndex('BJ');
-            $colBL = excelColumnToIndex('BL');
-            $colBN = excelColumnToIndex('BN');
-            $colBO = excelColumnToIndex('BO');
-            $colBP = excelColumnToIndex('BP');
-            $colBU = excelColumnToIndex('BU');
-            $colU  = excelColumnToIndex('U');
-
             $dates_in_csv    = [];
             $csv_record_keys = [];
             $rows_to_insert  = [];
@@ -118,29 +114,34 @@ if (isset($_POST['import'])) {
                 $rowIndex++;
                 if ($rowIndex == 1) continue; // ข้ามหัวตาราง
 
-                $Extended_Status = isset($data[$colU]) ? trim((string)$data[$colU]) : '';
+                $Extended_Status = getCol($data, 'U');
 
                 if (strtolower($Extended_Status) !== 'delivered' && strtolower($Extended_Status) !== 'shipped'  && strtolower($Extended_Status) !== 'ready_for_delivery'  && strtolower($Extended_Status) !== 'processing' ) {
                     $skippedCount++;
                     continue;
                 }
 
-                $Item_ID             = isset($data[$colA])  ? trim((string)$data[$colA])  : '';
-                $Display_ID          = isset($data[$colC])  ? trim((string)$data[$colC])  : '';
-                $Created_Date        = isset($data[$colE])  ? trim((string)$data[$colE])  : '';
-                $Delivery_Date       = isset($data[$colG])  ? trim((string)$data[$colG])  : '';
-                $Invoiced_Date       = isset($data[$colI])  ? trim((string)$data[$colI])  : '';
-                $Invoice_Number      = isset($data[$colM])  ? trim((string)$data[$colM])  : '';
-                $Item_Promotion_Code = isset($data[$colZ])  ? trim((string)$data[$colZ])  : '';
+                $Item_ID             = getCol($data, 'A');
+                $Display_ID          = getCol($data, 'C');
+                $Created_Date        = getCol($data, 'E');
+                $Delivery_Date       = getCol($data, 'G');
+                $Invoiced_Date       = getCol($data, 'I');
+                $Invoice_Number      = getCol($data, 'M');
+                $Item_Promotion_Code = getCol($data, 'Z');
 
-                $Outlet_Name         = isset($data[$colAK]) ? trim((string)$data[$colAK]) : '';
-                $Outlet_External_ID  = isset($data[$colAL]) ? trim((string)$data[$colAL]) : '';
-                $Sales_Rep_Code      = isset($data[$colBJ]) ? trim((string)$data[$colBJ]) : '';
-                $Product_SKU         = isset($data[$colBL]) ? trim((string)$data[$colBL]) : '';
-                $Product_Name        = isset($data[$colBN]) ? trim((string)$data[$colBN]) : '';
-                $Quantity            = isset($data[$colBO]) ? trim((string)$data[$colBO]) : '';
-                $Price               = isset($data[$colBP]) ? trim((string)$data[$colBP]) : '';
-                $Total               = isset($data[$colBU]) ? trim((string)$data[$colBU]) : '';
+                // คอลัมน์วันที่แบบ LAT (สมมติว่าอยู่ถัดจากคอลัมน์วันที่เดิม: F, H, J — แก้ตัวอักษรตรงนี้ได้ถ้าไม่ตรง)
+                $Created_Date_LAT    = getCol($data, 'F');
+                $Delivery_Date_LAT   = getCol($data, 'H');
+                $Invoiced_Date_LAT   = getCol($data, 'J');
+
+                $Outlet_Name         = getCol($data, 'AK');
+                $Outlet_External_ID  = getCol($data, 'AL');
+                $Sales_Rep_Code      = getCol($data, 'BJ');
+                $Product_SKU         = getCol($data, 'BL');
+                $Product_Name        = getCol($data, 'BN');
+                $Quantity            = getCol($data, 'BO');
+                $Price               = getCol($data, 'BP');
+                $Total               = getCol($data, 'BU');
 
                 if ($Invoice_Number === '' || $Item_ID === '' || $Invoiced_Date === '') {
                     continue;
@@ -149,12 +150,27 @@ if (isset($_POST['import'])) {
                 $dates_in_csv[$Invoiced_Date] = true;
                 $csv_record_keys[$Item_ID . '_' . $Invoiced_Date] = true;
 
-                // ✅ แก้ไข: เก็บครบ 13 คอลัมน์ (เพิ่ม Item_Promotion_Code เป็น Index ที่ 12)
+                // เก็บโดยใช้ key เป็นตัวอักษรคอลัมน์ของไฟล์ CSV (ตามที่ใช้กับ excelColumnToIndex)
                 $rows_to_insert[] = [
-                    $Item_ID, $Display_ID,$Created_Date,$Delivery_Date, $Invoiced_Date, $Invoice_Number,
-                    $Outlet_External_ID, $Outlet_Name, $Sales_Rep_Code, $Extended_Status,
-                    $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
-                    $Item_Promotion_Code
+                    'A'  => $Item_ID,
+                    'C'  => $Display_ID,
+                    'E'  => $Created_Date,
+                    'G'  => $Delivery_Date,
+                    'I'  => $Invoiced_Date,
+                    'M'  => $Invoice_Number,
+                    'AL' => $Outlet_External_ID,
+                    'AK' => $Outlet_Name,
+                    'BJ' => $Sales_Rep_Code,
+                    'U'  => $Extended_Status,
+                    'BL' => $Product_SKU,
+                    'BN' => $Product_Name,
+                    'BO' => $Quantity,
+                    'BP' => $Price,
+                    'BU' => $Total,
+                    'Z'  => $Item_Promotion_Code,
+                    'F'  => $Created_Date_LAT,
+                    'H'  => $Delivery_Date_LAT,
+                    'J'  => $Invoiced_Date_LAT
                 ];
             }
             fclose($handle);
@@ -166,7 +182,7 @@ if (isset($_POST['import'])) {
             echo "DEBUG: ข้าม (ไม่ใช่ delivered) = $skippedCount แถว<br>";
             echo "DEBUG: ผ่านเงื่อนไข delivered และมีค่าครบ = " . count($rows_to_insert) . " แถว<br>";
             if (count($rows_to_insert) > 0) {
-                echo "DEBUG: ตัวอย่างแถวแรกที่จะบันทึก (ต้องมี 13 คอลัมน์): <pre>" . htmlspecialchars(print_r($rows_to_insert[0], true)) . "</pre>";
+                echo "DEBUG: ตัวอย่างแถวแรกที่จะบันทึก (ต้องมี 19 คอลัมน์): <pre>" . htmlspecialchars(print_r($rows_to_insert[0], true)) . "</pre>";
             }
             echo "</div>";
 
@@ -192,7 +208,7 @@ if (isset($_POST['import'])) {
             $rows_for_insert = [];
             $rows_for_update = [];
             foreach ($rows_to_insert as $row) {
-    $key = $row[0] . '_' . $row[4]; // ใช้ Invoiced_Date (Index 4)
+    $key = $row['A'] . '_' . $row['I']; // A = Item_ID, I = Invoiced_Date
     if (isset($existing_keys[$key])) {
         $rows_for_update[] = $row;
     } else {
@@ -211,7 +227,8 @@ if (isset($_POST['import'])) {
                                     Item_ID, Display_ID,Created_Date,Delivery_Date, Invoiced_Date, Invoice_Number,
                                     Outlet_External_ID, Outlet_Name, Sales_Rep_Code, Extended_Status,
                                     Product_SKU, Product_Name, Quantity, Price, Total,
-                                    Item_Promotion_Code
+                                    Item_Promotion_Code,
+                                    Created_Date_LAT, Delivery_Date_LAT, Invoiced_Date_LAT
                                 ) VALUES ";
 
                 $chunks = array_chunk($rows_for_insert, 500);
@@ -221,9 +238,9 @@ if (isset($_POST['import'])) {
                     $values_flat  = [];
 
                     foreach ($chunk as $row) {
-                        $placeholders[] = "(" . implode(',', array_fill(0, 16, '?')) . ")";
-                        foreach ($row as $v) {
-                            $values_flat[] = $v;
+                        $placeholders[] = "(" . implode(',', array_fill(0, count($sale_columns), '?')) . ")";
+                        foreach ($sale_columns as $col) {
+                            $values_flat[] = $row[$col];
                         }
                     }
 
@@ -262,7 +279,8 @@ if (isset($_POST['import'])) {
                                 Created_Date = ?, Delivery_Date = ?,
                                 Outlet_External_ID = ?, Outlet_Name = ?, Sales_Rep_Code = ?, Extended_Status = ?,
                                 Product_SKU = ?, Product_Name = ?, Quantity = ?, Price = ?, Total = ?,
-                                Item_Promotion_Code = ?
+                                Item_Promotion_Code = ?,
+                                Created_Date_LAT = ?, Delivery_Date_LAT = ?, Invoiced_Date_LAT = ?
                             WHERE Item_ID = ? AND Invoiced_Date = ?";
                 $stmt_update = mysqli_prepare($con, $sql_update);
 
@@ -272,30 +290,34 @@ if (isset($_POST['import'])) {
                 }
 
                 foreach ($rows_for_update as $row) {
-                    $Item_ID             = $row[0];
-$Display_ID          = $row[1];
-$Created_Date        = $row[2];
-$Delivery_Date       = $row[3];
-$Invoiced_Date       = $row[4];
-$Invoice_Number      = $row[5];
-$Outlet_External_ID  = $row[6];
-$Outlet_Name         = $row[7];
-$Sales_Rep_Code      = $row[8];
-$Extended_Status     = $row[9];
-$Product_SKU         = $row[10];
-$Product_Name        = $row[11];
-$Quantity            = $row[12];
-$Price               = $row[13];
-$Total               = $row[14];
-$Item_Promotion_Code = $row[15];
+                    $Item_ID             = $row['A'];
+                    $Display_ID          = $row['C'];
+                    $Created_Date        = $row['E'];
+                    $Delivery_Date       = $row['G'];
+                    $Invoiced_Date       = $row['I'];
+                    $Invoice_Number      = $row['M'];
+                    $Outlet_External_ID  = $row['AL'];
+                    $Outlet_Name         = $row['AK'];
+                    $Sales_Rep_Code      = $row['BJ'];
+                    $Extended_Status     = $row['U'];
+                    $Product_SKU         = $row['BL'];
+                    $Product_Name        = $row['BN'];
+                    $Quantity            = $row['BO'];
+                    $Price               = $row['BP'];
+                    $Total               = $row['BU'];
+                    $Item_Promotion_Code = $row['Z'];
+                    $Created_Date_LAT    = $row['F'];
+                    $Delivery_Date_LAT   = $row['H'];
+                    $Invoiced_Date_LAT   = $row['J'];
 
-                    // ✅ แก้ไข: วางลำดับ Parameter ให้ตรงตาม SQL UPDATE (มี 13 ตัวพอดี)
-                    mysqli_stmt_bind_param($stmt_update, "ssssssssssssssss",
+                    // วางลำดับ Parameter ให้ตรงตาม SQL UPDATE (มี 19 ตัวพอดี)
+                    mysqli_stmt_bind_param($stmt_update, "sssssssssssssssssss",
     $Display_ID, $Invoice_Number,
     $Created_Date, $Delivery_Date,
     $Outlet_External_ID, $Outlet_Name, $Sales_Rep_Code, $Extended_Status,
     $Product_SKU, $Product_Name, $Quantity, $Price, $Total,
     $Item_Promotion_Code,
+    $Created_Date_LAT, $Delivery_Date_LAT, $Invoiced_Date_LAT,
     $Item_ID, $Invoiced_Date
 );
                     mysqli_stmt_execute($stmt_update);
@@ -365,10 +387,19 @@ $sql_sync_update = "UPDATE product_sale ps
         ps.price       = si.Price,
         ps.qty         = si.Quantity,
         ps.Total       = si.total,
+        
         ps.Created_Date   = DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         ps.Delivery_Date   = DATE_FORMAT(STR_TO_DATE(si.Delivery_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         ps.sale_date   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         ps.sale_time   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+
+
+   ps.Created_Date_LAT   = DATE_FORMAT(STR_TO_DATE(si.Created_Date_LAT, '%c/%e/%Y, %r'), '%Y-%m-%d %H:%i:%s'),
+   ps.Delivery_Date_LAT  = DATE_FORMAT(STR_TO_DATE(si.Delivery_Date_LAT, '%c/%e/%Y, %r'), '%Y-%m-%d %H:%i:%s'),
+   ps.Invoiced_Date_LAT  = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date_LAT, '%c/%e/%Y, %r'), '%Y-%m-%d'),
+   ps.Invoiced_Time_LAT   = DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date_LAT, '%c/%e/%Y, %r'), '%H:%i:%s'),
+
+
         ps.order_id    = si.Display_ID,
         ps.remain      = sale_import_2.remain,
         ps.free        = si.Item_Promotion_Code,
@@ -382,7 +413,7 @@ $update_sale_count = $sync_update_ok ? mysqli_affected_rows($con) : 0;
 
 // ---- 4.2 INSERT แถวใหม่ที่ยังไม่มีใน product_sale ----
 $sql_sync_insert = "INSERT INTO product_sale
-        (sr,customer_id, product_id, price, qty, Total, Created_Date, Delivery_Date, sale_date, sale_time, order_id, sale_id, remain, free,Item_ID,`status`)
+        (sr,customer_id, product_id, price, qty, Total, Created_Date, Delivery_Date, sale_date, sale_time,Created_Date_LAT,Delivery_Date_LAT,Invoiced_Date_LAT,Invoiced_Time_LAT, order_id, sale_id, remain, free,Item_ID,`status`)
     SELECT
         si.Sales_Rep_Code,
         si.Outlet_External_ID,
@@ -390,10 +421,19 @@ $sql_sync_insert = "INSERT INTO product_sale
         si.Price,
         si.Quantity,
         si.total,
+
         DATE_FORMAT(STR_TO_DATE(si.Created_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         DATE_FORMAT(STR_TO_DATE(si.Delivery_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d'),
         DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%H:%i:%s'),
+
+
+    DATE_FORMAT(STR_TO_DATE(si.Created_Date_LAT, '%c/%e/%Y, %r'), '%Y-%m-%d %H:%i:%s'),
+    DATE_FORMAT(STR_TO_DATE(si.Delivery_Date_LAT, '%c/%e/%Y, %r'), '%Y-%m-%d %H:%i:%s'),
+    DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date_LAT, '%c/%e/%Y, %r'), '%Y-%m-%d'),
+    DATE_FORMAT(STR_TO_DATE(si.Invoiced_Date_LAT, '%c/%e/%Y, %r'), '%H:%i:%s'),
+
+
         si.Display_ID,
         si.Invoice_Number,
         sale_import_2.remain,
