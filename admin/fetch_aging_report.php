@@ -167,6 +167,7 @@ $btw $c_id $r_id
             <th align="center">31-45 Days</th>
             <th align="center">46-60 Days</th>
             <th align="center">&gt; 60 Days</th>
+            <th align="center">Total</th>
             <th align="center">CusID</th>
             <th align="center">Customer Name</th>
         </tr>
@@ -219,6 +220,9 @@ $btw $c_id $r_id
         $sum_31_45 +=$d31_45;
         $sum_46_60 +=$d46_60;
         $sum_over60 +=$d_over60;
+
+ $sum_total_all +=$amount;
+
     ?>
         <tr>
             <td align="center"><?=$list_id;?></td>
@@ -231,6 +235,7 @@ $btw $c_id $r_id
             <td align="right"><?=number_format($d31_45, 0);?></td>
             <td align="right"><?=number_format($d46_60, 0);?></td>
             <td align="right"><?=number_format($d_over60, 0);?></td>
+            <td align="right"><?=number_format($amount, 0);?></td>
             <td align="center"><?=$s['customer_id'];?></td>
             <td align="left"><?=$s['outlet_name'];?></td>
         </tr>
@@ -246,6 +251,7 @@ $btw $c_id $r_id
             <td align="right"><?=number_format($sum_31_45, 0);?></td>
             <td align="right"><?=number_format($sum_46_60, 0);?></td>
             <td align="right"><?=number_format($sum_over60, 0);?></td>
+            <td align="right"><?=number_format($sum_total_all, 0);?></td>
         </tr>
     </tfoot>
          </table>
