@@ -19,9 +19,12 @@ if($customer_id==''){$c_id="";}
 elseif($customer_id=='New_customer'){
  $c_id="and product_sale.customer_id NOT IN (SELECT customer_id FROM customers)";}
 		   else{ 
+
  $c_id="and 
-         (product_sale.customer_id like '$customer_id%' or product_sale.customer_id like '%$customer_id%')
-         ";}
+         (product_sale.customer_id = '$customer_id' or product_sale.customer_id like '$customer_id%' or product_sale.customer_id like '%$customer_id%')
+         ";
+         
+         }
 			
 			
            @$status_payment= mysqli_real_escape_string($con,$_POST['status_payment']);	
@@ -42,7 +45,7 @@ elseif($customer_id=='New_customer'){
 
            if($from_date=='' or $to_date==''){$btw="and product_sale.sale_date='$today'";} 
 		  else{ $btw="and product_sale.sale_date between '$from_date' and '$to_date' ";}
-		  
+		
 /*
  if($from_date=='' or $to_date==''){$btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' )='$today'";} 
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
@@ -86,7 +89,6 @@ elseif($customer_id=='New_customer'){
 			 
 			 }
 		  
-
 
  @$sp=mysqli_query($con,"SELECT product_sale.*
 		,sum(product_sale.last_amount) as t_total_amt
