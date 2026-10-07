@@ -160,8 +160,9 @@ if($select_mode=='1'){
                     <th align="center">ປະເພດຊຳລະ</th>              
 					 
                     <th align="center" >ຈຳນວນເງີນ</th>
-					<th align="center" >ວັນທີມອບ</th>
 					<th align="center" >ເລກທີມອບ</th>
+					<th align="center" >ວັນທີມອບ</th>
+					
 					<th align="center" >ທະນາຄານ</th>
 					<th align="center" >ເລກບັນຊີ</th>
                 

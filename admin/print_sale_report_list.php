@@ -99,6 +99,22 @@ font-size:10px;
 		  else{ $btw="and DATE_FORMAT( STR_TO_DATE(Invoiced_Date, '%a, %d %b %Y %H:%i:%s GMT'), '%Y-%m-%d' ) between '$from_date' and '$to_date'";}
 */
 
+	  @$group_id= mysqli_real_escape_string($con,$_GET['group_id']);	
+         if($group_id==''){$g_id="";}  
+		 elseif($group_id=='004'){$g_id="and product_sale.free!=''  ";
+		 
+		$gt_qty=",SUM(CASE WHEN product_sale.free <> '' AND product_sale.free IS NOT NULL THEN product_sale.qty ELSE 0 END) AS t_qty,
+		SUM(CASE WHEN product_sale.free <> '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt";
+
+		 } 
+		 else{ $g_id="and products.Group_ID='$group_id'  ";
+
+		$gt_qty=",SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) as t_qty
+		,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt";
+		 
+
+		 }
+
 
            @$sale_id= mysqli_real_escape_string($con,$_GET['sale_id']);	  
 		 if($sale_id==''){$r_id="";}  else{ $r_id="and ( product_sale.sale_id like '$sale_id%' or product_sale.sale_id like '%$sale_id%') ";}
@@ -134,12 +150,14 @@ font-size:10px;
 if($select_mode=='1'){
 		  
 
-
-       @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
+  @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
-			,sum(product_sale.qty) as t_qty
+			/*,sum(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) as t_qty*/
+			$gt_qty
             ,sum(product_sale.amount) as t_amount
+			,sum(product_sale.total) as total_2 
+		/*	,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt*/
 		   FROM  product_sale 
 	
 	left join products on products.Product_ID=product_sale.product_id
@@ -150,37 +168,13 @@ if($select_mode=='1'){
        
      where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id 
 	 group by product_sale.product_id,product_sale.sale_id
-	order by  product_sale.sale_id,product_sale.product_id asc 
-         ");
-
-  /*
-      @$sp=mysqli_query($con,"SELECT sale_import.*
-,sale_import.Invoice_Number as sale_id
-,sum(sale_import.Quantity) as qty
-	 ,sum(sale_import.Total) as t_amount
-	 ,products.Product_ID,products.Product_Name
-   ,customer_import.village as `address`
-   ,customer_import.outlet_name as customer_name
-   ,customer_import.phone_number as phone
-   ,customer_import.outlet_name as fname
-   ,customer_import.external_id as customer_id
-   ,sale_import.Invoiced_Date as sale_date
-
-		   FROM  sale_import 
-		  LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 
-      LEFT JOIN customer_import ON customer_import.external_id = sale_import.Outlet_External_ID
-       
-       where 1=1 $btw $p_id 
-
-	 group by sale_import.Product_SKU,sale_import.Invoice_Number
-	 order by sale_import.Invoice_Number,sale_import.Product_SKU asc");
-*/
-
+	 order by product_sale.sale_id,product_sale.product_id asc");
 		  if($sp){
           ?>
           
  			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
+					<th align="center">ລຳດັບ</th>
                 	<th align="center">ເລກທີ</th>
 					<th align="center">ວັນທີ</th>
                     <th align="center">ຊື່ລູກຄ້າ</th>
@@ -198,9 +192,10 @@ if($select_mode=='1'){
                 </tr>
            <?php
             while($s=mysqli_fetch_array($sp)){
-            
+            $i++;
 			?>
             	<tr>
+				<td><?= $i;?></td>
 			    <td><?= $s["sale_id"];?></td>
 				<td><?= $s["sale_date"];?></td>
                 <td><?= $s["customer_name"];?></td>
@@ -212,7 +207,7 @@ if($select_mode=='1'){
                 
 				<td align="right"><?=@number_format($s["price"],0);?> </td>
                
-                <td align="right"><?php if($s["t_amount"]==0){ echo "Free";}else{ echo @number_format(($s["t_amount"]),0); } ?> </td>
+                <td align="right"><?php if($s["total_2"]==0){ echo "Free";}else{ echo @number_format(($s["total_2"]),0); } ?> </td>
               <!--  <td align="center"><?=@number_format($s["amount_crate"],0);?> </td>
                 <td align="center"><?=@number_format($s["last_amount"],0);?> </td>-->
 				
@@ -220,7 +215,7 @@ if($select_mode=='1'){
               <?php
            @$t_qty+=$s["t_qty"]; 
 		   
-		   @$t_amt +=$s["t_amount"];
+		   @$t_amt +=$s["total_2"];
 		 //  @$t_dis += $s["discount"];
 		   $t_amount_crate+= $s["amount_crate"];
 		   @$t_last_amount += $s["last_amount"];
@@ -242,9 +237,19 @@ if($select_mode=='1'){
       }
 		elseif($select_mode=='2'){ 
 		
-		
- @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID,sum(product_sale.qty) as qty
-	   ,sum(product_sale.amount) as amount
+
+		      @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
+	  /* ,sum(product_sale.qty) as t_qty*/
+/*
+  	,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) AS t_qty
+    
+  
+    ,SUM(CASE WHEN product_sale.free <> '' AND product_sale.free IS NOT NULL THEN product_sale.qty ELSE 0 END) AS free_qty
+*/
+	   $gt_qty
+	   ,sum(product_sale.amount) as t_amount
+	   ,sum(product_sale.total) as total_2 
+	  /* ,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt*/
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 			,tb_groups.Group_Name,products.version
 		   FROM  product_sale 
@@ -255,40 +260,17 @@ if($select_mode=='1'){
     left join tb_groups on tb_groups.Group_ID=products.group_id 
        
        
-     where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id group by product_sale.product_id,product_sale.price
-	  order by  product_sale.sale_id, product_sale.product_id asc ");
-         
-
-
-/*
-		      @$sp=mysqli_query($con,"SELECT sale_import.*
-,sale_import.Invoice_Number as sale_id
-,sum(sale_import.Quantity) as qty
-	 ,sum(sale_import.Total) as t_amount
-	 ,products.Product_ID,products.Product_Name
-   ,customer_import.village as `address`
-   ,customer_import.outlet_name as customer_name
-   ,customer_import.phone_number as phone
-   ,customer_import.outlet_name as fname
-   ,customer_import.external_id as customer_id
-   ,sale_import.Invoiced_Date as sale_date
-
-		   FROM  sale_import 
-		  LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 
-      LEFT JOIN customer_import ON customer_import.external_id = sale_import.Outlet_External_ID
-       
-       where 1=1 $btw $p_id 
-
-	 group by sale_import.Product_SKU
-	 order by sale_import.Product_SKU asc");
-*/
-
+     where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id 
+	 
+	  group by product_sale.product_id
+	
+	  order by product_sale.product_id asc");
 		  if($sp){
           ?>
-          
+        
  			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
-                	
+                	<th align="center">ລຳດັບ</th>
 					<th align="center">ລະຫັດສິນຄ້າ</th>
                     <th align="center">ຊື່ສິນຄ້າ</th>  
 					 <th align="center" >ຫົວຫນ່ວຍ</th>
@@ -303,39 +285,36 @@ if($select_mode=='1'){
                 </tr>
            <?php
             while($s=mysqli_fetch_array($sp)){
-            
+            $i++;
 			?>
             	<tr>
-			   
+			    <td><?= $i;?></td>
 				<td align="center"><?=$s["Product_ID"];?></td>
             	<td><?=$s["Product_Name"];?></td>
                 
             	<td align="center"><?=$s["Unit"];?></td>				
-                <td align="center"><?=@number_format($s["qty"],0);?> </td>
+                <td align="center"><?=@number_format($s["t_qty"],0);?> </td>
                 
 				<td align="right"><?=@number_format($s["price"],0);?> </td>
                
-                <td align="right"><?php if($s["amount"]==0){ echo "Free";}else{ echo @number_format(($s["amount"]),0); } ?> </td>
-              <!--  <td align="center"><?=@number_format($s["amount_crate"],0);?> </td>
-                <td align="center"><?=@number_format($s["last_amount"],0);?> </td>-->
+                <td align="right"><?php if($s["amt"]==0){ echo "Free";}else{ echo @number_format(($s["amt"]),0); } ?> </td>
+             
 				
 				</tr>
               <?php
-           @$t_qty+=$s["qty"]; 
+           @$t_qty+=$s["t_qty"]; 
 		   
-		   @$t_amt +=$s["amount"];
-		 //  @$t_dis += $s["discount"];
-		   $t_amount_crate+=$s["amount_crate"];
-		   @$t_last_amount+=$s["last_amount"];
+		   @$t_amt +=$s["amt"];
+		
+		  
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="3">ລວມ</td>
+			<td align="right" colspan="4">ລວມ</td>
             <td align="center"><?=@number_format($t_qty,0);?></td>
              <td align="right"></td>
             <td align="right"><?=@number_format($t_amt,0);?></td>
-           <!-- <td align="right"><?=@number_format($t_amount_crate,0);?></td>
-            <td align="right"><?=@number_format($t_last_amount,0);?></td>-->
+          
 			</tr> 
            
 			
@@ -345,10 +324,16 @@ if($select_mode=='1'){
 		  }
 		elseif($select_mode=='3'){ 
 		
-		 @$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
-	   ,sum(product_sale.qty) as t_qty
+		
+	@$sp=mysqli_query($con,"SELECT product_sale.* ,stocks.stock_name,products.Product_ID
+	   /*,sum(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END) as t_qty*/
+
+		$gt_qty
 	   ,sum(product_sale.amount) as t_amount
-	   
+	   ,sum(product_sale.total) as total_2 
+	   /*
+	   ,SUM(CASE WHEN product_sale.free = '' OR product_sale.free IS NULL THEN product_sale.qty ELSE 0 END * product_sale.price) as amt
+*/
 	   ,products.Product_Name,products.size,products.Unit ,customers.customer_name
 	   ,tb_groups.Group_Name,products.version
 	   ,sr_list.sr_fname,sr_list.sr_lname
@@ -364,66 +349,44 @@ if($select_mode=='1'){
 	
 	left join sr_list on product_sale.sr=sr_list.sr_id
 	left join users on product_sale.user_id=users.User_ID
+	
+	
        
-     where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id  $u_id $sro_id
+     where 1=1 $btw  $s_id $r_id $c_id $p_id  $g_id $u_id $sro_id
 	 
 	  group by product_sale.sale_id
 	
-	  order by product_sale.sale_id asc"); 
-         
-
-/*
-		      @$sp=mysqli_query($con,"SELECT sale_import.*
-,sale_import.Invoice_Number as sale_id
-,sum(sale_import.Quantity) as qty
-	 ,sum(sale_import.Total) as t_amount
-	 ,products.Product_ID,products.Product_Name
-   ,customer_import.village as `address`
-   ,customer_import.outlet_name as customer_name
-   ,customer_import.phone_number as phone
-   ,customer_import.outlet_name as fname
-   ,customer_import.external_id as customer_id
-   ,sale_import.Invoiced_Date as sale_date
-
-		   FROM  sale_import 
-		  LEFT JOIN products ON products.Product_ID = sale_import.Product_SKU 
-      LEFT JOIN customer_import ON customer_import.external_id = sale_import.Outlet_External_ID
-       
-       where 1=1 $btw $p_id 
-
-	 group by sale_import.Invoice_Number
-	 order by sale_import.Invoice_Number asc");
-*/
-
+	  order by product_sale.sale_id asc  ");
 		  if($sp){
           ?>
         
  			<table id="myTable" border="1"  class="table-bordered" align="left">
             	<tr>
-                	
+                	<th align="center">ລຳດັບ</th>
 					<th align="center">ເລກບິນ</th>
                     <th align="center">ວັນທີຂາຍ</th>
-                    <th align="center">ຊື່ລູກຄ້າ</th> 					 
+                    <th align="center">ຊື່ລູກຄ້າ</th> 	
+					<th align="center" >ຈຳນວນ</th>		 
                     <th align="center" >ຈຳນວນເງີນ</th>
                     <th align="center" >ປະເພດການຂາຍ</th>                   
                     <th align="center" >ສະຖານະການຂາຍ</th>
-                    <th align="center" >ຜູ້ເປີດຈ໊ອບ</th>
+                    
+				    <th align="center" >ຜູ້ເປີດຈ໊ອບ</th>
                     <th align="center" >ພ/ງ ຂາຍ</th>
-				
-                
                     
                 </tr>
            <?php
             while($s=mysqli_fetch_array($sp)){
-            
+            $i++;
 			?>
             	<tr>
-			    
+			    <td><?= $i;?></td>
 				<td align="center"><?=$s["sale_id"];?></td>
             	<td><?=$s["sale_date"];?></td>
                 
-            	<td align="left"><?=$s["customer_name"];?></td>				
-                <td align="right"><?=@number_format($s["t_amount"],0);?> </td>
+            	<td align="left"><?=$s["customer_name"];?></td>
+				<td align="right"><?=@number_format($s["t_qty"],0);?> </td>		
+                <td align="right"><?=@number_format($s["total_2"],0);?> </td>
                 <td align="center"><?php
 			   
 			   if($s["status_payment"]=="2"){ ?>
@@ -449,8 +412,10 @@ if($select_mode=='1'){
 				<?php   }
 			   
 			   ?></td>
-               <td><?=$s["fname"];?></td>
+                
+                <td><?=$s["fname"];?></td>
                 <td><?=$s["sr_fname"];?>&nbsp;<?=$s["sr_lname"];?></td>
+                
 				
              
 				
@@ -458,13 +423,14 @@ if($select_mode=='1'){
               <?php
            @$t_qty+=$s["t_qty"]; 
 		   
-		   @$t_amt +=$s["t_amount"];
+		   @$t_amt +=$s["total_2"];
 		
 		  
              } 
 			 ?>
 			<tr>
-			<td align="right" colspan="3">ລວມ</td>
+			<td align="right" colspan="4">ລວມ</td>
+			<td align="right"><?=@number_format($t_qty,0);?></td>
             <td align="right"><?=@number_format($t_amt,0);?></td>
              <td align="right" colspan="4"></td>
            
