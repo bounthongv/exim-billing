@@ -119,6 +119,22 @@ th{ text-align:center;}
 </button>
 */ ?>
 
+<?php ;?>
+
+
+<input type="hidden" class="form-control ss" name="Created_Date" id="Created_Date" value="<?php echo $_SESSION['Created_Date'];  ?>" >
+<input type="hidden" class="form-control ss" name="Delivery_Date" id="Delivery_Date" value="<?php echo $_SESSION['Delivery_Date'];  ?>" >
+
+
+
+<input type="hidden" class="form-control ss" name="Created_Date_LAT" id="Created_Date_LAT" value="<?php echo $_SESSION['Created_Date_LAT'];  ?>" >
+<input type="hidden" class="form-control ss" name="Delivery_Date_LAT" id="Delivery_Date_LAT" value="<?php echo $_SESSION['Delivery_Date_LAT'];  ?>" >
+
+<input type="hidden" class="form-control ss" name="Invoiced_Date_LAT" id="Invoiced_Date_LAT" value="<?php echo $_SESSION['Invoiced_Date_LAT'];  ?>" >
+<input type="hidden" class="form-control ss" name="Invoiced_Time_LAT" id="Invoiced_Time_LAT" value="<?php echo $_SESSION['Invoiced_Time_LAT'];  ?>" >
+
+
+
      <a href="sale_list.php" ><button type="button" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;ປິດ</button></a>
 
 

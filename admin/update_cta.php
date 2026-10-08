@@ -20,6 +20,7 @@ $Id = (int)(isset($_POST["Id"]) && $_POST["Id"] !== '' ? $_POST["Id"] : $_GET["I
     $number_days            = mysqli_real_escape_string($con, $_POST['Number_days']);
     $Number_bills            = mysqli_real_escape_string($con, $_POST['Number_bills']);
     $limited_amount         = mysqli_real_escape_string($con, $_POST['Limited_Amount']);
+    $limited_amount = filter_var($limited_amount,  FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $validation_date        = mysqli_real_escape_string($con, $_POST['Validation_Date']);
 
     // Checkbox - ຖ້າບໍ່ໄດ້ຕິກ ຈະບໍ່ຖືກສົ່ງມາໃນ $_POST ເລີຍ ຈຶ່ງຕ້ອງກວດສອບດ້ວຍ isset

@@ -50,7 +50,7 @@ include("init.php");
 	 
 		
 		
-			
+
 			
 	        	//$stock_id=$_SESSION["stock_id"]; 
           $sql_d=mysqli_query($con,"SELECT product_sale.*,stocks.stock_name
@@ -81,6 +81,17 @@ include("init.php");
 
     		while($f=mysqli_fetch_array($sql_d)){
 				
+ $_SESSION['Created_Date'] =$f["Created_Date"]; 
+ $_SESSION['Delivery_Date'] =$f["Delivery_Date"]; 
+
+
+ $_SESSION['Created_Date_LAT'] =$f["Created_Date_LAT"]; 
+ $_SESSION['Delivery_Date_LAT'] =$f["Delivery_Date_LAT"]; 
+
+ $_SESSION['Invoiced_Date_LAT'] =$f["Invoiced_Date_LAT"]; 
+ $_SESSION['Invoiced_Time_LAT'] =$f["Invoiced_Time_LAT"]; 
+
+
 	$_SESSION['s_sr_id'] =$f["sr"];
 	$_SESSION['s_sr_fname'] =$f["sr_fname"];
 	$_SESSION['s_sr_lname'] =$f["sr_lname"];

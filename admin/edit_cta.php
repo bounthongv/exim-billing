@@ -145,7 +145,7 @@ $s=mysqli_fetch_array($result);
 
 <tr>
     <td>ວົງເງິນເຄດິດສູງສຸດ Limited Amount:</td>
-    <td><input type="text" class="form-control" style="width:500px" name="Limited_Amount" id="Limited_Amount" value="<?php echo $s['Limited_Amount']; ?>"></td>
+    <td><input type="text" class="form-control" style="width:500px" name="Limited_Amount" id="Limited_Amount" value="<?php echo @number_format($s['Limited_Amount'],0) ?>"></td>
 </tr>
 	
 <tr>
@@ -289,5 +289,19 @@ var Province = $(this).attr("data-Province");
 $('#Address').val(village+'    '+district+'    '+Province);
 
   });
+
+// เพิ่มส่วนจัดการการใส่เครื่องหมายจุลภาค (Comma) ในช่อง Limited_Amount อัตโนมัติขณะพิมพ์
+$(document).on('input keyup', '#Limited_Amount', function() {
+    let value = $(this).val().replace(/[^0-9.]/g, '');
+    let parts = value.split('.');
+    
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    if (parts.length > 1) {
+        $(this).val(parts[0] + '.' + parts[1].substring(0, 2));
+    } else {
+        $(this).val(parts[0]);
+    }
+});
 
 </script>

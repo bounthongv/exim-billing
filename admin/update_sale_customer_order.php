@@ -105,6 +105,14 @@ $status= mysqli_real_escape_string($con,$_POST['status']);
 	
 	
 
+$Created_Date = mysqli_real_escape_string($con,$_POST['Created_Date']);
+$Delivery_Date = mysqli_real_escape_string($con,$_POST['Delivery_Date']);
+$Created_Date_LAT = mysqli_real_escape_string($con,$_POST['Created_Date_LAT']);
+$Delivery_Date_LAT = mysqli_real_escape_string($con,$_POST['Delivery_Date_LAT']);
+$Invoiced_Date_LAT = mysqli_real_escape_string($con,$_POST['Invoiced_Date_LAT']);
+$Invoiced_Time_LAT = mysqli_real_escape_string($con,$_POST['Invoiced_Time_LAT']);
+
+
 
 if(isset($_POST['save'])){
 for ($i = 0; $i < count($_POST['list_id']); $i++) {
@@ -171,13 +179,27 @@ if($free==''){
 	//$amount=$qty*$Price;	  	
 			
 
- "INSERT INTO product_sale (stockin_id,list_id,sale_id,sale_date,sale_time
-		,send_date,send_time,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
-		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,sr) 
+"INSERT INTO product_sale (stockin_id,sale_id,sale_date
+		,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
+		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,`status`,sr,free,Item_ID
+		,Created_Date
+		,Delivery_Date
+		,Created_Date_LAT
+		,Delivery_Date_LAT
+		,Invoiced_Date_LAT
+		,Invoiced_Time_LAT) 
 		
-		values('','$list_id','$sale_id','$sale_date','$sale_time','$send_date','$send_time','$order_id'
+		values('','$sale_id','$sale_date','$order_id'
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
-		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$sr') ";
+		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$status','$sr','$free'
+		,'$Item_ID'
+		,'$Created_Date'
+		,'$Delivery_Date'
+		,'$Created_Date_LAT'
+		,'$Delivery_Date_LAT'
+		,'$Invoiced_Date_LAT'
+		,'$Invoiced_Time_LAT'
+		) ";
 
 
 
@@ -186,12 +208,25 @@ if($free==''){
 
 	$sql_in=mysqli_query($con,"INSERT INTO product_sale (stockin_id,sale_id,sale_date
 		,order_id,customer_id,stock_id,product_id,product_lot_id,price,crate_price,qty
-		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,`status`,sr,free,Item_ID) 
+		,crate_qty,amount,amount_crate,last_amount,total,payment,remain,user_id,bill_size,status_payment,`status`,sr,free,Item_ID
+		,Created_Date
+		,Delivery_Date
+		,Created_Date_LAT
+		,Delivery_Date_LAT
+		,Invoiced_Date_LAT
+		,Invoiced_Time_LAT) 
 		
 		values('','$sale_id','$sale_date','$order_id'
 		,'$customer_id','$stock_id','$Product_ID','$Product_ID','$Price','$crate_price','$qty','$crate_qty'
 		,'$amount','$amount_crate','$total_amount_crate','$total_all','0','$total_all','$user_id','1','$status_payment','$status','$sr','$free'
-		,'$Item_ID') ");
+		,'$Item_ID'
+		,'$Created_Date'
+		,'$Delivery_Date'
+		,'$Created_Date_LAT'
+		,'$Delivery_Date_LAT'
+		,'$Invoiced_Date_LAT'
+		,'$Invoiced_Time_LAT'
+		) ");
 			
 			
 
