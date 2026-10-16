@@ -61,7 +61,7 @@ $Id = (int)(isset($_POST["Id"]) && $_POST["Id"] !== '' ? $_POST["Id"] : $_GET["I
             if (move_uploaded_file($_FILES['File_CTA']['tmp_name'], $targetPath)) {
     $fileNameEscaped = mysqli_real_escape_string($con, $newFileName);
     $file_sql_part = ", File_CTA = '$fileNameEscaped'";
-    $mime = $_FILES['File_CTA']['type'] ?? 'application/octet-stream';
+    $mime = isset($_FILES['File_CTA']['type']) ? $_FILES['File_CTA']['type'] : 'application/octet-stream';
     $size = (int)$_FILES['File_CTA']['size'];
     $origEscaped = mysqli_real_escape_string($con, $originalName);
     mysqli_query($con, "INSERT INTO tb_cta_files (cta_id, filename, original_name, file_size, mime_type) VALUES ($Id, '$fileNameEscaped', '$origEscaped', $size, '$mime')");
