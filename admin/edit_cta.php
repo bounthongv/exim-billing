@@ -31,6 +31,14 @@ $sql = "SELECT * FROM tb_cta WHERE Id = $Id";
 $result = mysqli_query($con, $sql);
 $s=mysqli_fetch_array($result);
 
+// ຫາບັນທືກ file ປັດຈຸບັນ (ເພື່ອໃຫ້ປຸ່ມລຶບລົບໄຟລ໌ໄດ້)
+$currentFileId = 0;
+if (!empty($s['File_CTA'])) {
+    $curEsc = mysqli_real_escape_string($con, $s['File_CTA']);
+    $curRow = mysqli_fetch_assoc(mysqli_query($con, "SELECT Id FROM tb_cta_files WHERE cta_id=$Id AND filename='$curEsc' ORDER BY Id DESC LIMIT 1"));
+    if ($curRow) { $currentFileId = (int)$curRow['Id']; }
+}
+
 ?>
 
  <script src="js/numeral.min.js"></script>
@@ -161,9 +169,12 @@ $s=mysqli_fetch_array($result);
         <?php if (!empty($s['File_CTA'])): ?>
             <br>
             <small>ໄຟລ໌ປັດຈຸບັນ:
-                <a href="pdf_file/<?php echo $s['File_CTA']; ?>" target="_blank" style="color: black;">
-    <?php echo $s['File_CTA']; ?>
+                <a href="pdf_file/<?php echo rawurlencode($s['File_CTA']); ?>" target="_blank" style="color: black;">
+    <?php echo htmlspecialchars($s['File_CTA']); ?>
                     </a>
+                    <?php if ($currentFileId > 0): ?>
+                    <button type="button" class="btn btn-danger btn-xs" onclick="deleteFile(<?php echo $currentFileId; ?>, <?php echo $Id; ?>, '<?php echo htmlspecialchars($s['File_CTA'], ENT_QUOTES); ?>')"><i class="fa fa-trash"></i> ລຶບ</button>
+                    <?php endif; ?>
             </small>
         <?php endif; ?>
     </td>
@@ -227,6 +238,26 @@ $s=mysqli_fetch_array($result);
 
 
 <script>
+
+function deleteFile(fileId, ctaId, filename) {
+    if (!confirm('ທ່ານຕ້ອງການລຶບໄຟລ໌ ' + filename + ' ແທ້ບໍ່?')) return;
+    $.ajax({
+        url: 'delete_cta_file.php',
+        method: 'POST',
+        data: { file_id: fileId, cta_id: ctaId },
+        success: function(response) {
+            var res = JSON.parse(response);
+            if (res.status === 'ok') {
+                location.href = 'edit_cta.php?Id=' + ctaId;
+            } else {
+                alert('ການລຶບລົ້ມເຫລວ: ' + res.message);
+            }
+        },
+        error: function() {
+            alert('ເກີດຂໍ້ຜິດພາດໃນການເຊື່ອມຕໍ່');
+        }
+    });
+}
 
 
   function get_customer(){	 

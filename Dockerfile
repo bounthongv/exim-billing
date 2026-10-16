@@ -1,4 +1,5 @@
 FROM php:7.4-apache
+RUN apt-get update && apt-get install -y ghostscript && rm -rf /var/lib/apt/lists/*
 RUN a2enmod rewrite
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 # Custom PHP config - matches apis.com.la (which uses PHP 5.6 with FPM)

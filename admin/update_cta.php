@@ -45,29 +45,53 @@ $Id = (int)(isset($_POST["Id"]) && $_POST["Id"] !== '' ? $_POST["Id"] : $_GET["I
             mkdir($targetDir, 0755, true);
         }
 
-        $originalName = $_FILES['File_CTA']['name'];
-        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-        $allowedExt = ["jpg", "jpeg", "png", "pdf"];
+        $originalName = basename(str_replace('\\', '/', $_FILES['File_CTA']['name']));
+                $originalName = preg_replace('/[^A-Za-z0-9_\-\.\s\p{L}\p{N}()\[\]]+/u', '_', $originalName);
+                $originalName = trim($originalName);
+                $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                $allowedExt = ["jpg", "jpeg", "png", "pdf"];
 
-        // ຈຳກັດຂະໜາດໄຟລ໌ ບໍ່ໃຫ້ເກີນ 5MB
-        $maxSize = 5 * 1024 * 1024;
+                // ຈຳກັດຂະໜາດໄຟລ໌ ບໍ່ໃຫ້ເກີນ 5MB
+                $maxSize = 5 * 1024 * 1024;
 
-        if (in_array($ext, $allowedExt) && $_FILES['File_CTA']['size'] <= $maxSize) {
+                if (in_array($ext, $allowedExt) && $_FILES['File_CTA']['size'] <= $maxSize) {
 
-            // ຕັ້ງຊື່ໄຟລ໌ໃໝ່ ກັນຊື່ຊ້ຳກັນ
-            $newFileName = "cta_" . $Id . "_" . time() . "." . $ext;
-            $targetPath = $targetDir . $newFileName;
+                    // ຮັກສາຊື່ໄຟລ໌ເດີມໄວ້; ຖ້າມີຊື່ຊ້ຳໃນໂຟນເດີ ຈຶ່ງເພີ່ມເລກແລະ timestamp ຕໍ່ທ້າຍ
+                    $pi = pathinfo($originalName);
+                    $base = isset($pi['filename']) ? $pi['filename'] : 'file';
+                    $newFileName = $originalName;
+                    $i = 1;
+                    while (file_exists($targetDir . $newFileName)) {
+                        $newFileName = $base . '_' . time() . '_' . $i . '.' . $ext;
+                        $i++;
+                    }
+                    $targetPath = $targetDir . $newFileName;
 
-            if (move_uploaded_file($_FILES['File_CTA']['tmp_name'], $targetPath)) {
-    $fileNameEscaped = mysqli_real_escape_string($con, $newFileName);
-    $file_sql_part = ", File_CTA = '$fileNameEscaped'";
-    $mime = isset($_FILES['File_CTA']['type']) ? $_FILES['File_CTA']['type'] : 'application/octet-stream';
-    $size = (int)$_FILES['File_CTA']['size'];
-    $origEscaped = mysqli_real_escape_string($con, $originalName);
-    mysqli_query($con, "INSERT INTO tb_cta_files (cta_id, filename, original_name, file_size, mime_type) VALUES ($Id, '$fileNameEscaped', '$origEscaped', $size, '$mime')");
-} else {
-    $upload_error = 'ເກີດຂໍ້ຜິດພາດໃນການອັບໂຫລດ: ຂະໜາດໄຟລ໌ຕາມຂໍ້ຈຳກັດ (ສູງສຸດ 5MB) ຫຼື ຂໍ້ຜິດອື່ນເດີ.';
-}
+                    if (move_uploaded_file($_FILES['File_CTA']['tmp_name'], $targetPath)) {
+
+                        // ປົກກະຕິ PDF ທີ່ຖືກບັນທືກແບບ incremental ອາດບໍ່ສະແດງໃນບາງບຣາວເຊີ
+                        // → ໃຊ້ Ghostscript ປັບຮູບໃຫມ່ໃຫ້ກາຍເປັນ PDF ມາດຕະຖານທີ່ເບິ່ງໄດ້
+                        if ($ext === 'pdf' && file_exists('/usr/bin/gs')) {
+                            $tmpPdf = $targetDir . '.norm_' . $newFileName;
+                            $cmd = '/usr/bin/gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dAutoRotatePages=/None -sOutputFile=' . escapeshellarg($tmpPdf) . ' ' . escapeshellarg($targetPath) . ' 2>/dev/null';
+                            @exec($cmd, $out, $rc);
+                            if ($rc === 0 && file_exists($tmpPdf) && filesize($tmpPdf) > 0) {
+                                @unlink($targetPath);
+                                @rename($tmpPdf, $targetPath);
+                            } else {
+                                @unlink($tmpPdf);
+                            }
+                        }
+
+            $fileNameEscaped = mysqli_real_escape_string($con, $newFileName);
+            $file_sql_part = ", File_CTA = '$fileNameEscaped'";
+            $mime = isset($_FILES['File_CTA']['type']) ? $_FILES['File_CTA']['type'] : 'application/octet-stream';
+            $size = (int)$_FILES['File_CTA']['size'];
+            $origEscaped = mysqli_real_escape_string($con, $originalName);
+            mysqli_query($con, "INSERT INTO tb_cta_files (cta_id, filename, original_name, file_size, mime_type) VALUES ($Id, '$fileNameEscaped', '$origEscaped', $size, '$mime')");
+        } else {
+            $upload_error = 'ເກີດຂໍ້ຜິດພາດໃນການອັບໂຫລດ: ຂະໜາດໄຟລ໌ຕາມຂໍ້ຈຳກັດ (ສູງສຸດ 5MB) ຫຼື ຂໍ້ຜິດອື່ນເດີ.';
+        }
         } else {
             $upload_error = 'ໄຟລ໌ບໍ່ຖືກຕ້ອງ: ອະນຸຍາດສະເພາະ jpg, jpeg, png, pdf ແລະຂະໜາດບໍ່ເກີນ 5MB';
         }

@@ -27,6 +27,9 @@ $filepath = __DIR__ . "/pdf_file/" . $row['filename'];
 // Delete from database
 	mysqli_query($con, "DELETE FROM tb_cta_files WHERE Id=$file_id");
 
+// ຖ້າ file ທີ່ລຶບແມ່ນ file ປັດຈຸບັນຂອງ tb_cta → ໃຫ້ລຶບຊື່ໃນ File_CTA ອອກ (ຫລືຕັ້ງເປັນ file ລ່າສຸດທີ່ຍັງເຫລືອ)
+mysqli_query($con, "UPDATE tb_cta SET File_CTA = (SELECT f.filename FROM (SELECT filename FROM tb_cta_files WHERE cta_id=$cta_id ORDER BY Id DESC LIMIT 1) f) WHERE Id=$cta_id AND File_CTA='" . mysqli_real_escape_string($con, $row['filename']) . "'");
+
 // Delete from disk
 $deleted = false;
 if (file_exists($filepath)) {

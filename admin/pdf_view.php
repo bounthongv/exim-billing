@@ -72,7 +72,7 @@ function deleteFile(fileId, ctaId, filename) {
 <td><?php echo htmlspecialchars($f['mime_type']); ?></td>
 <td><?php echo date("d/m/Y H:i", strtotime($f['uploaded_at'])); ?></td>
 <td>
-<a href="pdf_file/<?php echo htmlspecialchars($f['filename']); ?>" target="_blank"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> ເບິ່ງ</button></a>
+<a href="pdf_file/<?php echo rawurlencode($f['filename']); ?>" target="_blank"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> ເບິ່ງ</button></a>
 <button type="button" class="btn btn-danger btn-sm" onclick="deleteFile(<?php echo $f['Id']; ?>, <?php echo $Id; ?>, '<?php echo htmlspecialchars($f['filename'], ENT_QUOTES); ?>')"><i class="fa fa-trash"></i></button>
 </td>
 </tr>
