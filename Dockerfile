@@ -1,19 +1,17 @@
 FROM php:7.4-apache
-RUN apt-get update && apt-get install -y ghostscript && rm -rf /var/lib/apt/lists/*
+# Debian bullseye is EOL -> deb.debian.org 404s; point apt at the archive mirror before installing ghostscript
+RUN sed -i "s|deb.debian.org|archive.debian.org|g" /etc/apt/sources.list && apt-get update && apt-get install -y ghostscript && rm -rf /var/lib/apt/lists/*
 RUN a2enmod rewrite
 RUN docker-php-ext-install pdo pdo_mysql mysqli
-# Custom PHP config - matches apis.com.la (which uses PHP 5.6 with FPM)
-# We use PHP 7.4 because PHP 5.6 + MySQL 8 has charset negotiation issues
-# PHP 7.4 is more lenient with @-suppression and null arithmetic than PHP 8.x
 RUN { \
-        echo 'display_errors = Off'; \
-        echo 'log_errors = On'; \
-        echo 'error_log = /var/log/php_errors.log'; \
-        echo 'date.timezone = Asia/Vientiane'; \
-        echo 'error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT'; \
-        echo 'upload_max_filesize = 20M'; \
-        echo 'post_max_size = 21M'; \
-        echo 'memory_limit = 128M'; \
+        echo "display_errors = Off"; \
+        echo "log_errors = On"; \
+        echo "error_log = /var/log/php_errors.log"; \
+        echo "date.timezone = Asia/Vientiane"; \
+        echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT"; \
+        echo "upload_max_filesize = 20M"; \
+        echo "post_max_size = 21M"; \
+        echo "memory_limit = 128M"; \
     } > /usr/local/etc/php/conf.d/custom.ini
 WORKDIR /var/www/html
 COPY . /var/www/html/
