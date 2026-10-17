@@ -97,6 +97,7 @@ $to_date1 = date_create($to_date);
   WHERE 1=1
   $btw $c_id $r_id $diff
   group by product_sale.sale_id
+  ORDER BY product_sale.sale_date ASC
  ");
           ?>
         
