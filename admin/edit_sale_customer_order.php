@@ -1,6 +1,8 @@
 <?php 
 include("init.php");
 //unset($_SESSION['cart_trnasfer_mini_stock']);
+
+// $_SESSION['user_id'];
 ?>
 
 <?php
@@ -120,18 +122,6 @@ th{ text-align:center;}
 */ ?>
 
 <?php ;?>
-
-
-<input type="hidden" class="form-control ss" name="Created_Date" id="Created_Date" value="<?php echo $_SESSION['Created_Date'];  ?>" >
-<input type="hidden" class="form-control ss" name="Delivery_Date" id="Delivery_Date" value="<?php echo $_SESSION['Delivery_Date'];  ?>" >
-
-
-
-<input type="hidden" class="form-control ss" name="Created_Date_LAT" id="Created_Date_LAT" value="<?php echo $_SESSION['Created_Date_LAT'];  ?>" >
-<input type="hidden" class="form-control ss" name="Delivery_Date_LAT" id="Delivery_Date_LAT" value="<?php echo $_SESSION['Delivery_Date_LAT'];  ?>" >
-
-<input type="hidden" class="form-control ss" name="Invoiced_Date_LAT" id="Invoiced_Date_LAT" value="<?php echo $_SESSION['Invoiced_Date_LAT'];  ?>" >
-<input type="hidden" class="form-control ss" name="Invoiced_Time_LAT" id="Invoiced_Time_LAT" value="<?php echo $_SESSION['Invoiced_Time_LAT'];  ?>" >
 
 
 
@@ -309,7 +299,49 @@ th{ text-align:center;}
 </td>
   </tr>
 
-  
+
+  <?php
+  if($_SESSION['user_id']=='0001'){
+?>
+<tr>
+<td>Created_Date <input type="text" class="form-control ss" name="Created_Date" id="Created_Date" value="<?php echo $_SESSION['Created_Date'];  ?>" ></td>
+<td>Delivery_Date <input type="text" class="form-control ss" name="Delivery_Date" id="Delivery_Date" value="<?php echo $_SESSION['Delivery_Date'];  ?>" ></td>
+
+
+
+<td>Created_Date_LAT <input type="text" class="form-control ss" name="Created_Date_LAT" id="Created_Date_LAT" value="<?php echo $_SESSION['Created_Date_LAT'];  ?>" ></td>
+<td>Delivery_Date_LAT <input type="text" class="form-control ss" name="Delivery_Date_LAT" id="Delivery_Date_LAT" value="<?php echo $_SESSION['Delivery_Date_LAT'];  ?>" ></td>
+
+<td>Invoiced_Date_LAT <input type="text" class="form-control ss" name="Invoiced_Date_LAT" id="Invoiced_Date_LAT" value="<?php echo $_SESSION['Invoiced_Date_LAT'];  ?>" ></td>
+<td>Invoiced_Time_LAT <input type="text" class="form-control ss" name="Invoiced_Time_LAT" id="Invoiced_Time_LAT" value="<?php echo $_SESSION['Invoiced_Time_LAT'];  ?>" ></td>
+</tr>
+
+<?php
+  }else{
+?>
+
+<tr>
+<td><input type="hidden" class="form-control ss" name="Created_Date" id="Created_Date" value="<?php echo $_SESSION['Created_Date'];  ?>" ></td>
+<td><input type="hidden" class="form-control ss" name="Delivery_Date" id="Delivery_Date" value="<?php echo $_SESSION['Delivery_Date'];  ?>" ></td>
+
+
+
+<td><input type="hidden" class="form-control ss" name="Created_Date_LAT" id="Created_Date_LAT" value="<?php echo $_SESSION['Created_Date_LAT'];  ?>" ></td>
+<td><input type="hidden" class="form-control ss" name="Delivery_Date_LAT" id="Delivery_Date_LAT" value="<?php echo $_SESSION['Delivery_Date_LAT'];  ?>" ></td>
+
+<td><input type="hidden" class="form-control ss" name="Invoiced_Date_LAT" id="Invoiced_Date_LAT" value="<?php echo $_SESSION['Invoiced_Date_LAT'];  ?>" ></td>
+<td><input type="hidden" class="form-control ss" name="Invoiced_Time_LAT" id="Invoiced_Time_LAT" value="<?php echo $_SESSION['Invoiced_Time_LAT'];  ?>" ></td>
+</tr>
+
+
+<?php
+  }
+?>
+
+
+
+
+
   
 </table>
 
