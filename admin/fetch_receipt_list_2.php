@@ -66,11 +66,17 @@ if($select_mode=='1'){
   payment_2.pay_id,
   payment_2.pay_date,
   tb_bank.Bank_Name,
-  tb_bank.Bank_account
+  tb_bank.Bank_account,
+  product_sale.total
 		 from  customer_payment
 		 left join customers on customer_payment.customer_id=customers.customer_id
 		 left join tb_bank on customer_payment.Bank_account=tb_bank.Bank_account
 		 left join payment_2 on customer_payment.sale_id=payment_2.sale_id
+		 left join 
+		 (SELECT sale_id,sale_date,
+		  sum(total) as total,
+		  payment,remain from product_sale group by sale_id)
+		as product_sale on customer_payment.sale_id=product_sale.sale_id
 		 where 1=1 $btw $r_id $p_id $c_id and customer_payment.payment_type = '2' order by payment_date asc");
 		  if($sp){
           ?>
@@ -130,7 +136,7 @@ if($select_mode=='1'){
                  <td align="center"><?php 
 				 if($s["payment_type"]=='1'){ echo "ເງີນສົດ";}
 				 elseif($s["payment_type"]=='2'){ echo "ເງີນໂອນ";}else{}  ?></td>
-            	<td align="right"><?=@number_format($s["amount"],0);?></td>
+            	<td align="right"><?=@number_format($s["total"],0);?></td>
 
 
                 <td align="right"><?php echo @$s["pay_id"];?></td>
@@ -147,7 +153,7 @@ if($select_mode=='1'){
 				</tr>
               <?php
           
-		   @$t_amt +=$s["amount"];
+		   @$t_amt +=$s["total"];
 		 
              } 
 			 ?>

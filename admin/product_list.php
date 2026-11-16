@@ -315,7 +315,7 @@ reader.readAsDataURL(input.files[0]);
       
       <td>ສາງ<br>
       <select name="stock_id" id="stock_id" class="form-control" required>   
-       	 
+       	 	<option value="">ທັງຫມົດ</option>
     <?PHP  
 	
 		
@@ -324,7 +324,7 @@ reader.readAsDataURL(input.files[0]);
 		<option value="<?php echo $f['stock_id']?>"><?php echo $f['stock_id']?> &nbsp; <?php echo $f['stock_name']?></option>
 
 	<?PHP } ?>
-	<option value="">ທັງຫມົດ</option>
+
 
    
     </select> </td>    
@@ -340,8 +340,8 @@ reader.readAsDataURL(input.files[0]);
     </select> </td>  
       
     
-          <!--   <td>ລະຫັດສິນຄ້າ <br><input  type="hidden" name="product_id" id="product_id" class="form-control"  ></td> 
-             <td>ຊື່ສິນຄ້າ <br><input  type="hidden" name="product_name" id="product_name" class="form-control"  ></td> -->
+             <td>ລະຫັດສິນຄ້າ <br><input  type="text" name="product_id" id="product_id" class="form-control"  ></td> 
+             <td>ຊື່ສິນຄ້າ <br><input  type="text" name="product_name" id="product_name" class="form-control"  ></td>
              <td><br><button type="button" class="btn btn-info" id="search_product"><i class="fa fa-search"></i> ຄົ້ນຫາ</button>
            
              </td>

@@ -15,7 +15,7 @@
 		  if($gr_id==''){$g_id="";}  else{ $g_id="and tb_groups.Group_ID='$gr_id' ";}
 		  
 		  @$product_id= mysqli_real_escape_string($con,$_POST['product_id']);		   
-		  if($product_id==''){$p_id="";}  else{ $p_id="and ( stock_product.product_id like '$product_id%' or stock_product.product_id like '%$product_id%' ) ";}
+		  if($product_id==''){$p_id="";}  else{ $p_id="and ( products.product_id like '$product_id%' or products.product_id like '%$product_id%' ) ";}
 		  
 		  		  @$product_name= mysqli_real_escape_string($con,$_POST['product_name']);		   
 		  if($product_name==''){$name="";}  else{ $name="and (products.Product_Name like '$product_name%' or products.Product_Name like '%$product_name%')";}
@@ -41,6 +41,7 @@
 	    group by products.Product_ID  order by products.Group_ID,products.Product_ID asc ");
 */
 
+
  @$sp=mysqli_query($con,"SELECT products.*,products.Product_ID
 		  ,products.Product_Name,products.size,products.Unit 
 		  ,tb_groups.Group_Name,tb_stock_product.stock_qty as total_qty
@@ -48,7 +49,7 @@
 	    left join (select sum(qty) as stock_qty,product_id from stock_product where 1=1 group by product_id ) as tb_stock_product
   on products.Product_ID=tb_stock_product.product_id
        left join tb_groups on tb_groups.Group_ID=products.group_id
-       where    1=1   
+       where    1=1    $s_id $g_id $p_id $name
 	    group by products.Product_ID  order by `Id` ASC");
 		  if($sp){
           
